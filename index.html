@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reading Archive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#eae3d2;
+    --paper-2:#e2d9c4;
+    --card:#f4efe2;
+    --ink:#2a2622;
+    --ink-soft:#5b5347;
+    --rule:#c9bd9e;
+    --oxblood:#7c2e2a;
+    --oxblood-dim:#a8564f;
+    --green:#3a4a3a;
+    --gold:#a3792f;
+    --radius:3px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    background-image: radial-gradient(rgba(42,38,34,0.035) 1px, transparent 1px);
+    background-size: 3px 3px;
+    color:var(--ink);
+    font-family:'Source Serif 4', Georgia, serif;
+    line-height:1.6;
+  }
+  a{color:inherit; text-decoration:none;}
+  ::selection{background:var(--oxblood); color:var(--card);}
+
+  header{
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 64px 28px 30px;
+    border-bottom: 2px solid var(--ink);
+  }
+  .kicker{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--oxblood);
+    margin:0 0 10px;
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:44px;
+    margin:0 0 10px;
+    letter-spacing:-.01em;
+  }
+  .lede{
+    color:var(--ink-soft);
+    font-style:italic;
+    font-size:16px;
+    max-width:56ch;
+    margin:0 0 6px;
+  }
+  .count{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    color:var(--ink-soft);
+    margin-top:14px;
+  }
+
+  .controls{
+    max-width:900px;
+    margin: 24px auto 0;
+    padding: 0 28px;
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    align-items:center;
+  }
+  #search{
+    flex: 1 1 240px;
+    padding:10px 12px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+    background:var(--card);
+    border:1px solid var(--rule);
+    border-radius:var(--radius);
+    color:var(--ink);
+  }
+  #search:focus{ outline:2px solid var(--oxblood-dim); outline-offset:1px; }
+
+  .filter-pill{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    padding:8px 13px;
+    border:1px solid var(--rule);
+    border-radius:20px;
+    background:var(--card);
+    cursor:pointer;
+    color:var(--ink-soft);
+  }
+  .filter-pill.active{
+    background:var(--oxblood);
+    border-color:var(--oxblood);
+    color:var(--card);
+  }
+
+  main{
+    max-width:900px;
+    margin: 30px auto 100px;
+    padding: 0 28px;
+  }
+
+  .shelf{
+    border-top: 1px solid var(--rule);
+  }
+
+  .book-row{
+    display:grid;
+    grid-template-columns: 44px 1fr auto;
+    gap: 18px;
+    align-items:start;
+    padding: 20px 6px;
+    border-bottom: 1px solid var(--rule);
+    cursor:pointer;
+  }
+  .book-row:hover{ background: rgba(42,38,34,.035); }
+  .book-row:hover .book-title{ color:var(--oxblood); }
+
+  .spine{
+    width:44px;
+    height:60px;
+    border-radius: 2px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:var(--card);
+    font-weight:600;
+  }
+
+  .book-title{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:19px;
+    margin:0 0 4px;
+  }
+  .book-author{
+    font-size:14px;
+    font-style:italic;
+    color:var(--ink-soft);
+    margin:0 0 8px;
+  }
+  .book-summary{
+    font-size:14px;
+    color:var(--ink-soft);
+    margin:0 0 10px;
+    max-width:60ch;
+  }
+  .tag-row{ display:flex; flex-wrap:wrap; gap:6px; }
+  .tag{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10px;
+    padding:2px 8px;
+    border:1px solid var(--rule);
+    border-radius:20px;
+    color:var(--ink-soft);
+  }
+
+  .book-meta{
+    text-align:right;
+    white-space:nowrap;
+  }
+  .status{
+    display:inline-block;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    padding:3px 9px;
+    border-radius:20px;
+    margin-bottom:8px;
+  }
+  .status-finished{ background:#e7ede2; color:var(--green); border:1px solid #b9c9ac; }
+  .status-reading{ background:#f3e6d8; color:var(--gold); border:1px solid #dcc190; }
+  .status-queued{ background:var(--paper-2); color:var(--ink-soft); border:1px solid var(--rule); }
+  .rating{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--gold);
+    display:block;
+  }
+  .chapters-count{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:var(--ink-soft);
+    display:block;
+    margin-top:6px;
+  }
+
+  #empty{
+    text-align:center;
+    padding: 60px 20px;
+    color:var(--ink-soft);
+    font-style:italic;
+    display:none;
+  }
+
+  footer{
+    max-width:900px;
+    margin: 0 auto 60px;
+    padding: 20px 28px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:var(--ink-soft);
+    border-top:1px solid var(--rule);
+    text-align:center;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <p class="kicker">Personal Library</p>
+  <h1>Reading Archive</h1>
+  <p class="lede">A running collection of book notes, chapter by chapter — each one rebuilt into a searchable reading aid with a synthesized rules/ideas index.</p>
+  <p class="count" id="count"></p>
+</header>
+
+<div class="controls">
+  <input id="search" type="text" placeholder="search title, author, tag…" autocomplete="off">
+  <button class="filter-pill active" data-status="all">All</button>
+  <button class="filter-pill" data-status="reading">Reading</button>
+  <button class="filter-pill" data-status="finished">Finished</button>
+  <button class="filter-pill" data-status="queued">Queued</button>
+</div>
+
+<main>
+  <div class="shelf" id="shelf"></div>
+  <p id="empty">No books match that search.</p>
+</main>
+
+<footer>reading archive · add a book by appending one entry to the BOOKS array</footer>
+
+<script>
+/* ============================================================
+   BOOKS — one entry per book. Add new books here as you finish
+   building each reading-aid page. `href` should point to that
+   book's standalone HTML file.
+   status: "reading" | "finished" | "queued"
+   ============================================================ */
+const BOOKS = [
+  {
+    title: "How to Read a Book",
+    author: "Mortimer J. Adler & Charles Van Doren",
+    href: "how-to-read-a-book.html",
+    status: "finished",
+    rating: 9.2,
+    chapters: 10,
+    summary: "A practical framework for reading with increasing levels of skill — elementary, inspectional, analytical, and syntopical — built around the habit of asking the right questions of a book.",
+    tags: ["reading", "analytical-reading", "classics", "nonfiction"],
+    accent: "#7c2e2a"
+  }
+  // {
+  //   title: "...",
+  //   author: "...",
+  //   href: "slug.html",
+  //   status: "reading",
+  //   rating: null,
+  //   chapters: 0,
+  //   summary: "...",
+  //   tags: [],
+  //   accent: "#3a4a3a"
+  // },
+];
+
+const shelf = document.getElementById('shelf');
+const countEl = document.getElementById('count');
+const emptyEl = document.getElementById('empty');
+const searchInput = document.getElementById('search');
+let activeStatus = 'all';
+
+function initials(title){
+  return title.split(' ').filter(w => /^[A-Z0-9]/.test(w)).slice(0,2).map(w=>w[0]).join('') || title[0];
+}
+
+function render(){
+  const q = searchInput.value.trim().toLowerCase();
+  const filtered = BOOKS.filter(b => {
+    const statusOk = activeStatus === 'all' || b.status === activeStatus;
+    const hay = (b.title + ' ' + b.author + ' ' + (b.tags||[]).join(' ')).toLowerCase();
+    const searchOk = !q || hay.includes(q);
+    return statusOk && searchOk;
+  });
+
+  countEl.textContent = `${BOOKS.length} book${BOOKS.length===1?'':'s'} in the archive`;
+  shelf.innerHTML = '';
+  emptyEl.style.display = filtered.length ? 'none' : 'block';
+
+  filtered.forEach(b => {
+    const row = document.createElement('a');
+    row.className = 'book-row';
+    row.href = b.href;
+    row.innerHTML = `
+      <div class="spine" style="background:${b.accent || '#7c2e2a'}">${initials(b.title)}</div>
+      <div>
+        <p class="book-title">${b.title}</p>
+        <p class="book-author">${b.author}</p>
+        ${b.summary ? `<p class="book-summary">${b.summary}</p>` : ''}
+        ${b.tags && b.tags.length ? `<div class="tag-row">${b.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>` : ''}
+      </div>
+      <div class="book-meta">
+        <span class="status status-${b.status}">${b.status}</span>
+        ${b.rating ? `<span class="rating">★ ${b.rating}/10</span>` : ''}
+        ${b.chapters ? `<span class="chapters-count">${b.chapters} chapters</span>` : ''}
+      </div>
+    `;
+    shelf.appendChild(row);
+  });
+}
+
+document.querySelectorAll('.filter-pill').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeStatus = btn.dataset.status;
+    render();
+  });
+});
+searchInput.addEventListener('input', render);
+
+render();
+</script>
+
+</body>
+</html>

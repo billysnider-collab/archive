@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reading Archive — How to Read a Book</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
+<style>
+  :root{
+    --paper:#eae3d2;
+    --paper-2:#e2d9c4;
+    --card:#f4efe2;
+    --ink:#2a2622;
+    --ink-soft:#5b5347;
+    --rule:#c9bd9e;
+    --oxblood:#7c2e2a;
+    --oxblood-dim:#a8564f;
+    --green:#3a4a3a;
+    --gold:#a3792f;
+    --shadow: 0 1px 0 rgba(42,38,34,.06);
+    --radius: 3px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    background-image:
+      radial-gradient(rgba(42,38,34,0.035) 1px, transparent 1px);
+    background-size: 3px 3px;
+    color:var(--ink);
+    font-family:'Source Serif 4', Georgia, serif;
+    font-size:16.5px;
+    line-height:1.65;
+  }
+  a{color:inherit;}
+  ::selection{background:var(--oxblood); color:var(--card);}
+
+  .layout{
+    display:grid;
+    grid-template-columns: 300px 1fr;
+    min-height:100vh;
+  }
+
+  /* ---------- SIDEBAR : catalog drawer ---------- */
+  .sidebar{
+    background:var(--paper-2);
+    border-right:1px solid var(--rule);
+    padding: 28px 22px 40px;
+    position:sticky; top:0; height:100vh; overflow-y:auto;
+  }
+  .brand{
+    margin-bottom:22px;
+    padding-bottom:18px;
+    border-bottom: 2px solid var(--ink);
+  }
+  .brand .kicker{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--oxblood);
+    margin:0 0 6px;
+  }
+  .brand h1{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:23px;
+    line-height:1.15;
+    margin:0 0 6px;
+  }
+  .brand .authors{
+    font-size:13px;
+    color:var(--ink-soft);
+    font-style:italic;
+  }
+
+  .search-wrap{ margin-bottom: 20px; }
+  #search{
+    width:100%;
+    padding:9px 11px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    background:var(--card);
+    border:1px solid var(--rule);
+    border-radius:var(--radius);
+    color:var(--ink);
+  }
+  #search:focus{outline:2px solid var(--oxblood-dim); outline-offset:1px;}
+
+  .nav-section-label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin: 20px 0 8px;
+  }
+
+  .toc{list-style:none; margin:0; padding:0;}
+  .toc li{ margin-bottom:2px; }
+  .toc button{
+    all:unset;
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+    width:100%;
+    padding:8px 10px;
+    cursor:pointer;
+    border-radius:var(--radius);
+    font-size:14.5px;
+  }
+  .toc button:hover{ background:rgba(42,38,34,.06); }
+  .toc button.active{
+    background:var(--card);
+    box-shadow: inset 3px 0 0 var(--oxblood);
+  }
+  .toc .num{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:var(--oxblood);
+    min-width:20px;
+  }
+  .toc .t{ color:var(--ink); }
+  .toc button.active .t{ font-weight:600; }
+
+  .rules-link{
+    display:block;
+    margin-top:22px;
+    padding:10px 12px;
+    background:var(--green);
+    color:var(--card);
+    text-align:center;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    border-radius:var(--radius);
+    cursor:pointer;
+    border:none;
+  }
+  .rules-link:hover{ background:#2c392c; }
+
+  /* ---------- MAIN ---------- */
+  main{ padding: 48px 56px 100px; max-width: 820px; }
+
+  .card-header{
+    border:1px solid var(--rule);
+    background:var(--card);
+    border-radius:var(--radius);
+    padding: 22px 26px;
+    margin-bottom: 34px;
+    box-shadow: var(--shadow);
+    position:relative;
+  }
+  .card-header::before{
+    content:"";
+    position:absolute; left:0; top:14px; bottom:14px; width:4px;
+    background:var(--oxblood);
+  }
+  .card-header .meta-row{
+    display:flex; flex-wrap:wrap; gap:8px 18px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:var(--ink-soft);
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    margin-bottom:10px;
+  }
+  .card-header h2{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:30px;
+    margin:0 0 10px;
+    line-height:1.2;
+  }
+  .card-header .summary{
+    color:var(--ink-soft);
+    font-size:15px;
+    font-style:italic;
+    margin:0;
+  }
+  .tag-row{ margin-top:14px; display:flex; flex-wrap:wrap; gap:6px; }
+  .tag{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10px;
+    padding:3px 8px;
+    border:1px solid var(--rule);
+    border-radius:20px;
+    color:var(--ink-soft);
+  }
+  .rating{
+    font-family:'IBM Plex Mono', monospace;
+    color:var(--gold);
+  }
+
+  article h1{ display:none; } /* chapter already h1'd in card-header */
+  article h2{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:22px;
+    margin: 40px 0 14px;
+    padding-bottom:8px;
+    border-bottom: 1px solid var(--rule);
+  }
+  article h3{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:18px;
+    margin: 28px 0 10px;
+    color: var(--oxblood);
+  }
+  article h4{ font-size:15px; margin:20px 0 8px; font-weight:600;}
+  article p{ margin: 0 0 14px; }
+  article ul, article ol{ margin: 0 0 16px; padding-left: 22px; }
+  article li{ margin-bottom:6px; }
+  article strong{ color:var(--ink); }
+  article hr{ border:none; border-top:1px solid var(--rule); margin:32px 0; }
+  article blockquote{
+    margin: 20px 0;
+    padding: 4px 20px;
+    border-left: 3px solid var(--gold);
+    font-style: italic;
+    color: var(--ink-soft);
+  }
+  article code{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.9em;
+    background: rgba(42,38,34,.07);
+    padding: 1px 5px;
+    border-radius:3px;
+  }
+  article table{
+    width:100%;
+    border-collapse:collapse;
+    margin: 18px 0 24px;
+    font-size:14.5px;
+    background:var(--card);
+  }
+  article th, article td{
+    border:1px solid var(--rule);
+    padding:8px 10px;
+    text-align:left;
+    vertical-align:top;
+  }
+  article th{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    background: var(--paper-2);
+  }
+  .wikilink{
+    color: var(--oxblood);
+    border-bottom: 1px dotted var(--oxblood-dim);
+    font-style: normal;
+  }
+  .mermaid{
+    background: var(--card);
+    border:1px solid var(--rule);
+    border-radius: var(--radius);
+    padding: 18px;
+    margin: 20px 0;
+    display:flex; justify-content:center; overflow-x:auto;
+  }
+
+  /* Callouts — marginalia notes */
+  .callout{
+    border:1px solid var(--rule);
+    border-left: 4px solid var(--ink-soft);
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    margin: 18px 0;
+  }
+  .callout-title{
+    margin:0 0 6px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    font-weight:600;
+  }
+  .callout-body p:last-child{ margin-bottom:0; }
+  .callout-tip{ border-left-color: var(--green); }
+  .callout-tip .callout-title{ color: var(--green); }
+  .callout-success{ border-left-color: #4c6b3f; }
+  .callout-success .callout-title{ color:#4c6b3f; }
+  .callout-warning{ border-left-color: var(--gold); }
+  .callout-warning .callout-title{ color: var(--gold); }
+  .callout-danger{ border-left-color: var(--oxblood); }
+  .callout-danger .callout-title{ color: var(--oxblood); }
+  .callout-important{ border-left-color: var(--oxblood); }
+  .callout-important .callout-title{ color: var(--oxblood); }
+  .callout-abstract{ border-left-color: var(--ink); }
+  .callout-quote{ border-left-color: var(--ink-soft); font-style:italic; }
+  .callout-question{ border-left-color: var(--oxblood-dim); }
+  .callout-example{ border-left-color: var(--gold); }
+  .callout-note{ border-left-color: var(--ink-soft); }
+  .callout-check{ border-left-color: #4c6b3f; }
+
+  .chapter-nav{
+    display:flex; justify-content:space-between; gap:16px;
+    margin-top: 48px; padding-top:20px; border-top:1px solid var(--rule);
+  }
+  .chapter-nav a{
+    text-decoration:none;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    color:var(--ink-soft);
+    padding:10px 14px;
+    border:1px solid var(--rule);
+    border-radius:var(--radius);
+    cursor:pointer;
+    background:var(--card);
+  }
+  .chapter-nav a:hover{ border-color:var(--oxblood); color:var(--oxblood); }
+  .chapter-nav .spacer{ flex:1; }
+
+  /* Rules index page */
+  .rules-page h2.page-title{
+    font-family:'Fraunces', serif; font-size:30px; font-weight:600; margin:0 0 6px;
+  }
+  .rules-page .page-sub{ color:var(--ink-soft); font-style:italic; margin-bottom:30px;}
+  .stage-group{ margin-bottom:30px; }
+  .stage-group h3{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px; text-transform:uppercase; letter-spacing:.08em;
+    color:var(--oxblood); border-bottom:1px solid var(--rule); padding-bottom:8px; margin-bottom:14px;
+  }
+  .rule-card{
+    display:flex; gap:16px;
+    padding:14px 4px;
+    border-bottom:1px dashed var(--rule);
+    cursor:pointer;
+  }
+  .rule-card:hover .rule-title{ color:var(--oxblood); }
+  .rule-num{
+    font-family:'Fraunces', serif; font-weight:600; font-size:26px;
+    color:var(--rule); min-width:38px;
+  }
+  .rule-title{ font-weight:600; margin:0 0 4px; font-size:16px; }
+  .rule-desc{ color:var(--ink-soft); font-size:14.5px; margin:0; }
+  .rule-src{ font-family:'IBM Plex Mono', monospace; font-size:10.5px; color:var(--ink-soft); margin-top:6px; display:inline-block;}
+
+  #hits{ font-family:'IBM Plex Mono', monospace; font-size:10.5px; color:var(--ink-soft); margin-top:6px; min-height:14px;}
+
+  @media (max-width: 860px){
+    .layout{ grid-template-columns: 1fr; }
+    .sidebar{ position:relative; height:auto; border-right:none; border-bottom:1px solid var(--rule); }
+    main{ padding: 28px 20px 80px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="layout">
+  <nav class="sidebar">
+    <div class="brand">
+      <p class="kicker">Reading Archive</p>
+      <h1 id="book-title"></h1>
+      <p class="authors" id="book-authors"></p>
+    </div>
+
+    <div class="search-wrap">
+      <input id="search" type="text" placeholder="search chapters, tags, text…" autocomplete="off">
+      <div id="hits"></div>
+    </div>
+
+    <p class="nav-section-label">Chapters</p>
+    <ul class="toc" id="toc"></ul>
+
+    <button class="rules-link" id="rules-btn">✎ Synthesized Rules Index</button>
+  </nav>
+
+  <main id="main"></main>
+</div>
+
+<script>
+mermaid.initialize({ startOnLoad: false, theme: 'neutral' });
+
+const BOOK = {
+  "title": "How to Read a Book",
+  "authors": "Mortimer J. Adler & Charles Van Doren",
+  "chapters": [
+    {
+      "chapter": 1,
+      "title": "Ch 1 - The Activity and Art of Reading",
+      "summary": "Foundational chapter that defines the book's purpose: developing the art of reading for increased understanding. Introduces active reading, the distinction between reading for information vs. understanding, and learning by instruction vs. discovery.",
+      "rating": "9",
+      "tags": [
+        "how-to-read-a-book",
+        "adler",
+        "analytical-reading",
+        "stage-0-introduction",
+        "active-vs-passive",
+        "reading-for-understanding",
+        "rules-of-reading",
+        "pkmsystem"
+      ],
+      "html": "<h1>Ch 1 - The Activity and Art of Reading</h1>\n<blockquote>\n<p>“This is a book for readers and for those who wish to become readers. … whose main purpose in reading books is to gain increased understanding.”<br />\n— Adler &amp; Van Doren</p>\n</blockquote>\n<h2>📌 Chapter Overview</h2>\n<p>This opening chapter sets the <strong>foundation</strong> for the entire book. It explains <strong>why</strong> most people read poorly, what <strong>active reading</strong> really means, and why the highest goal of reading is <strong>increased understanding</strong> rather than mere information or entertainment.</p>\n<div class=\"callout callout-abstract\"><p class=\"callout-title\">Core Idea</p><div class=\"callout-body\"><p>Reading is an <strong>active skill</strong> — like catching a baseball — that can be improved through deliberate effort. The best reading elevates your mind from “understanding less” to “understanding more” without external help. This book teaches the art of <strong>reading for understanding</strong>.</p></div></div>\n\n<hr />\n<h2>🎯 Key Distinctions</h2>\n<h3>1. Active vs. Passive Reading</h3>\n<div class=\"callout callout-tip\"><p class=\"callout-title\">Active Reading</p><div class=\"callout-body\"><ul>\n<li>\n<p>Reading is <strong>always</strong> somewhat active (you can’t read with eyes closed and mind asleep).</p>\n</li>\n<li>\n<p><strong>Better readers</strong> exert more effort and perform more mental acts skillfully.</p>\n</li>\n<li>\n<p>Analogy: Reader = catcher in baseball; Writer = pitcher. Both are active; the book is the passive “ball.”</p>\n</li>\n<li>\n<p>The art of reading = skill to catch <strong>every kind</strong> of communication well.</p>\n</li>\n</ul></div></div>\n\n<div class=\"callout callout-warning\"><p class=\"callout-title\">Common Myth</p><div class=\"callout-body\"><p>Reading and listening are <strong>not</strong> passive like receiving a gift. They require real work — just different work from writing or speaking.</p></div></div>\n\n<h3>2. Reading for Information vs. Reading for Understanding</h3>\n<div class=\"callout callout-success\"><p class=\"callout-title\">Reading for Information</p><div class=\"callout-body\"><ul>\n<li>\n<p>Book is at the <strong>same level</strong> as your mind.</p>\n</li>\n<li>\n<p>You gain facts you can immediately absorb.</p>\n</li>\n<li>\n<p>No increase in understanding (you already “got it”).</p>\n</li>\n</ul></div></div>\n\n<div class=\"callout callout-success\"><p class=\"callout-title\">Reading for Understanding (the book’s focus)</p><div class=\"callout-body\"><ul>\n<li>\n<p>Book is <strong>above</strong> your current level.</p>\n</li>\n<li>\n<p>Initial inequality: author knows more.</p>\n</li>\n<li>\n<p>You actively lift yourself to approach the author’s level.</p>\n</li>\n<li>\n<p>Feels like “pulling yourself up by your bootstraps.”</p>\n</li>\n<li>\n<p>Requires <strong>more varied activity</strong> and <strong>greater skill</strong>.</p>\n</li>\n</ul></div></div>\n\n<h3>3. Learning by Instruction vs. Learning by Discovery</h3>\n<div class=\"callout callout-tip\"><p class=\"callout-title\">Learning by Instruction (“Aided Discovery”)</p><div class=\"callout-body\"><ul>\n<li>\n<p>You learn from a teacher (living or absent — i.e., a book).</p>\n</li>\n<li>\n<p>Operations performed on <strong>discourse</strong> (written or spoken words).</p>\n</li>\n<li>\n<p>Reading = the art of being taught.</p>\n</li>\n</ul></div></div>\n\n<div class=\"callout callout-tip\"><p class=\"callout-title\">Learning by Discovery (“Unaided Discovery”)</p><div class=\"callout-body\"><ul>\n<li>\n<p>You learn directly from nature/world through research and reflection.</p>\n</li>\n<li>\n<p>No teacher present.</p>\n</li>\n</ul></div></div>\n\n<p><strong>Key Insight:</strong> Both are active. Reading is <strong>aided discovery</strong> — discovery with help from an absent teacher (the author).</p>\n<hr />\n<h2>🧩 Visual Summary</h2>\n<div class=\"mermaid\">flowchart TD\n    A[Goals of Reading] --> B[Information]\n    A --> C[Understanding ← Book's Focus]\n    A --> D[Entertainment]\n    \n    C --> E[Initial Inequality\\nAuthor > Reader]\n    E --> F[Reader actively elevates self\\nBootstrapping]\n    \n    G[Types of Learning] --> H[Instruction\\nAided Discovery\\nReading/Listening]\n    G --> I[Discovery\\nUnaided\\nResearch on World]</div>`</p>",
+      "file": "How_to_Read_a_Book_-_Ch01_-_The_Activity_and_Art_of_Reading.md"
+    },
+    {
+      "chapter": 2,
+      "title": "Ch 2 - The Levels of Reading",
+      "summary": "Introduces the four cumulative levels of reading: Elementary, Inspectional, Analytical, and Syntopical. Higher levels include all lower ones; the book focuses primarily on Analytical reading for increased understanding.",
+      "rating": "9.5",
+      "tags": [
+        "how-to-read-a-book",
+        "adler",
+        "analytical-reading",
+        "levels-of-reading",
+        "stage-0-introduction",
+        "rules-of-reading",
+        "pkmsystem"
+      ],
+      "html": "<h1>Ch 2 - The Levels of Reading</h1>\n<blockquote>\n<p>“There are four levels of reading. They are here called levels rather than kinds because … higher ones include lower ones. … the fourth and highest level of reading includes all the others. It simply goes beyond them.”<br />\n— Adler &amp; Van Doren</p>\n</blockquote>\n<h2>📌 Chapter Overview</h2>\n<p>Chapter 2 builds directly on Chapter 1 by outlining the <strong>four progressive levels</strong> of reading skill. These levels are <strong>cumulative</strong> — each higher level incorporates all the skills of the ones below it.</p>\n<p>The authors emphasize that most people never advance beyond Elementary reading, yet true understanding requires climbing to Analytical (and sometimes Syntopical) reading.</p>\n<div class=\"callout callout-abstract\"><p class=\"callout-title\">Core Idea</p><div class=\"callout-body\"><p>Reading is not one uniform activity. There are distinct <strong>levels</strong> of reading, each serving different purposes and demanding increasing effort and skill. Mastering higher levels allows you to read <strong>better</strong> — to gain deeper understanding from challenging books.</p></div></div>\n\n<hr />\n<h2>🎯 The Four Levels of Reading (Cumulative)</h2>\n<div class=\"callout callout-tip\"><p class=\"callout-title\">Level 1: Elementary Reading</p><div class=\"callout-body\"><ul>\n<li>\n<p>Also called <strong>Basic</strong> or <strong>Rudimentary</strong> reading.</p>\n</li>\n<li>\n<p>What you learn in elementary school: recognizing letters, words, sentences; basic comprehension of literal meaning.</p>\n</li>\n<li>\n<p>Focus: “What does the sentence say?” (decoding symbols).</p>\n</li>\n<li>\n<p>Most adults have this level, but many stop here.</p>\n</li>\n<li>\n<p>Prerequisite for all higher reading — you cannot skip it.</p>\n</li>\n</ul></div></div>\n\n<hr />\n<div class=\"callout callout-tip\"><p class=\"callout-title\">Level 2: Inspectional Reading</p><div class=\"callout-body\"><ul>\n<li>\n<p>Also called <strong>Skimming</strong> or <strong>Pre-reading</strong>.</p>\n</li>\n<li>\n<p>Goal: Get the <strong>most out of a book in a limited time</strong> (e.g., 30–60 minutes).</p>\n</li>\n<li>\n<p>Two stages:</p>\n</li>\n<li>\n<p><strong>Systematic Skimming</strong> (pre-reading): Title, preface, TOC, index, headings, first/last paragraphs of chapters, dust jacket.</p>\n</li>\n<li>\n<p><strong>Superficial Reading</strong>: Read straight through quickly, without stopping at difficulties.</p>\n</li>\n<li>\n<p>Purpose: Answer “What is this book about?” and decide whether it deserves deeper reading.</p>\n</li>\n<li>\n<p>Key benefit: Helps you <strong>see the structure</strong> quickly.</p>\n</li>\n</ul></div></div>\n\n<hr />\n<div class=\"callout callout-tip\"><p class=\"callout-title\">Level 3: Analytical Reading</p><div class=\"callout-body\"><ul>\n<li>\n<p>The <strong>heart</strong> of the book — the main focus of Adler &amp; Van Doren.</p>\n</li>\n<li>\n<p>Thorough, complete, and <strong>systematic</strong> reading for full understanding.</p>\n</li>\n<li>\n<p>Answers the question: “What exactly does the author mean, and how does he prove it?”</p>\n</li>\n<li>\n<p>Involves the rules we covered earlier:</p>\n</li>\n<li>\n<p>Coming to terms (Rule 5)</p>\n</li>\n<li>\n<p>Grasping propositions (Rule 6)</p>\n</li>\n<li>\n<p>Constructing arguments (Rule 7)</p>\n</li>\n<li>\n<p>Determining solutions (Rule 8)</p>\n</li>\n<li>\n<p>Then moves into fair criticism (Rules 9–11).</p>\n</li>\n<li>\n<p>This is <strong>active, effortful</strong> reading — “bootstrapping” your understanding.</p>\n</li>\n</ul></div></div>\n\n<hr />\n<div class=\"callout callout-tip\"><p class=\"callout-title\">Level 4: Syntopical Reading</p><div class=\"callout-body\"><ul>\n<li>\n<p>Also called <strong>Comparative</strong> or <strong>Synoptic</strong> reading.</p>\n</li>\n<li>\n<p>Highest and most complex level.</p>\n</li>\n<li>\n<p>Reading <strong>multiple books</strong> on the <strong>same subject</strong> to construct a dialogue among them.</p>\n</li>\n<li>\n<p>Goal: Achieve a broad, objective understanding of a topic by comparing and contrasting different authors’ views.</p>\n</li>\n<li>\n<p>Requires mastery of all lower levels plus special techniques (e.g., creating a “syntopicon” of terms and questions).</p>\n</li>\n<li>\n<p>Rarely needed for single books, but powerful for deep research or mastering a field.</p>\n</li>\n</ul></div></div>\n\n<p>Key Propositions</p>\n<ul>\n<li>\n<p>Higher levels of reading are more active and require more skill.</p>\n</li>\n<li>\n<p>Most formal education stops at Elementary reading, leaving adults under-equipped for difficult books.</p>\n</li>\n<li>\n<p>Inspectional reading is especially useful when time is limited or when deciding whether to invest in Analytical reading.</p>\n</li>\n<li>\n<p>The book you are now reading (How to Read a Book) is primarily about Analytical Reading, with some treatment of Inspectional and Syntopical.</p>\n</li>\n</ul>\n<hr />\n<p>Connections to Other Chapters</p>\n<ul>\n<li>\n<p>Ch 1 → <span class=\"wikilink\">How to Read a Book - Ch05 The Activity and Art of Reading</span> (active reading, understanding vs. information)</p>\n</li>\n<li>\n<p>Level 2 → <span class=\"wikilink\">Ch 4 - What is the Book About</span> (Inspectional Reading in detail)</p>\n</li>\n<li>\n<p>Level 3 → <span class=\"wikilink\">Ch 9 - Determining an Author's Message</span> and <span class=\"wikilink\">Ch 10 - Criticizing a Book Fairly</span></p>\n</li>\n<li>\n<p>Level 4 → Later sections on Syntopical Reading (Part Four)</p>\n</li>\n<li>\n<p>Application → <span class=\"wikilink\">Analytical Reading MOC</span> and our macroeconomics example</p>\n</li>\n</ul>\n<div class=\"callout callout-quote\"><p class=\"callout-title\">Cumulative Nature “The first level is not lost in the second, the second in the third, the third in the fourth.”</p></div>\n\n<hr />\n<p>Related MOCs &amp; Wikilinks</p>\n<ul>\n<li>\n<p><span class=\"wikilink\">Analytical Reading MOC</span></p>\n</li>\n<li>\n<p><span class=\"wikilink\">How to Read a Book MOC</span></p>\n</li>\n<li>\n<p><span class=\"wikilink\">Levels of Reading</span></p>\n</li>\n<li>\n<p><span class=\"wikilink\">Inspectional Reading</span></p>\n</li>\n<li>\n<p><span class=\"wikilink\">Active vs Passive Reading</span></p>\n</li>\n<li>\n<p><span class=\"wikilink\">How to Read a Book - Ch05 The Activity and Art of Reading</span></p>\n</li>\n<li>\n<p><span class=\"wikilink\">Ch 9 - Determining an Author's Message</span></p>\n</li>\n<li>\n<p><span class=\"wikilink\">Ch 10 - Criticizing a Book Fairly</span></p>\n</li>\n</ul>\n<hr />\n<p>My Personal Notes &amp; Reflections</p>\n<ul>\n<li>\n<p>This chapter finally made the structure of the whole book click for me. Everything we’ve done so far (outlining, propositions, criticism) belongs to Level 3 — Analytical.</p>\n</li>\n<li>\n<p>Inspectional reading is a game-changer for busy people: I now skim new nonfiction books in 15–30 minutes before deciding whether to go deep.</p>\n</li>\n<li>\n<p>The cumulative nature explains why struggling with a hard book often means I need to drop back to a quicker inspectional pass first.</p>\n</li>\n<li>\n<p>Link to macro text: We began with a superficial look (Level 2), then moved to propositions and arguments (Level 3). Perfect application!</p>\n</li>\n</ul>\n<div class=\"callout callout-success\"><p class=\"callout-title\">Practical Tip I Use Now Before any serious book:</p></div>\n\n<ol>\n<li>Elementary (obvious)</li>\n<li>Quick Inspectional skim (5–10 questions from Ch 4)</li>\n<li>Decide: Full Analytical or set aside?</li>\n</ol>\n<hr />\n<h2>Tags#levels-of-reading #elementary #inspectional #analytical #syntopical #cumulative #adler #stage0</h2>\n<h2>🧩 Visual Summary – The Four Levels (Cumulative Pyramid)</h2>\n<div class=\"mermaid\">flowchart TD\n    A[Level 4: Syntopical Reading\\nComparative / Multiple Books] --> B[Level 3: Analytical Reading\\nDeep Understanding of One Book]\n    B --> C[Level 2: Inspectional Reading\\nSkimming for Overview]\n    C --> D[Level 1: Elementary Reading\\nBasic Decoding & Literal Meaning]\n    \n    style A fill:#ff9999,stroke:#333\n    style B fill:#99ccff,stroke:#333\n    style C fill:#99ff99,stroke:#333\n    style D fill:#ffff99,stroke:#333</div>`</p>",
+      "file": "How_to_Read_a_Book_-_Ch02_-_The_Levels_of_Reading.md"
+    },
+    {
+      "chapter": 3,
+      "title": "Ch 3 - The First Level of Reading: Elementary Reading",
+      "summary": "Detailed examination of Elementary Reading (Level 1). Covers historical trends in teaching methods, the four stages of learning to read, the relationship between stages and levels, and why higher education often fails to teach beyond this level. Emphasizes that true competence requires moving to Analytical and Syntopical reading.",
+      "rating": "8.5",
+      "tags": [
+        "how-to-read-a-book",
+        "adler",
+        "levels-of-reading",
+        "elementary-reading",
+        "stage-0-introduction",
+        "reading-readiness",
+        "rules-of-reading",
+        "pkmsystem"
+      ],
+      "html": "<h1>Ch 3 - The First Level of Reading: Elementary Reading</h1>\n<blockquote>\n<p>“The first level of reading is Elementary Reading … the kind of reading you were taught in elementary school.”<br />\n— Adler &amp; Van Doren</p>\n</blockquote>\n<h2>📌 Chapter Overview</h2>\n<p>Chapter 3 focuses exclusively on <strong>Level 1: Elementary Reading</strong> — the foundational decoding and basic comprehension skills most people acquire in childhood. The authors review historical teaching methods, current controversies, and the four developmental stages within this level.</p>\n<p>They stress that while Elementary Reading is essential, it is <strong>not sufficient</strong> for the kind of reading this book aims to teach (Analytical and Syntopical). Most formal education stops here, leaving adults unprepared for higher-level reading.</p>\n<div class=\"callout callout-abstract\"><p class=\"callout-title\">Core Idea</p><div class=\"callout-body\"><p>Elementary reading (also called basic or rudimentary literacy) is the necessary starting point, but it only enables you to read <em>what</em> the text says literally. True understanding requires climbing to higher levels. The chapter explains why so many people never progress beyond it and what society must do to fix this.</p></div></div>\n\n<hr />\n<h2>🎯 Historical Trends in Elementary Reading Instruction</h2>\n<p>The chapter identifies three converging trends that created today’s “reading crisis”:</p>\n<ol>\n<li><strong>Universal Literacy Effort</strong> — America’s democratic push to educate everyone (not just motivated elites).</li>\n<li><strong>Shifts in Teaching Methods</strong>:</li>\n</ol>\n<ul>\n<li>\n<p>ABC / synthetic method (sounding out letters → syllables).</p>\n</li>\n<li>\n<p>Phonics method (sound-based).</p>\n</li>\n<li>\n<p>Sight / “look-say” / whole-word method (recognizing entire words or sentences first).</p>\n</li>\n<li>\n<p>Later swings back to phonics + eclectic, language-experience, linguistic, and programmed approaches.\n3. <strong>Persistent Criticism of Schools</strong> — Ongoing debate about failures, especially with diverse student populations.</p>\n</li>\n</ul>\n<div class=\"callout callout-warning\"><p class=\"callout-title\">Key Observation</p><div class=\"callout-body\"><p>All methods work for <em>some</em> children but fail for others. The pendulum keeps swinging because no single method is a universal panacea.</p></div></div>\n\n<hr />\n<h2>🧩 The Four Stages of Learning to Read (All Within Level 1)</h2>\n<div class=\"callout callout-tip\"><p class=\"callout-title\">Stage 1: Reading Readiness (≈ birth to age 6–7)</p><div class=\"callout-body\"><ul>\n<li>\n<p>Physical (vision, hearing), intellectual (visual perception), language, and personal/social readiness.</p>\n</li>\n<li>\n<p>Tests and teacher judgment determine readiness.</p>\n</li>\n<li>\n<p>Jumping the gun causes frustration and long-term dislike of reading.</p>\n</li>\n</ul></div></div>\n\n<div class=\"callout callout-tip\"><p class=\"callout-title\">Stage 2: Word Mastery (≈ Grade 1)</p><div class=\"callout-body\"><ul>\n<li>\n<p>Learn ~300–400 sight words.</p>\n</li>\n<li>\n<p>Introduce basic context clues and beginning sounds.</p>\n</li>\n<li>\n<p>Children begin reading simple books independently.</p>\n</li>\n<li>\n<p><strong>Magical moment</strong>: Symbols suddenly become meaningful (“The cat sat on the hat”).</p>\n</li>\n</ul></div></div>\n\n<div class=\"callout callout-tip\"><p class=\"callout-title\">Stage 3: Vocabulary Growth & Context Use (≈ Grades 2–4)</p><div class=\"callout-body\"><ul>\n<li>\n<p>Rapid vocabulary expansion.</p>\n</li>\n<li>\n<p>Use context to unlock unfamiliar words.</p>\n</li>\n<li>\n<p>Read for different purposes and content areas (science, social studies, etc.).</p>\n</li>\n<li>\n<p>Reading becomes a tool for curiosity and fun.</p>\n</li>\n</ul></div></div>\n\n<div class=\"callout callout-tip\"><p class=\"callout-title\">Stage 4: Refinement & Assimilation (≈ Grades 5–8 / early teens)</p><div class=\"callout-body\"><ul>\n<li>\n<p>Polish all previous skills.</p>\n</li>\n<li>\n<p>Begin comparing ideas across texts.</p>\n</li>\n<li>\n<p>Reach “mature” elementary literacy (roughly 8th–10th grade level).</p>\n</li>\n<li>\n<p>Ready for high-school work, but <strong>not yet</strong> for Analytical reading.</p>\n</li>\n</ul></div></div>\n\n<hr />\n<h2>📐 Relationship Between Stages and Levels</h2>\n<div class=\"callout callout-important\"><p class=\"callout-title\">Critical Distinction</p><div class=\"callout-body\"><ul>\n<li>\n<p>The <strong>four stages</strong> described above are <strong>all stages of Elementary Reading (Level 1)</strong>.</p>\n</li>\n<li>\n<p>They correspond roughly to:</p>\n</li>\n<li>\n<p>Readiness → Pre-school / Kindergarten</p>\n</li>\n<li>\n<p>Word Mastery → 1st grade</p>\n</li>\n<li>\n<p>Vocabulary Growth → 4th grade (functional literacy)</p>\n</li>\n<li>\n<p>Refinement → 8th–10th grade (high-school readiness)</p>\n</li>\n<li>\n<p>Mastering all four stages = <strong>9th-grade literacy</strong> (the minimum assumed for readers of this book).</p>\n</li>\n</ul></div></div>\n\n<p><strong>You have completed Level 1</strong> if you can read this book at all. Higher levels (Inspectional, Analytical, Syntopical) build on top of it.</p>\n<hr />\n<h2>🔍 Higher Education and the Failure to Teach Beyond Elementary Reading</h2>\n<ul>\n<li>\n<p>High schools and colleges traditionally offered <strong>no</strong> instruction in higher-level reading.</p>\n</li>\n<li>\n<p>Remedial courses today are mostly <strong>Elementary-level fixes</strong> (speed reading, “effective reading”) — not true Analytical training.</p>\n</li>\n<li>\n<p>Ideal outcome:</p>\n</li>\n<li>\n<p>Good high school → competent <strong>Analytical</strong> readers</p>\n</li>\n<li>\n<p>Good college → competent <strong>Syntopical</strong> readers</p>\n</li>\n<li>\n<p>Reality: Many graduates never reach these levels, sometimes requiring graduate school to finally learn how to read well.</p>\n</li>\n</ul>\n<div class=\"callout callout-quote\"><p class=\"callout-title\">Adler’s Challenge</p><div class=\"callout-body\"><p>“It should not take twenty years of schooling to learn how to read. Something is very wrong if it does.”</p></div></div>\n\n<hr />\n<h2>🧩 Visual Summary – Stages vs. Levels</h2>\n<div class=\"mermaid\">flowchart TD\n    subgraph \"Level 1: Elementary Reading\"\n        A[Stage 1: Reading Readiness] --> B[Stage 2: Word Mastery\\n~Grade 1]\n        B --> C[Stage 3: Vocabulary Growth\\n~Grade 4]\n        C --> D[Stage 4: Refinement\\n~Grade 8–10]\n    end\n    \n    D --> E[Level 2: Inspectional]\n    E --> F[Level 3: Analytical ← This Book's Focus]\n    F --> G[Level 4: Syntopical]\n    \n    style A fill:#ffff99\n    style D fill:#99ff99\n    style F fill:#99ccff</div>`</p>\n<p>My Personal Notes &amp; Reflections</p>\n<ul>\n<li>\n<p>This chapter explains why so many intelligent adults still struggle with difficult books — they were never taught anything beyond Elementary reading.</p>\n</li>\n<li>\n<p>The “magical moment” of discovering meaning in symbols is beautifully described and humbling.</p>\n</li>\n<li>\n<p>Strong societal point: Universal literacy is a democratic achievement, but we must now push for universal competence in higher reading.</p>\n</li>\n</ul>\n<p>-</p>\n<div class=\"callout callout-tip\"><p class=\"callout-title\">Practical Takeaway If you (or someone you know) struggles with complex nonfiction, the solution is rarely more “speed reading” — it’s learning the higher levels this book teaches.</p></div>",
+      "file": "How_to_Read_a_Book_-_Ch03_-_The_First_Level_of_Reading.md"
+    },
+    {
+      "chapter": 4,
+      "title": "Ch 4 - The Second Level of Reading: Inspectional Reading",
+      "summary": "Detailed guide to Level 2 Inspectional Reading: Systematic Skimming (pre-reading) and Superficial Reading. Explains how to quickly evaluate a book, grasp its structure, and read difficult material without getting stalled. Addresses speed reading, fixations, regressions, and the primacy of comprehension.",
+      "rating": "9.5",
+      "tags": [
+        "how-to-read-a-book",
+        "adler",
+        "levels-of-reading",
+        "inspectional-reading",
+        "systematic-skimming",
+        "superficial-reading",
+        "speed-reading",
+        "pkmsystem"
+      ],
+      "html": "<h1>Ch 4 - The Second Level of Reading: Inspectional Reading</h1>\n<blockquote>\n<p>“Inspectional reading is the art of getting the most out of a book in a limited time.”<br />\n— Adler &amp; Van Doren</p>\n</blockquote>\n<h2>📌 Chapter Overview</h2>\n<p><strong>Level 2: Inspectional Reading</strong> is a true, distinct level that sits between Elementary and Analytical reading. It is <strong>cumulative</strong> — it includes all of Elementary reading and prepares the ground for full Analytical reading.</p>\n<p>There are <strong>two distinct but related sub-levels</strong>:\n1. <strong>Systematic Skimming (Pre-reading)</strong>\n2. <strong>Superficial Reading</strong></p>\n<p>The goal is practical: decide quickly whether a book deserves deeper attention and get a useful overview even if you never read it analytically.</p>\n<div class=\"callout callout-abstract\"><p class=\"callout-title\">Core Idea</p><div class=\"callout-body\"><p>Inspectional reading lets you “thresh” a book — separating the nourishing kernels from the chaff — in minutes to an hour, while training you to read actively and intelligently under time pressure.</p></div></div>\n\n<hr />\n<h2>🎯 The Two Sub-Levels of Inspectional Reading</h2>\n<h3>1. Systematic Skimming / Pre-Reading</h3>\n<p><strong>Purpose</strong>: Discover the book’s subject, structure, and main contention quickly. Decide if it is worth a full analytical reading.</p>\n<div class=\"callout callout-tip\"><p class=\"callout-title\">The 6-Step Skimming Checklist</p><div class=\"callout-body\"><ol>\n<li><strong>Title Page &amp; Preface</strong> — Note subtitles, scope, and author’s angle. Place the book in a mental “pigeonhole.”</li>\n<li><strong>Table of Contents</strong> — Treat it like a road map. (Authors often put real effort into it!)</li>\n<li><strong>Index</strong> — Scan for crucial terms and look up a few key passages.</li>\n<li><strong>Dust Jacket / Publisher’s Blurb</strong> — Often written (or approved) by the author; look for honest summaries of main points.</li>\n<li><strong>Pivotal Chapters</strong> — Read opening and closing paragraphs of chapters that seem central.</li>\n<li><strong>Thumb &amp; Dip</strong> — Flip through, reading paragraphs or short sections. <strong>Always read the last 2–3 pages</strong> — authors usually summarize their key ideas here.</li>\n</ol></div></div>\n\n<div class=\"callout callout-success\"><p class=\"callout-title\">Time required</p><div class=\"callout-body\"><p>Usually 5–60 minutes. You will know the book’s type, main thesis, and whether it deserves more time.</p></div></div>\n\n<h3>2. Superficial Reading</h3>\n<p><strong>Purpose</strong>: Get through a difficult book the <strong>first time</strong> without being stopped by what you don’t immediately understand.</p>\n<div class=\"callout callout-danger\"><p class=\"callout-title\">Golden Rule of Superficial Reading</p><div class=\"callout-body\"><p><strong>Read it straight through without stopping to look up or ponder difficult passages.</strong><br />\nFocus on what you <em>can</em> understand. Keep moving. Context from later parts will illuminate earlier difficulties on a second reading.</p></div></div>\n\n<p><strong>Why this works</strong>:</p>\n<ul>\n<li>\n<p>Stopping at every hard spot kills momentum and often prevents you from ever finishing.</p>\n</li>\n<li>\n<p>Even grasping 50% on the first pass is far better than understanding nothing because you got stuck on page 10.</p>\n</li>\n<li>\n<p>Example: Reading Shakespeare or <em>The Wealth of Nations</em> — a superficial first pass preserves the whole before you study the parts.</p>\n</li>\n</ul>\n<hr />\n<p>Speed Reading, Fixations, Regressions &amp; Comprehension</p>\n<ul>\n<li>\n<p>There is no single correct speed. Master readers vary speed according to the material.</p>\n</li>\n<li>\n<p>Most speed-reading courses are remedial (fixing Elementary-level habits).</p>\n</li>\n<li>\n<p>Fixations (eyes stopping 5–6 times per line) and regressions (eyes jumping backward) are the main physical bottlenecks.</p>\n</li>\n<li>\n<p>Simple fix: Use your hand (thumb + two fingers) as a pointer and sweep it across the line slightly faster than comfortable. Practice increases speed dramatically.</p>\n</li>\n</ul>\n<div class=\"callout callout-important\"><p class=\"callout-title\">The Real Problem Speed without comprehension is worthless. Dense, important passages (e.g., first two paragraphs of the Declaration of Independence) may legitimately require reading at ~20 words per minute. Inspectional reading is fast because you read less and with different goals — not because you magically understand everything faster.</p></div>",
+      "file": "How_to_Read_a_Book_-_Ch04_-_Inspectional_Reading.md"
+    },
+    {
+      "chapter": 5,
+      "title": "Ch 5 - How to Be a Demanding Reader",
+      "summary": "Foundational chapter on becoming a truly active, demanding reader. Introduces the four universal questions that guide all higher reading, the practice of marking books for intellectual ownership, the three kinds of note-making, and how separate rules coalesce into one fluid habit of skilled reading.",
+      "rating": "9.5",
+      "tags": [
+        "how-to-read-a-book",
+        "adler",
+        "active-reading",
+        "demanding-reader",
+        "four-questions",
+        "marginalia",
+        "note-making",
+        "habit-formation",
+        "pkmsystem"
+      ],
+      "html": "<h1>Ch 5 - How to Be a Demanding Reader</h1>\n<blockquote>\n<p>“The rules for reading yourself to sleep are easier to follow than the rules for staying awake while reading.”<br />\n— Adler &amp; Van Doren</p>\n</blockquote>\n<h2>📌 Chapter Overview</h2>\n<p>To read <strong>for profit</strong> — to grow in mind and spirit — you must read <strong>actively</strong>. Staying awake is not primarily a matter of willpower or physical conditions, but of clear goals and deliberate technique. A demanding reader treats every worthwhile book as a conversation worth having and makes the effort required to profit from it.</p>\n<div class=\"callout callout-abstract\"><p class=\"callout-title\">Core Idea</p><div class=\"callout-body\"><p>Active reading means asking the right questions in the right order and answering them with a pencil in hand. Marking a book is the visible sign of this engagement and the best way to achieve intellectual ownership. With practice, the many separate rules become one graceful habit.</p></div></div>\n\n<hr />\n<h2>❓ 1. The Four Basic Questions of a Demanding Reader</h2>\n<p>The art of reading above the elementary level consists in the habit of asking <strong>the right questions in the right order</strong> and answering them as precisely as possible.</p>\n<div class=\"callout callout-tip\"><p class=\"callout-title\">The Four Universal Questions</p><div class=\"callout-body\"><ol>\n<li>\n<p><strong>What is the book about as a whole?</strong><br />\n   Discover the leading theme and how the author subdivides it into its essential subordinate topics.</p>\n</li>\n<li>\n<p><strong>What is being said in detail, and how?</strong><br />\n   Identify the main ideas, assertions, and arguments that constitute the author’s particular message.</p>\n</li>\n<li>\n<p><strong>Is the book true, in whole or in part?</strong><br />\n   You can only answer this after fully understanding the first two questions.</p>\n</li>\n<li>\n<p><strong>What of it?</strong><br />\n   What is the significance? Why does the author think it matters? What follows for you? What else is implied or suggested?</p>\n</li>\n</ol></div></div>\n\n<div class=\"callout callout-note\"><p class=\"callout-title\">Level-Specific Strength</p><div class=\"callout-body\"><ul>\n<li>\n<p><strong>Inspectional reading</strong> answers Q1–2 most effectively.  </p>\n</li>\n<li>\n<p><strong>Analytical reading</strong> completes Q1–3.  </p>\n</li>\n<li>\n<p><strong>Syntopical reading</strong> puts special weight on Q4.</p>\n</li>\n</ul></div></div>\n\n<hr />\n<h2>✏️ 2. Marking a Book: Intellectual Ownership</h2>\n<p>Full ownership of a book comes only when you have made it a part of yourself. The best way to do this is by <strong>writing in it</strong>. Marking keeps you awake, externalizes your thinking, improves memory, and turns reading into a genuine conversation with the author.</p>\n<div class=\"callout callout-success\"><p class=\"callout-title\">Why Marking Is Indispensable</p><div class=\"callout-body\"><ul>\n<li>\n<p>Keeps you <strong>wide awake</strong> rather than merely conscious.</p>\n</li>\n<li>\n<p>Forces thinking to express itself in words (if you can’t express it, you probably don’t really know it).</p>\n</li>\n<li>\n<p>Helps you remember both the author’s ideas and your own reactions.</p>\n</li>\n<li>\n<p>Is the highest form of respect you can pay an author.</p>\n</li>\n</ul></div></div>\n\n<h3>🛠️ The Seven Marking Devices</h3>\n<ol>\n<li><strong>Underlining</strong> — major points or especially forceful statements.</li>\n<li><strong>Vertical lines in the margin</strong> — to emphasize a passage too long to underline.</li>\n<li><strong>Stars / asterisks</strong> — used sparingly for the 10–12 most important statements in the whole book.</li>\n<li><strong>Numbers in the margin</strong> — to indicate the sequence of points in an argument.</li>\n<li><strong>Page numbers in the margin (“Cf. p. 213”)</strong> — to link related or contrasting ideas across the book.</li>\n<li><strong>Circling key words or phrases</strong> — to highlight central vocabulary (ties directly to coming to terms).</li>\n<li><strong>Margin notes (top, bottom, or side)</strong> — questions, brief summaries, agreements/disagreements, or running structural index.</li>\n</ol>\n<div class=\"callout callout-tip\"><p class=\"callout-title\">Endpaper Strategy</p><div class=\"callout-body\"><ul>\n<li>\n<p><strong>Back endpapers</strong>: Running personal index of main points in order of appearance.</p>\n</li>\n<li>\n<p><strong>Front endpapers</strong>: Final integrated structural outline of the whole book (written after finishing).</p>\n</li>\n</ul></div></div>\n\n<hr />\n<h2>📓 3. The Three Kinds of Note-Making</h2>\n<table>\n<thead>\n<tr>\n<th>Note Type</th>\n<th>Reading Level</th>\n<th>Primary Focus</th>\n<th>Typical Location</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><strong>Structural</strong></td>\n<td>Inspectional</td>\n<td>What kind of book? Overall theme? Structural order</td>\n<td>Title page or Table of Contents</td>\n</tr>\n<tr>\n<td><strong>Conceptual</strong></td>\n<td>Analytical</td>\n<td>Author’s ideas, truth, significance, your understanding</td>\n<td>Margins, endpapers, linked notes</td>\n</tr>\n<tr>\n<td><strong>Dialectical</strong></td>\n<td>Syntopical</td>\n<td>Shape of the discussion across multiple books</td>\n<td>Separate sheets or dedicated vault notes</td>\n</tr>\n</tbody>\n</table>\n<hr />\n<h2>⛷️ 4. Reading Is Like Skiing: From Many Rules to One Habit</h2>\n<p>Learning any complex skill feels awkward at first. You must practice the separate acts consciously until they become automatic. Only then can they fuse into one graceful, harmonious performance.</p>\n<ul>\n<li>\n<p><strong>Beginner</strong>: Pays attention to every micro-rule and feels clumsy.</p>\n</li>\n<li>\n<p><strong>Expert</strong>: Forgets the separate acts and focuses on the goal (truth, understanding, insight).</p>\n</li>\n</ul>\n<p>The initial discomfort when applying the rules of analytical reading is normal and a sign of real progress. With deliberate practice, the many rules coalesce into <strong>one integrated habit</strong> — the art of demanding reading.</p>\n<hr />\n<h2>🔗 5. Interlinking and Graph Connections</h2>\n<ul>\n<li>\n<p><span class=\"wikilink\">Ch 4 - The Second Level of Reading: Inspectional Reading</span> — Prepares the ground for the four questions</p>\n</li>\n<li>\n<p><span class=\"wikilink\">Four Questions of Reading</span> — Dedicated hub for Q1–Q4 with examples</p>\n</li>\n<li>\n<p><span class=\"wikilink\">Marginalia &amp; Note-Making</span> — Practical techniques and Obsidian mappings</p>\n</li>\n<li>\n<p><span class=\"wikilink\">Levels of Reading</span> — How the questions scale across levels</p>\n</li>\n<li>\n<p><span class=\"wikilink\">Analytical Reading MOC</span> — Full workflow integrating this chapter</p>\n</li>\n</ul>\n<hr />\n<h2>🛠️ 6. Interactive Workspace: Demanding Reader Template</h2>\n<p>Use this template every time you begin a serious reading session.</p>\n<h3>📌 Session Metadata</h3>\n<ul>\n<li>\n<p><strong>Book Title / Chapter:</strong></p>\n</li>\n<li>\n<p><strong>Date / Session:</strong></p>\n</li>\n<li>\n<p><strong>Physical or Digital Marking Used:</strong></p>\n</li>\n</ul>\n<h3>📈 The Four-Question Tracker</h3>\n<div class=\"callout callout-question\"><p class=\"callout-title\">Q1 – What is the book about as a whole?</p><div class=\"callout-body\"></div></div>\n\n<div class=\"callout callout-question\"><p class=\"callout-title\">Q2 – What is being said in detail, and how?</p><div class=\"callout-body\"><p>(List key ideas, assertions, arguments marked today)</p></div></div>\n\n<div class=\"callout callout-question\"><p class=\"callout-title\">Q3 – Is the book true, in whole or in part?</p><div class=\"callout-body\"><p>(Agreements, disagreements, and reasons)</p></div></div>\n\n<div class=\"callout callout-question\"><p class=\"callout-title\">Q4 – What of it?</p><div class=\"callout-body\"><p>(Significance, personal or theoretical implications)</p></div></div>\n\n<h3>🗂️ Marking &amp; Endpaper Check</h3>\n<ul>\n<li>\n<p>[ ] Used underlining / vertical lines / stars where appropriate</p>\n</li>\n<li>\n<p>[ ] Added numbers for argument sequences</p>\n</li>\n<li>\n<p>[ ] Made cross-references (“Cf.”)</p>\n</li>\n<li>\n<p>[ ] Back endpapers: started/updated personal index</p>\n</li>\n<li>\n<p>[ ] Front endpapers: reserved for final unified outline</p>\n</li>\n</ul>\n<hr />\n<h2>🏷 Tags</h2>\n<h1>demanding-reader #active-reading #four-questions #marginalia #note-making #habit-formation #structural-notes #conceptual-notes</h1>\n<p>```</p>",
+      "file": "How_to_Read_a_Book_-_Ch05_The_Activity_and_Art_of_Reading.md"
+    },
+    {
+      "chapter": 6,
+      "title": "Ch 6 - Pigeonholing a Book",
+      "summary": "Introduces Rule 1 of analytical reading: You must know what kind of book you are reading, and you should know this as early as possible (preferably before you begin). Covers the importance of classification, practical vs theoretical books, and the main kinds of theoretical books (history, science, philosophy).",
+      "rating": "9",
+      "tags": [
+        "how-to-read-a-book",
+        "adler",
+        "analytical-reading",
+        "rule1",
+        "classification",
+        "theoretical-vs-practical",
+        "pigeonholing",
+        "pkmsystem"
+      ],
+      "html": "<h1>Ch 6 - Pigeonholing a Book</h1>\n<blockquote>\n<p>“RULE 1. You MUST KNOW WHAT KIND OF BOOK YOU ARE READING, AND YOU SHOULD KNOW THIS AS EARLY IN THE PROCESS AS POSSIBLE, PREFERABLY BEFORE YOU BEGIN TO READ.”<br />\n— Adler &amp; Van Doren</p>\n</blockquote>\n<h2>📌 Chapter Overview</h2>\n<p>This chapter presents the <strong>first rule of analytical reading</strong>: classify the book correctly and do so as early as possible. Knowing the kind of book you are reading is essential because different kinds of books must be read in different ways.</p>\n<p>The authors emphasize that the rules for reading whole books also apply (with adaptation) to shorter materials. Classifying a book correctly prevents confusion and allows you to apply the subsequent rules intelligently.</p>\n<div class=\"callout callout-abstract\"><p class=\"callout-title\">Core Idea</p><div class=\"callout-body\"><p>Before you can read a book well, you must first know <strong>what kind</strong> of book it is. This “pigeonholing” is best done through inspectional reading (title, subtitle, preface, table of contents, blurb, index). The major distinction is between <strong>fiction</strong> and <strong>expository</strong> works, and within expository works, between <strong>theoretical</strong> and <strong>practical</strong> books.</p></div></div>\n\n<hr />\n<h2>🎯 Rule 1 – Classify the Book Early</h2>\n<p><strong>RULE 1</strong>: You must know what kind of book you are reading, and you should know this as early as possible — preferably before you begin to read.</p>\n<p><strong>Why it matters</strong>:</p>\n<ul>\n<li>\n<p>Different kinds of books demand different reading strategies.</p>\n</li>\n<li>\n<p>Misclassifying a book leads to frustration and poor comprehension.</p>\n</li>\n<li>\n<p>Correct classification lets you adapt all later rules appropriately.</p>\n</li>\n</ul>\n<hr />\n<h2>📚 Major Classifications</h2>\n<h3>1. Fiction vs. Expository Works</h3>\n<ul>\n<li>\n<p><strong>Fiction</strong> (imaginative literature): novels, plays, epics, lyrics, short stories.</p>\n</li>\n<li>\n<p><strong>Expository</strong> (nonfiction): conveys knowledge, opinions, theories, or practical guidance.</p>\n</li>\n</ul>\n<p>Most readers can spot fiction easily, but borderline cases exist (e.g., <em>Portnoy’s Complaint</em>, <em>Naked Lunch</em>, <em>The Andromeda Strain</em>).</p>\n<h3>2. Theoretical vs. Practical Books (within Expository Works)</h3>\n<table>\n<thead>\n<tr>\n<th>Type</th>\n<th>Goal</th>\n<th>Characteristic Language</th>\n<th>Examples</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><strong>Theoretical</strong></td>\n<td>To know / understand “what is”</td>\n<td>“is”, facts, explanations</td>\n<td>Physics, psychology, philosophy, history</td>\n</tr>\n<tr>\n<td><strong>Practical</strong></td>\n<td>To guide action (“how to”)</td>\n<td>“should”, “ought”, “good/bad”, ends &amp; means</td>\n<td>Ethics, politics, economics, manuals, this book</td>\n</tr>\n</tbody>\n</table>\n<p><strong>Key distinction</strong>:</p>\n<ul>\n<li>\n<p>Theoretical books teach <strong>that</strong> something is the case.</p>\n</li>\n<li>\n<p>Practical books teach <strong>how</strong> to do something or how one <strong>ought</strong> to act.</p>\n</li>\n</ul>\n<p><strong>Signs in the text</strong>:</p>\n<ul>\n<li>\n<p>Practical books frequently use “should/ought,” “good/bad,” “ends,” “means.”</p>\n</li>\n<li>\n<p>Theoretical books emphasize “is,” facts, and explanations.</p>\n</li>\n</ul>\n<p><strong>Examples</strong>:</p>\n<ul>\n<li>\n<p>Kant’s <em>Critique of Pure Reason</em> → theoretical</p>\n</li>\n<li>\n<p>Kant’s <em>Critique of Practical Reason</em> → practical</p>\n</li>\n<li>\n<p>This book (<em>How to Read a Book</em>) → practical (it teaches an art)</p>\n</li>\n</ul>\n<hr />\n<h2>🧩 Kinds of Theoretical Books</h2>\n<p>The traditional subdivision of theoretical books:</p>\n<ul>\n<li>\n<p><strong>History</strong> — narrative of particular events in time and place (chronotopic).</p>\n</li>\n<li>\n<p><strong>Science</strong> — seeks general laws; relies on special experience (experiments, observations beyond everyday life).</p>\n</li>\n<li>\n<p><strong>Philosophy</strong> — seeks general truths using common, everyday human experience (armchair thinking).</p>\n</li>\n</ul>\n<p><strong>How to tell science from philosophy</strong>:</p>\n<ul>\n<li>\n<p>Science refers to <strong>special experience</strong> (lab experiments, field observations) that most readers have not had.</p>\n</li>\n<li>\n<p>Philosophy appeals only to <strong>common experience</strong> that any thoughtful person can verify.</p>\n</li>\n</ul>\n<p><strong>Examples</strong>:</p>\n<ul>\n<li>\n<p>Darwin’s <em>The Origin of Species</em> → science (field observations)</p>\n</li>\n<li>\n<p>Locke’s <em>Essay Concerning Human Understanding</em> → philosophy (common mental experience)</p>\n</li>\n<li>\n<p>William James’ <em>Principles of Psychology</em> → both</p>\n</li>\n</ul>\n<hr />\n<h2>🔍 How to Classify a Book (Practical Method)</h2>\n<ol>\n<li><strong>Inspectional reading signals</strong>:</li>\n</ol>\n<ul>\n<li>\n<p>Title and subtitle</p>\n</li>\n<li>\n<p>Preface / introduction</p>\n</li>\n<li>\n<p>Table of contents</p>\n</li>\n<li>\n<p>Dust jacket blurb</p>\n</li>\n<li>\n<p>Index</p>\n</li>\n<li>\n<p>Chapter headings</p>\n</li>\n</ul>\n<ol start=\"2\">\n<li><strong>Look for revealing words</strong>:</li>\n</ol>\n<ul>\n<li>\n<p>“How to…”, “The Art of…” → practical</p>\n</li>\n<li>\n<p>“Should / ought / good / bad / ends / means” → practical</p>\n</li>\n<li>\n<p>“Is / facts / laws / principles” → theoretical</p>\n</li>\n</ul>\n<ol start=\"3\">\n<li><strong>Check the kind of experience appealed to</strong>:</li>\n</ol>\n<ul>\n<li>\n<p>Everyday common experience → philosophy</p>\n</li>\n<li>\n<p>Special / experimental experience → science</p>\n</li>\n</ul>\n<hr />\n<h2>📍 Connections to Other Chapters</h2>\n<ul>\n<li>\n<p><strong>Ch 4</strong> → Inspectional reading is the best tool for early classification</p>\n</li>\n<li>\n<p><strong>Ch 5</strong> → The four questions begin with Q1: “What is the book about as a whole?” — classification helps answer it</p>\n</li>\n<li>\n<p><strong>Ch 9–11</strong> → Analytical reading builds directly on correct pigeonholing</p>\n</li>\n<li>\n<p><strong>Ch 14–15</strong> → Adaptations for fiction and poetry</p>\n</li>\n</ul>\n<hr />\n<h2>🗂 Related MOCs &amp; Wikilinks</h2>\n<ul>\n<li>\n<p><span class=\"wikilink\">Analytical Reading MOC</span></p>\n</li>\n<li>\n<p><span class=\"wikilink\">How to Read a Book MOC</span></p>\n</li>\n<li>\n<p><span class=\"wikilink\">Four Questions of Reading</span></p>\n</li>\n<li>\n<p><span class=\"wikilink\">Theoretical vs Practical Books</span></p>\n</li>\n<li>\n<p><span class=\"wikilink\">Rule 1 - Classifying Books</span></p>\n</li>\n<li>\n<p><span class=\"wikilink\">Ch 5 - How to Be a Demanding Reader</span></p>\n</li>\n<li>\n<p><span class=\"wikilink\">Ch 4 - The Second Level of Reading: Inspectional Reading</span></p>\n</li>\n</ul>\n<hr />\n<h2>📝 My Personal Notes &amp; Reflections</h2>\n<ul>\n<li>\n<p>Rule 1 is deceptively simple but extremely powerful. Misclassifying a book (e.g., treating a practical ethics book as pure theory) leads to wasted effort or wrong expectations.</p>\n</li>\n<li>\n<p>The theoretical vs practical distinction clarified why this book feels different from pure philosophy or science texts.</p>\n</li>\n<li>\n<p>Direct application to our macroeconomics text: It is primarily <strong>theoretical</strong> (explains general equilibrium, aggregates, etc.) but contains practical implications for policy. Recognizing this early helped us adjust our questioning.</p>\n</li>\n<li>\n<p>Titles can be misleading — careful inspectional reading of front matter prevents many mistakes.</p>\n</li>\n</ul>\n<div class=\"callout callout-success\"><p class=\"callout-title\">My Updated Habit</p><div class=\"callout-body\"><p>Before diving into any new book I now force myself to answer:</p>\n<ul>\n<li>\n<p>Fiction or expository?</p>\n</li>\n<li>\n<p>If expository: theoretical or practical?</p>\n</li>\n<li>\n<p>If theoretical: history, science, or philosophy?</p>\n</li>\n</ul></div></div>\n\n<hr />\n<h2>🏷 Tags</h2>\n<h1>rule1 #pigeonholing #classification #theoretical-vs-practical #history-science-philosophy #analytical-reading #adler</h1>\n<p>```</p>",
+      "file": "How_to_Read_a_Book_-_Ch06_-_Pigeonholing_a_Book.md"
+    },
+    {
+      "chapter": 7,
+      "title": "Ch 7 - X-Raying a Book",
+      "summary": "The first stage of analytical reading: X-raying a book to discover its skeleton. Introduces Rules 2–4 — stating the unity of the whole book in a sentence or short paragraph, outlining its major parts and how they relate to the unity, and discovering the author’s main problems and intended solutions.",
+      "rating": "9.5",
+      "tags": [
+        "how-to-read-a-book",
+        "adler",
+        "analytical-reading",
+        "rules2-4",
+        "x-raying",
+        "structural-outline",
+        "unity-of-book",
+        "pkmsystem"
+      ],
+      "html": "<h1>Ch 7 - X-Raying a Book</h1>\n<blockquote>\n<p>“Every book has a skeleton hidden between its covers. Your job as a reader is to find it.”  </p>\n</blockquote>\n<h2>📌 Chapter Overview</h2>\n<p>This chapter develops the <strong>first stage of analytical reading</strong> beyond mere inspectional skimming: <strong>X-raying</strong> a book to expose its underlying structure.[file:1] To X-ray a book is to see through the surface details to the <strong>unity of the whole</strong>, its <strong>major articulated parts</strong>, and the <strong>problems</strong> the author is trying to solve.[file:1]</p>\n<p>Adler likens a well-constructed book to a well-built house in which each room and floor has a place and function within an ordered whole.[file:1] The reader’s task is to perceive this order so clearly that he can restate it independently of the author’s sequence of words.[file:1]</p>\n<div class=\"callout callout-abstract\"><p class=\"callout-title\">Core Idea</p><div class=\"callout-body\"><p>X-raying a book = discovering its <strong>skeleton</strong> by applying <strong>Rules 2–4</strong>:  </p>\n<ul>\n<li>\n<p>State the book’s unity.  </p>\n</li>\n<li>\n<p>Outline its major parts and their order.  </p>\n</li>\n<li>\n<p>Identify the main problems the author tackles and the solutions proposed.[file:1]</p>\n</li>\n</ul></div></div>\n\n<hr />\n<h2>🎯 Rules 2–4: The First Stage of Analytical Reading</h2>\n<h3>Rule 2 – State the Unity of the Whole Book</h3>\n<div class=\"callout callout-tip\"><p class=\"callout-title\">Rule 2 – Unity</p><div class=\"callout-body\"><p>Grasp and express the <strong>unity</strong> of the book in <strong>one sentence</strong> or, at most, a short paragraph.[file:1]</p></div></div>\n\n<p>Rule 2 requires you to answer the question: <strong>“What is this book about as a whole?”</strong> in a way that captures its central line of thought rather than merely listing topics.[file:1] Adler notes that some authors help by explicitly stating their main theme in the preface, but when they do not, the reader must infer it from a first, rapid reading.[file:1]</p>\n<p><strong>Practice prompts</strong>:</p>\n<ul>\n<li>\n<p>“In one sentence: this book is trying to show that…”  </p>\n</li>\n<li>\n<p>“If I had to explain this book to an intelligent friend in 30 seconds, I would say…”</p>\n</li>\n</ul>\n<hr />\n<h3>Rule 3 – Outline the Major Parts</h3>\n<div class=\"callout callout-tip\"><p class=\"callout-title\">Rule 3 – Major Parts & Order</p><div class=\"callout-body\"><p>Set forth the <strong>major parts</strong> of the book, show how they are <strong>ordered</strong>, and explain how each contributes to the unity of the whole.[file:1]</p></div></div>\n\n<p>Rule 3 answers: <strong>“How is this book put together?”</strong> A good book is an <strong>orderly arrangement of parts</strong>, not a heap of miscellaneous remarks.[file:1] The reader must identify the principal divisions, then subordinate divisions, until the structure is clear enough to reproduce in his own outline.[file:1]</p>\n<p><strong>Practical method</strong>:</p>\n<ul>\n<li>\n<p>Use the table of contents and headings as a <strong>hypothesis</strong> about structure, then refine it as you read.[file:1]</p>\n</li>\n<li>\n<p>For each major part, write a brief statement of what it is about and how it furthers the main aim discovered under Rule 2.[file:1]</p>\n</li>\n<li>\n<p>Stop subdivision once additional breakdown no longer clarifies the argument but only inventories details.[file:1]</p>\n</li>\n</ul>\n<hr />\n<h3>Rule 4 – Discover the Author’s Problems (and Solutions)</h3>\n<div class=\"callout callout-tip\"><p class=\"callout-title\">Rule 4 – Problems & Questions</p><div class=\"callout-body\"><p>Discover what <strong>problems</strong> the author is trying to solve and, later, what <strong>solutions</strong> he offers.[file:1]</p></div></div>\n\n<p>Rule 4 treats every expository book as an <strong>attempted answer</strong> to one or more questions; to understand it structurally, you must know which questions those are.[file:1] Adler suggests that sometimes the author explicitly states his questions, but often they must be inferred by asking “What would disappear if this book had never been written?”[file:1]</p>\n<p>At this stage you focus on <strong>identifying the problems</strong>, leaving full evaluation of the adequacy of the solutions to later stages of analytical reading and to syntopical reading.[file:1]</p>\n<hr />\n<h2>🧩 Visual Summary – X-Raying a Book (Rules 2–4)</h2>\n<div class=\"mermaid\">flowchart TD\n    A[\"X-Raying a Book\\nFirst Stage of Analytical Reading\"] --> B[\"Rule 2\\nState the Unity\"]\n    A --> C[\"Rule 3\\nOutline Major Parts\"]\n    A --> D[\"Rule 4\\nDiscover Problems\"]\n\n    B --> E[\"What is the book\\nabout as a whole?\"]\n    C --> F[\"How are the main parts\\nordered and related?\"]\n    D --> G[\"Which questions or\\nproblems is the author answering?\"]\n\n    style A fill:#99ccff,stroke:#333</div>\n<p>Analogy: Just as an X-ray reveals the <strong>skeleton</strong> beneath the flesh, Rules 2–4 reveal the book’s <strong>logical architecture</strong> beneath its surface examples, anecdotes, and rhetorical flourishes.[file:1]</p>\n<hr />\n<h2>🔗 Connections to Other Chapters</h2>\n<ul>\n<li>\n<p><span class=\"wikilink\">Ch 4 - The Second Level of Reading: Inspectional Reading</span> – provides the rapid survey needed to form first guesses about unity and structure.[file:1]</p>\n</li>\n<li>\n<p><span class=\"wikilink\">Ch 5 - How to Be a Demanding Reader</span> – Question 1 (“What is the book about as a whole?”) directly corresponds to Rule 2.[file:1]</p>\n</li>\n<li>\n<p><span class=\"wikilink\">Ch 6 - Pigeonholing a Book</span> – Rule 1 (classifying the kind of book) must precede X-raying; you outline <em>this</em> kind of book, not another.[file:1]</p>\n</li>\n<li>\n<p><span class=\"wikilink\">Ch 8 - Coming to Terms with an Author</span> &amp; <span class=\"wikilink\">Ch 9 - Determining an Author's Message</span> – the second stage (terms, propositions, arguments) presupposes that you already know the book’s structural skeleton.[file:1]</p>\n</li>\n<li>\n<p>Later chapters on criticism and syntopical reading assume you can first <strong>see the structure</strong> before you judge or compare it.[file:1]</p>\n</li>\n</ul>\n<hr />\n<h2>🗂 Related MOCs &amp; Wikilinks</h2>\n<ul>\n<li>\n<p><span class=\"wikilink\">Analytical Reading MOC</span></p>\n</li>\n<li>\n<p><span class=\"wikilink\">How to Read a Book MOC</span></p>\n</li>\n<li>\n<p><span class=\"wikilink\">Rules of Analytical Reading</span></p>\n</li>\n<li>\n<p><span class=\"wikilink\">Structural Outline Technique</span></p>\n</li>\n<li>\n<p><span class=\"wikilink\">Four Questions of Reading</span></p>\n</li>\n<li>\n<p><span class=\"wikilink\">Ch 6 - Pigeonholing a Book</span></p>\n</li>\n<li>\n<p><span class=\"wikilink\">Ch 5 - How to Be a Demanding Reader</span></p>\n</li>\n</ul>\n<hr />\n<h2>📝 My Personal Notes &amp; Reflections</h2>\n<ul>\n<li>\n<p>“X‑raying” locks in the habit of seeing books as <strong>architectures of thought</strong> instead of linear streams of text.  </p>\n</li>\n<li>\n<p>Rule 2 (unity in one sentence) is a brutal but revealing test of whether I actually understand the book or have merely accumulated impressions.  </p>\n</li>\n<li>\n<p>Rule 3 turns the table of contents into an <strong>active map</strong> rather than a passive front matter artifact.  </p>\n</li>\n<li>\n<p>Rule 4 draws attention to the author’s <strong>problems and questions</strong>, which often clarifies why the book exists at all and why its sequence of parts makes sense.</p>\n</li>\n</ul>\n<div class=\"callout callout-success\"><p class=\"callout-title\">My Updated Habit</p><div class=\"callout-body\"><p>After inspectional reading, I now:\n1. Draft a one‑sentence unity statement (Rule 2).<br />\n2. Build a hierarchical outline of major parts and key subsections (Rule 3).<br />\n3. List the central questions or problems the author is addressing (Rule 4).<br />\nOnly then do I proceed to detailed work on terms, propositions, and arguments.</p></div></div>",
+      "file": "How_to_Read_a_Book_-_Ch07_-_X-Raying_A_Book.md"
+    },
+    {
+      "chapter": 8,
+      "title": "Ch 8: Coming to Terms with an Author",
+      "summary": "",
+      "rating": "",
+      "tags": [],
+      "html": "<h1>📖 Ch 8: Coming to Terms with an Author</h1>\n<h1>adler #analytical-reading #interpretation #terms-vs-words #grammar-and-logic #book-notes</h1>\n<div class=\"callout callout-abstract\"><p class=\"callout-title\">Adler-Style One-Sentence Unity</p><div class=\"callout-body\"><p>To interpret a book’s content, the reader must master the second stage of analytical reading by applying Rule 5: locating the author's key words and tunneling through the language barrier to determine precisely how the author is using them unambiguously in context—thereby converting ambiguous words into shared, communicable terms.</p></div></div>\n\n<hr />\n<h2>🧭 Applying the Four Levels to This Chapter</h2>\n<h3>🟢 Level 1 – Elementary Reading</h3>\n<ul>\n<li><strong>Status:</strong> Passed. The language is introductory expository prose, though it tackles abstract concepts.</li>\n</ul>\n<h3>🟡 Level 2 – Inspectional Reading</h3>\n<ul>\n<li>\n<p><strong>Time Spent:</strong> ~10-15 minutes.</p>\n</li>\n<li>\n<p><strong>Actions:</strong> Skimmed headings (Words vs. Terms, Finding Key Words, Technical Vocab, Finding Meanings). Noted the schematic illustration ($Xa, Xb, Xc$).</p>\n</li>\n<li>\n<p><strong>Surface Answer:</strong> An instructional chapter teaching the <strong>first rule of interpretive reading</strong>: how to find and define the author's core terminology.</p>\n</li>\n</ul>\n<hr />\n<h2>🔴 Level 3 – Analytical Reading (The X-Ray)</h2>\n<h4>1. What is this chapter about as a whole? (Unity)</h4>\n<p>Successful communication between author and reader requires \"coming to terms,\" which means overcoming the inherent ambiguity of language. The reader must actively locate the author's most important words—often the ones that cause the most trouble—and use the surrounding context to discover the precise, unambiguous meaning (the <em>term</em>) the author has assigned to them.</p>\n<h4>2. Outline &amp; Details</h4>\n<p><strong>Part A: The Goal – Coming to Terms</strong></p>\n<ul>\n<li>\n<p>Stage 1 of Analytical Reading (Ch 6-7) was about structure (the skeleton). Stage 2 is about interpretation (the message).</p>\n</li>\n<li>\n<p><strong>Communication</strong> succeeds only when it results in a \"common something\"—a shared thought. This miracle requires both parties to use the same words with the same meanings.</p>\n</li>\n<li>\n<p><strong>Rule 5:</strong> Find the important words and through them come to terms with the author.</p>\n</li>\n</ul>\n<p><strong>Part B: Words vs. Terms</strong></p>\n<ul>\n<li>\n<p><strong>Words</strong> are ambiguous; they have many meanings in the dictionary.</p>\n</li>\n<li>\n<p><strong>Terms</strong> are words <em>used unambiguously</em>. They occur only during communication when a writer and reader agree on a single meaning for a word for a time.</p>\n</li>\n<li>\n<p><em>The Master Distinction:</em> One word can be the vehicle for many terms, and one term can be expressed by many words (synonyms).</p>\n</li>\n</ul>\n<p><strong>Part C: Locating the Key Words</strong></p>\n<ul>\n<li>\n<p>Most words in a book are used in an ordinary way. You only need to spot the ones used specially.</p>\n</li>\n<li>\n<p><strong>Positive Signs:</strong> Typographical stress (italics, quotes), explicit definitions, or the author quarreling with other writers about a word's meaning.</p>\n</li>\n<li>\n<p><strong>Negative Sign (The Paradox):</strong> The words that give you the most trouble are often the author's most important terms. You must mark and ponder them.</p>\n</li>\n</ul>\n<p><strong>Part D: Finding the Meanings</strong></p>\n<ul>\n<li>\n<p>How do you find the meaning of a strange word? You must use the meanings of all the <em>other</em> words in the context that you <em>do</em> understand.</p>\n</li>\n<li>\n<p>This is like a <strong>jigsaw puzzle</strong>: each word put into place (becoming a term) makes the next adjustment easier.</p>\n</li>\n</ul>\n<h4>3. Critique (Agreement &amp; Reservations)</h4>\n<ul>\n<li>\n<p>✅ <strong>Strengths:</strong> The distinction between an author's <em>vocabulary</em> (words) and <em>terminology</em> (terms) is crucial for deep reading. The emphasis on reciprocity (reading and writing are two sides of the same tunnel) is helpful.</p>\n</li>\n<li>\n<p>⚠️ <strong>Reservations:</strong> Adler admits this is hard. Tunneling through ambiguity can be intimidating on complex philosophical or scientific texts, and his \"trial-and-error\" method requires significant patience that some readers lack.</p>\n</li>\n</ul>\n<h4>4. Implications (So What?)</h4>\n<ul>\n<li><strong>Reading is Active:</strong> The undemanding reader is inattentive to words and fails to come to terms. activo reading demands relentless attention to linguistic shifts to gain understanding.</li>\n</ul>\n<hr />\n<h2>📊 Grammar vs. Logic: The Linguistic Barrier</h2>\n<table>\n<thead>\n<tr>\n<th><strong>The Step</strong></th>\n<th><strong>Deals With (Medium)</strong></th>\n<th><strong>The Art Involved</strong></th>\n<th><strong>Goal of Rule 5</strong></th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><strong>I. Grammatical</strong></td>\n<td><strong>Words</strong> (Language as it is: ambiguous, multiple meanings).</td>\n<td>Grammar</td>\n<td>Spot the important words that \"make a difference.\"</td>\n</tr>\n<tr>\n<td><strong>II. Logical</strong></td>\n<td><strong>Terms</strong> (Words used unambiguously; single thoughts).</td>\n<td>Logic</td>\n<td>Determine the <em>precise</em> meaning the author is using in context.</td>\n</tr>\n</tbody>\n</table>\n<hr />\n<h3>🧩 The Jigsaw Analogy</h3>\n<ul>\n<li>\n<p><strong>The Problem:</strong> A new book is like a jumbled puzzle. Many words are ambiguous and not yet \"in place.\"</p>\n</li>\n<li>\n<p><strong>The Process:</strong> You operate with the meanings you already possess (familiar words). Each strange word you manage to fix in place—identifying it as a defined term—clarifies the surrounding picture.</p>\n</li>\n<li>\n<p><strong>The Goal:</strong> Tunnel through from your side of the mountain until your mind meets the author's mind in a \"common thought.\"</p>\n</li>\n</ul>\n<hr />\n<h2>✨ Key Quotes to Highlight</h2>\n<div class=\"callout callout-quote\"><p class=\"callout-title\">The Definition of a Term</p><div class=\"callout-body\"><p><em>\"A term can be defined as an unambiguous word. That is not quite accurate... a term is a word used unambiguously.\"</em></p></div></div>\n\n<div class=\"callout callout-quote\"><p class=\"callout-title\">The Paradox of Key Words</p><div class=\"callout-body\"><p><em>\"From your point of view as a reader, therefore, the most important words are those that give you trouble. It is likely that these words are important for the author as well.\"</em></p></div></div>\n\n<div class=\"callout callout-quote\"><p class=\"callout-title\">On Definitions</p><div class=\"callout-body\"><p><em>\"You acquire meanings... [by] using the meanings of all the other words in the context that you do understand.\"</em></p></div></div>\n\n<hr />\n<h2>🧠 Personal Applications (2026 Context)</h2>\n<ul>\n<li><strong>Obsidian Terminologies:</strong> When dropping a new book into your vault, don't just capture quotes. Create a dedicated section in your book note called <code>## Key Terminology</code>. List the author's most crucial vocabulary ($Word$) and then use their own words (from definitions or context) to define the $Term$. This converts passive highlights into active knowledge capture.</li>\n</ul>\n<hr />\n<h2>🔗 Related Notes in Vault</h2>\n<ul>\n<li>\n<p><span class=\"wikilink\">How to Read a Book - Ch07 - X-Raying a Book</span></p>\n</li>\n<li>\n<p><span class=\"wikilink\">The Art of Marginalia</span></p>\n</li>\n<li>\n<p><span class=\"wikilink\">Active Reading Techniques</span></p>\n</li>\n<li>\n<p><span class=\"wikilink\">Grammar vs Logic</span></p>\n</li>\n</ul>",
+      "file": "How_to_Read_a_Book_-_Ch08_-_Coming_to_Terms_with_an_Author.md"
+    },
+    {
+      "chapter": 9,
+      "title": "Chapter 9: Determining an Author's Message",
+      "summary": "",
+      "rating": "",
+      "tags": [
+        "[reading, analytical-reading, how-to-read-a-book, logic, grammar]"
+      ],
+      "html": "<h1>Chapter 9: Determining an Author's Message</h1>\n<h2>1. Conceptual Overview &amp; The Two Layers</h2>\n<p>Adler distinguishes between the <strong>grammatical layer</strong> (units of language) and the <strong>logical layer</strong> (units of thought or knowledge). Sentences and paragraphs are things you see on the page; propositions and arguments are what those sentences and paragraphs mean as judgments and reasons.</p>\n<p>Because language is an imperfect medium, there is never a strict one-to-one mapping between grammar and logic: one sentence can contain multiple propositions, and one proposition can be expressed in many different sentences. The task of the analytical reader is to penetrate the surface of words, sentences, and paragraphs in order to grasp terms, propositions, and arguments as elements of thought.</p>\n<h3>📊 Grammatical vs. Logical Units</h3>\n<table>\n<thead>\n<tr>\n<th style=\"text-align: left;\">Grammatical (Language)</th>\n<th style=\"text-align: left;\">Logical (Thought)</th>\n<th style=\"text-align: left;\">Relationship for the Reader</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td style=\"text-align: left;\"><strong>Words</strong></td>\n<td style=\"text-align: left;\"><span class=\"wikilink\">Terms</span></td>\n<td style=\"text-align: left;\">One word can express several terms; one term can be expressed by several different words.</td>\n</tr>\n<tr>\n<td style=\"text-align: left;\"><strong>Sentences</strong></td>\n<td style=\"text-align: left;\"><span class=\"wikilink\">Propositions</span></td>\n<td style=\"text-align: left;\">Not every sentence expresses a proposition (questions, wishes, commands do not), and a single complex sentence may contain several distinct propositions.</td>\n</tr>\n<tr>\n<td style=\"text-align: left;\"><strong>Paragraphs</strong></td>\n<td style=\"text-align: left;\"><span class=\"wikilink\">Arguments</span></td>\n<td style=\"text-align: left;\">Arguments usually require multiple sentences or even multiple paragraphs, and may be spread out rather than confined to a single visible block of text.</td>\n</tr>\n</tbody>\n</table>\n<div class=\"callout callout-important\"><p class=\"callout-title\">Key Orientation</p><div class=\"callout-body\"><p>The active reader must attend simultaneously to grammatical units (what is literally written) and logical units (what is actually being asserted or inferred) in order to grasp an author's message.</p></div></div>\n\n<hr />\n<h2>2. Rule 6: Propositions (Key Sentences &amp; Judgments)</h2>\n<div class=\"callout callout-abstract\"><p class=\"callout-title\">Rule 6 — Core Formula</p><div class=\"callout-body\"><p><strong>Mark the most important sentences in a book and discover the propositions they contain.</strong></p></div></div>\n\n<p>Adler defines a proposition as an author's judgment: an affirmation of something as true or a denial of something as false. These are expressed in declarative sentences, not in questions, wishes, or mere statements of intention.</p>\n<h3>2.1 Distinguishing Sentences from Propositions</h3>\n<p>Not every sentence expresses a proposition:</p>\n<ul>\n<li>\n<p><strong>Questions</strong> state problems rather than answers.</p>\n</li>\n<li>\n<p><strong>Wishes and intentions</strong> reveal purposes but not the knowledge being expounded.</p>\n</li>\n</ul>\n<p>Even when sentences are declarative, they may express:</p>\n<ul>\n<li>\n<p>Multiple propositions (compound or highly complex sentences).</p>\n</li>\n<li>\n<p>Different propositions on different occasions if key terms shift meaning.</p>\n</li>\n</ul>\n<div class=\"callout callout-example\"><p class=\"callout-title\">Parsing a Complex Sentence (Machiavelli's *The Prince*)</p><div class=\"callout-body\"><p>Adler analyzes a single complex sentence from Machiavelli to show it contains three distinct propositions: \n1. A prince should inspire fear in a certain way.\n2. He can endure being feared as long as he is not hated.\n3. He avoids hatred by refraining from taking his subjects’ property and women.</p>\n<p><em>Unless you separate these, you cannot make a discriminating judgment to agree or disagree with the author.</em></p></div></div>\n\n<div class=\"callout callout-tip\"><p class=\"callout-title\">How to Apply Rule 6 While Reading</p><div class=\"callout-body\"><ol start=\"4\">\n<li><strong>Identify the most important sentences</strong> — those that carry the main weight of the author's teaching or cause you the most perplexity.</li>\n<li><strong>Extract the propositions</strong> by unpacking compound constructions (<em>\"and,\" \"if...then,\" \"not only...but also,\" \"because,\" \"therefore\"</em>).</li>\n<li><strong>Rephrase each proposition</strong> in your own clear, minimal wording.</li>\n<li><strong>Notice shifts in terms</strong> where the same sentence might mean something different in another context.</li>\n</ol></div></div>\n\n<hr />\n<h2>3. Rule 7: Arguments (Constructing the Author’s Reasoning)</h2>\n<div class=\"callout callout-abstract\"><p class=\"callout-title\">Rule 7 — Core Formula</p><div class=\"callout-body\"><p><strong>Locate or construct the basic arguments in the book by finding them in the connection of sentences.</strong></p></div></div>\n\n<p>An argument is a set or series of statements in which some provide the reasons for a conclusion. The author’s propositions are mere opinions unless they are supported by arguments that show <em>why</em> the reader ought to be persuaded.</p>\n<h3>3.1 Why Arguments $\\neq$ Paragraphs</h3>\n<p>Adler explicitly warns that arguments do not always coincide with single paragraphs. </p>\n<div class=\"callout callout-warning\"><p class=\"callout-title\">Structural Pitfall</p><div class=\"callout-body\"><p>The worst mistake is to assume a one-to-one mapping between paragraphs and arguments. Arguments are logical structures that may cut across multiple paragraphs or be compressed into a single compound sentence.</p></div></div>\n\n<h3>3.2 Constructing Arguments from Sentences</h3>\n<ol>\n<li><strong>Look for indicator words:</strong> <em>\"Because,\" \"since,\" \"if...then,\" \"therefore,\" \"it follows that,\" \"for this reason.\"</em></li>\n<li><strong>Separate Premises from Conclusions:</strong> Premises are the grounds; conclusions are what you are being asked to accept.</li>\n<li><strong>Check for Validity:</strong> A valid argument is one where the conclusion follows from the premises, even if the premises themselves are factually false.</li>\n</ol>\n<div class=\"callout callout-example\"><p class=\"callout-title\">Micro-Outline of an Argument (Adler's logic)</p><div class=\"callout-body\"><ul>\n<li>\n<p><strong>Premise A:</strong> Adults no longer in school must continue learning on their own.</p>\n</li>\n<li>\n<p><strong>Premise B:</strong> To continue learning on their own, they must learn from books (absent teachers).</p>\n</li>\n<li>\n<p><strong>Conclusion:</strong> Therefore, they must know how to make books teach them well (analytical reading).</p>\n</li>\n</ul></div></div>\n\n<hr />\n<h2>4. The Two “Acid Tests” for Escaping Verbalism</h2>\n<p>Adler is deeply concerned with <strong>verbalism</strong>—the bad habit of parroting an author's words without digesting the thought. To ensure you have actually understood a proposition, apply these two tests:</p>\n<div class=\"callout callout-quote\"><p class=\"callout-title\">The Two Tests of Understanding</p><div class=\"callout-body\"><ol>\n<li><strong>Translation:</strong> Can you restate the author’s key propositions and arguments in your own words without losing the meaning? If you must use their exact words, you only grasp the vocabulary, not the mind.</li>\n<li><strong>Exemplification:</strong> Can you provide concrete, real-world examples (or imagine a possible case) that illustrate the proposition or structure of the argument? </li>\n</ol></div></div>\n\n<div class=\"callout callout-tip\"><p class=\"callout-title\">Practical Use</p><div class=\"callout-body\"><p>After identifying a key sentence and extracting its propositions (Rule 6), apply these two tests before you decide whether you agree or disagree. This ensures you are critiquing the author’s actual view, not a misunderstanding.</p></div></div>\n\n<hr />\n<h2>5. Interlinking and Graph Connections</h2>\n<ul>\n<li>\n<p><span class=\"wikilink\">How to Read a Book – Overview</span></p>\n</li>\n<li>\n<p><span class=\"wikilink\">Analytical Reading Stage 1</span> – Structural outline (Rules 1–4) that meets Chapter 9 at the level of propositions and arguments.</p>\n</li>\n<li>\n<p><span class=\"wikilink\">Analytical Reading Stage 2</span> – Content interpretation: terms, propositions, arguments, solutions (Rules 5–8).</p>\n</li>\n<li>\n<p><span class=\"wikilink\">Active Reading</span> – Habits of marking, questioning, and summarizing that operationalize Rules 6 and 7.</p>\n</li>\n<li>\n<p><span class=\"wikilink\">Syntax vs Logic</span> – The distinction between grammatical form (sentences, paragraphs) and logical form (propositions, arguments).</p>\n</li>\n<li>\n<p><span class=\"wikilink\">Terms, Propositions, and Arguments</span> – Local node for Chapter 8–9 distinctions.</p>\n</li>\n<li>\n<p><span class=\"wikilink\">Verbalism and Understanding</span> – Notes focused on Adler’s “acid tests” and the problem of parroting.</p>\n</li>\n</ul>\n<hr />\n<h2>6. Interactive Active-Reading Workspace (Chapter 9 Practice)</h2>\n<p>Use this template to practice applying Chapter 9 to any expository text you are currently reading.</p>\n<h3>📌 Work Item Metadata</h3>\n<ul>\n<li><strong>Source Title:</strong> * <strong>Author:</strong> * <strong>Edition / Pages:</strong> * <strong>Context in my reading project:</strong> <span class=\"wikilink\">Active Reading</span> · <span class=\"wikilink\">Analytical Reading Stage 2</span></li>\n</ul>\n<h3>🔍 Step 1 – Identify the Key Sentence (Rule 6)</h3>\n<ul>\n<li><strong>Quoted Sentence:</strong> * <strong>Why it is important:</strong> * <strong>Indicators present</strong> (<em>because, therefore, and, if...then</em>): </li>\n</ul>\n<h3>🧬 Step 2 – Extract the Propositions (Judgments)</h3>\n<ul>\n<li><strong>Proposition 1:</strong> * <strong>Proposition 2:</strong> * <strong>Proposition 3:</strong> ### 🗣️ Step 3 – Translation Test (Anti-Verbalism #1)</li>\n</ul>\n<div class=\"callout callout-question\"><p class=\"callout-title\">My Own Words Translation</p><div class=\"callout-body\"><ul>\n<li>\n<p><strong>P1 Translation:</strong> &gt; * <strong>P2 Translation:</strong> ### 🌍 Step 4 – Exemplification Test (Anti-Verbalism #2)\n[!example] Real-World Example</p>\n</li>\n<li>\n<p><strong>Concrete Example:</strong> &gt; * <strong>Counter-example/Limiting Case:</strong> ### 📐 Step 5 – Locate or Construct the Argument (Rule 7)</p>\n</li>\n</ul></div></div>\n\n<ul>\n<li>\n<p><strong>Location in text (Pages/Paragraphs):</strong> * <strong>Premise 1:</strong> * <strong>Premise 2:</strong> * <strong>Conclusion:</strong> * <strong>Reconstructed argument in standard form:</strong></p>\n</li>\n<li>\n<p>$P1$</p>\n</li>\n<li>\n<p>$P2$</p>\n</li>\n<li>\n<p>$\\therefore C$</p>\n</li>\n</ul>\n<h3>🏁 Step 6 – Reflective Checkpoint</h3>\n<ul>\n<li>\n<p>Do I genuinely understand the author’s message at this point? Why / why not?</p>\n</li>\n<li>\n<p><strong>Next Action:</strong> (e.g., Proceed to criticism, or re-read section to clarify terms).</p>\n</li>\n</ul>",
+      "file": "How_to_Read_a_Book_-_Ch09_-_Determining_an_Author_s_Message.md"
+    },
+    {
+      "chapter": 10,
+      "title": "Chapter 10: Criticizing a Book Fairly",
+      "summary": "",
+      "rating": "",
+      "tags": [
+        "[reading, analytical-reading, how-to-read-a-book, rhetoric, criticism]"
+      ],
+      "html": "<h1>Chapter 10: Criticizing a Book Fairly</h1>\n<h2>🌌 1. The Conversational Nature of Reading</h2>\n<p>Reading is a delayed conversation where the author speaks first, and the reader has the final word. </p>\n<ul>\n<li>\n<p><strong>Teachability:</strong> Not passive subservience, but the active exercise of independent judgment after a full hearing.</p>\n</li>\n<li>\n<p><strong>The Role of Rhetoric:</strong> How the author persuades, and how the reader responsibly reacts to that persuasion.</p>\n</li>\n</ul>\n<hr />\n<h2>⚖️ 2. The Three General Maxims of Intellectual Etiquette</h2>\n<div class=\"callout callout-abstract\"><p class=\"callout-title\">Rule 9: The Prerequisite of Understanding</p><div class=\"callout-body\"><p><strong>You must be able to say, with reasonable certainty, \"I understand,\" before you can say \"I agree,\" \"I disagree,\" or \"I suspend judgment.\"</strong></p>\n<ul>\n<li>\n<p>To disagree without understanding is impudent.</p>\n</li>\n<li>\n<p>To agree without understanding is inane.</p>\n</li>\n<li>\n<p>Suspending judgment is an active critical choice (asserting that a point has not been proven).</p>\n</li>\n</ul></div></div>\n\n<div class=\"callout callout-abstract\"><p class=\"callout-title\">Rule 10: Non-Contentious Disagreement</p><div class=\"callout-body\"><p><strong>When you disagree, do so reasonably, and not disputatiously or contentiously.</strong></p>\n<ul>\n<li>\n<p>The goal of reading is learning the truth, not winning an argument.</p>\n</li>\n<li>\n<p>Approach books to gain knowledge, not to knock the author down. Be as prepared to agree as you are to disagree.</p>\n</li>\n</ul></div></div>\n\n<div class=\"callout callout-abstract\"><p class=\"callout-title\">Rule 11: Knowledge vs. Mere Opinion</p><div class=\"callout-body\"><p><strong>Respect the difference between knowledge and mere personal opinion, by giving reasons for any critical judgment you make.</strong></p>\n<ul>\n<li>\n<p>Unsupported disagreement is just venting personal prejudice.</p>\n</li>\n<li>\n<p>Knowledge consists of testable, objective opinions backed by reasons and evidence.</p>\n</li>\n</ul></div></div>\n\n<hr />\n<h2>🔗 3. Interlinking and Graph Connections</h2>\n<ul>\n<li>\n<p><span class=\"wikilink\">How to Read a Book – Overview</span></p>\n</li>\n<li>\n<p><span class=\"wikilink\">Analytical Reading Stage 3</span> — The rules of criticism and fair judgment.</p>\n</li>\n<li>\n<p><span class=\"wikilink\">Rhetoric and Persuasion</span> — The art of communication and taking a responsible intellectual stance.</p>\n</li>\n<li>\n<p><span class=\"wikilink\">The Virtue of Teachability</span> — True critical thinking vs. passive reading.</p>\n</li>\n<li>\n<p><span class=\"wikilink\">Rule 12: Specific Criteria for Criticism</span> — The concrete points of disagreement (uninformed, misinformed, illogical, incomplete).</p>\n</li>\n</ul>\n<hr />\n<h2>🛠️ 4. Interactive Workspace: Applying Intellectual Etiquette</h2>\n<p>Use this workspace to check your posture before you criticize a current reading project.</p>\n<h3>📌 Session Metadata</h3>\n<ul>\n<li>\n<p><strong>Source Title:</strong></p>\n</li>\n<li>\n<p><strong>Context / Project:</strong> <span class=\"wikilink\">Active Reading</span></p>\n</li>\n</ul>\n<h3>🚦 Step 1: The Understanding Check (Rule 9)</h3>\n<div class=\"callout callout-check\"><p class=\"callout-title\">Can I state the author's main propositions and arguments in my own words?</p><div class=\"callout-body\"><ul>\n<li><strong>The Author's Main Thesis:</strong> &gt; * <strong>The Supporting Arguments:</strong> &gt; * <em>If I cannot do this, I must pause before rendering a final judgment.</em></li>\n</ul></div></div>\n\n<h3>🧘‍♂️ Step 2: The Emotional Check (Rule 10)</h3>\n<div class=\"callout callout-question\"><p class=\"callout-title\">Am I reading to find the truth, or am I reading to pick a fight?</p><div class=\"callout-body\"><ul>\n<li><strong>Points where I naturally feel defensive/resistant:</strong> &gt; * <strong>Am I giving the author a fair, sympathetic hearing?</strong> ### ⚖️ Step 3: The Rational Burden (Rule 11)</li>\n</ul></div></div>\n<p>If I plan to <strong>disagree</strong> or <strong>suspend judgment</strong>, what are my objective reasons?</p>\n<table>\n<thead>\n<tr>\n<th style=\"text-align: left;\">Point of Contention</th>\n<th style=\"text-align: left;\">My Counter-Evidence / Reasons</th>\n<th style=\"text-align: left;\">Is this Knowledge or Just My Opinion?</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td style=\"text-align: left;\"><em>Example point</em></td>\n<td style=\"text-align: left;\"><em>Example counter-reason</em></td>\n<td style=\"text-align: left;\"><em>Objective Knowledge / Personal Feeling</em></td>\n</tr>\n<tr>\n<td style=\"text-align: left;\"></td>\n<td style=\"text-align: left;\"></td>\n<td style=\"text-align: left;\"></td>\n</tr>\n</tbody>\n</table>\n<h4>🏁 Final Pre-Criticism Verdict</h4>\n<ul>\n<li>\n<p>[ ] <strong>I am ready to Agree</strong> (I accept the author's premises and conclusions).</p>\n</li>\n<li>\n<p>[ ] <strong>I am ready to Disagree</strong> (I have objective counter-evidence to present).</p>\n</li>\n<li>\n<p>[ ] <strong>I Suspend Judgment</strong> (The author's argument is currently incomplete or unproven).</p>\n</li>\n</ul>\n<h2>yaml</h2>\n<p>title: \"Ch 10 - Criticizing a Book Fairly\"\nalias: [\"10 Criticizing a Book Fairly\", \"Rules for Talking Back to an Author\"]\ntags:</p>\n<ul>\n<li>\n<p>how-to-read-a-book</p>\n</li>\n<li>\n<p>adler</p>\n</li>\n<li>\n<p>analytical-reading</p>\n</li>\n<li>\n<p>stage-3-criticism</p>\n</li>\n<li>\n<p>intellectual-etiquette</p>\n</li>\n<li>\n<p>rules-of-reading</p>\n</li>\n<li>\n<p>pkmsystem\ncreated: \nmodified: \nchapter: 10\nbook: \"How to Read a Book\"\nauthors: \"Mortimer J. Adler &amp; Charles Van Doren\"\nstatus: \"Completed\"\ntype: \"Book Chapter Note\"\nsummary: \"The transition from understanding to judgment. Introduces the third stage of analytical reading and the three general maxims of intellectual etiquette (Rules 9–11) for fair criticism.\"\nrating: 9.5</p>\n</li>\n</ul>\n<hr />\n<h1>Ch 10 - Criticizing a Book Fairly</h1>\n<blockquote>\n<p>“Reading a book is a kind of conversation. … The reader has the last word.”<br />\n— Adler &amp; Van Doren</p>\n</blockquote>\n<h2>📌 Chapter Overview</h2>\n<p><strong>Stage 3: Criticism</strong> — The reward of all previous analytical effort.</p>\n<p>After you have <strong>classified</strong> the book (Stage 1) and <strong>understood</strong> the author’s message (Stage 2), you are now ready (and obligated) to <strong>talk back</strong> — to judge the book fairly.</p>\n<p>This chapter teaches the <strong>intellectual etiquette</strong> required for honest, profitable conversation with an author.</p>\n<div class=\"callout callout-abstract\"><p class=\"callout-title\">Core Idea</p><div class=\"callout-body\"><p>A good reader is <strong>teachable</strong> — which means actively critical, not passive. Criticism must follow understanding. Disagreement should serve truth, not ego.</p></div></div>\n\n<hr />\n<h2>🎯 The Three General Maxims of Critical Reading</h2>\n<div class=\"callout callout-tip\"><p class=\"callout-title\">Rule 9 – Complete Understanding Before Judgment</p><div class=\"callout-body\"><p><strong>You must be able to say, with reasonable certainty, “I understand” before you can say “I agree,” “I disagree,” or “I suspend judgment.”</strong></p>\n<ul>\n<li>\n<p>Understanding is a <strong>precondition</strong> for any fair criticism.</p>\n</li>\n<li>\n<p>Premature agreement is inane; premature disagreement is impudent.</p>\n</li>\n<li>\n<p>Suspending judgment is also an act of criticism — it claims the author has not yet convinced you.</p>\n</li>\n</ul>\n<p><strong>Why it matters:</strong> Many people skip straight to judgment. This rule prevents that intellectual vice.</p></div></div>\n\n<hr />\n<div class=\"callout callout-tip\"><p class=\"callout-title\">Rule 10 – Disagree Reasonably, Not Contentiously</p><div class=\"callout-body\"><p><strong>When you disagree, do so reasonably and not disputatiously or contentiously.</strong></p>\n<ul>\n<li>\n<p>Conversation is not a battle to be won.</p>\n</li>\n<li>\n<p>The goal is <strong>truth</strong>, not victory.</p>\n</li>\n<li>\n<p>Admit points when you see them; never feel “whipped” by having to agree.</p>\n</li>\n</ul>\n<p><strong>Plato &amp; Aristotle reminder:</strong> Honor truth above friendship or ego.</p></div></div>\n\n<hr />\n<div class=\"callout callout-tip\"><p class=\"callout-title\">Rule 11 – Give Reasons; Respect Knowledge vs. Opinion</p><div class=\"callout-body\"><p><strong>Respect the difference between knowledge and mere personal opinion by giving reasons for any critical judgment you make.</strong></p>\n<ul>\n<li>\n<p>If the author offers <strong>reasons</strong>, treat the claim as knowledge (open to reasoned refutation).</p>\n</li>\n<li>\n<p>If the author offers only unsupported assertions, it is <strong>mere opinion</strong>.</p>\n</li>\n<li>\n<p>You must do the same: back your agreement or disagreement with grounds.</p>\n</li>\n</ul>\n<p><strong>Key distinction:</strong> Knowledge = defensible opinions supported by evidence. Opinion = unsupported personal feeling.</p></div></div>\n\n<hr />\n<h2>🧩 Visual Summary – The Three Rules of Fair Criticism</h2>\n<div class=\"mermaid\">flowchart TD\n    A[Stage 3: Criticizing a Book Fairly] --> B[Rule 9\\nUnderstand First]\n    A --> C[Rule 10\\nDisagree Reasonably]\n    A --> D[Rule 11\\nGive Reasons\\nKnowledge vs Opinion]\n    \n    B --> E[\"'I understand' before any judgment\"]\n    C --> F[\"Seek truth, not victory\"]\n    D --> G[\"Always explain WHY you agree or disagree\"]</div>`</p>",
+      "file": "How_To_Read_a_Book_-_Ch10_-_Criticizing_a_Book_Fairly.md"
+    }
+  ],
+  "rules_index": [
+    {
+      "num": 1,
+      "title": "Classify the Book",
+      "desc": "Know what kind of book you are reading — as early as possible, preferably before you begin.",
+      "stage": "Stage 1: Structure",
+      "chapter": 6
+    },
+    {
+      "num": 2,
+      "title": "State the Unity",
+      "desc": "Grasp and express the unity of the whole book in a single sentence, or at most a short paragraph.",
+      "stage": "Stage 1: Structure",
+      "chapter": 7
+    },
+    {
+      "num": 3,
+      "title": "Outline the Major Parts",
+      "desc": "Set forth the major parts of the book, show how they are ordered, and how each contributes to the unity.",
+      "stage": "Stage 1: Structure",
+      "chapter": 7
+    },
+    {
+      "num": 4,
+      "title": "Discover the Author's Problems",
+      "desc": "Find the questions the author is trying to answer — what problems the book is attempting to solve.",
+      "stage": "Stage 1: Structure",
+      "chapter": 7
+    },
+    {
+      "num": 5,
+      "title": "Come to Terms",
+      "desc": "Find the important words and, through them, come to terms with the author — turn ambiguous words into shared terms.",
+      "stage": "Stage 2: Interpretation",
+      "chapter": 8
+    },
+    {
+      "num": 6,
+      "title": "Grasp the Propositions",
+      "desc": "Mark the most important sentences in a book and discover the propositions they contain.",
+      "stage": "Stage 2: Interpretation",
+      "chapter": 9
+    },
+    {
+      "num": 7,
+      "title": "Construct the Arguments",
+      "desc": "Locate or construct the basic arguments by finding them in the connection of sentences.",
+      "stage": "Stage 2: Interpretation",
+      "chapter": 9
+    },
+    {
+      "num": 9,
+      "title": "Understand Before Judging",
+      "desc": "You must be able to say “I understand” before you can say “I agree,” “I disagree,” or “I suspend judgment.”",
+      "stage": "Stage 3: Criticism",
+      "chapter": 10
+    },
+    {
+      "num": 10,
+      "title": "Disagree Reasonably",
+      "desc": "When you disagree, do so reasonably and not disputatiously or contentiously — seek truth, not victory.",
+      "stage": "Stage 3: Criticism",
+      "chapter": 10
+    },
+    {
+      "num": 11,
+      "title": "Give Reasons",
+      "desc": "Respect the difference between knowledge and mere personal opinion by giving reasons for any critical judgment.",
+      "stage": "Stage 3: Criticism",
+      "chapter": 10
+    }
+  ]
+};
+
+const mainEl = document.getElementById('main');
+const tocEl = document.getElementById('toc');
+document.getElementById('book-title').textContent = BOOK.title;
+document.getElementById('book-authors').textContent = BOOK.authors;
+
+let currentView = { type: 'chapter', chapter: BOOK.chapters[0].chapter };
+
+function buildTOC(){
+  tocEl.innerHTML = '';
+  BOOK.chapters.forEach(ch => {
+    const li = document.createElement('li');
+    const btn = document.createElement('button');
+    btn.innerHTML = `<span class="num">${String(ch.chapter).padStart(2,'0')}</span><span class="t">${ch.title.replace(/^Ch(apter)?\s*\d+[:\-–]?\s*/i,'')}</span>`;
+    btn.dataset.chapter = ch.chapter;
+    btn.addEventListener('click', () => renderChapter(ch.chapter));
+    li.appendChild(btn);
+    tocEl.appendChild(li);
+  });
+}
+
+function highlightTOC(){
+  document.querySelectorAll('.toc button').forEach(b => {
+    b.classList.toggle('active', currentView.type==='chapter' && Number(b.dataset.chapter) === currentView.chapter);
+  });
+}
+
+function starRating(r){
+  if(!r) return '';
+  const n = Math.round(parseFloat(r)/2);
+  return '★'.repeat(n) + '☆'.repeat(5-n) + ` <span style="color:var(--ink-soft)">(${r}/10)</span>`;
+}
+
+function renderChapter(num){
+  const ch = BOOK.chapters.find(c => c.chapter === num);
+  if(!ch) return;
+  currentView = { type:'chapter', chapter:num };
+  const idx = BOOK.chapters.indexOf(ch);
+  const prev = BOOK.chapters[idx-1];
+  const next = BOOK.chapters[idx+1];
+
+  mainEl.innerHTML = `
+    <div class="card-header">
+      <div class="meta-row">
+        <span>Chapter ${ch.chapter}</span>
+        <span>·</span>
+        <span>${BOOK.title}</span>
+        ${ch.rating ? `<span>·</span><span class="rating">${starRating(ch.rating)}</span>` : ''}
+      </div>
+      <h2>${ch.title}</h2>
+      ${ch.summary ? `<p class="summary">${ch.summary}</p>` : ''}
+      ${ch.tags && ch.tags.length ? `<div class="tag-row">${ch.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>` : ''}
+    </div>
+    <article>${ch.html}</article>
+    <div class="chapter-nav">
+      ${prev ? `<a id="nav-prev">← Ch ${prev.chapter}</a>` : '<span></span>'}
+      <span class="spacer"></span>
+      ${next ? `<a id="nav-next">Ch ${next.chapter} →</a>` : '<span></span>'}
+    </div>
+  `;
+  if(prev) document.getElementById('nav-prev').addEventListener('click', ()=>renderChapter(prev.chapter));
+  if(next) document.getElementById('nav-next').addEventListener('click', ()=>renderChapter(next.chapter));
+
+  highlightTOC();
+  window.scrollTo(0,0);
+  mermaid.run({ querySelector: '.mermaid' });
+}
+
+function renderRulesIndex(){
+  currentView = { type:'rules' };
+  const stages = {};
+  BOOK.rules_index.forEach(r => {
+    stages[r.stage] = stages[r.stage] || [];
+    stages[r.stage].push(r);
+  });
+  let html = `
+    <div class="rules-page">
+      <h2 class="page-title">The Rules of Analytical Reading</h2>
+      <p class="page-sub">Synthesized across all ${BOOK.chapters.length} chapters — every numbered rule Adler & Van Doren give, gathered in one place, in the order you apply them.</p>
+  `;
+  Object.entries(stages).forEach(([stage, rules]) => {
+    html += `<div class="stage-group"><h3>${stage}</h3>`;
+    rules.forEach(r => {
+      html += `
+        <div class="rule-card" data-chapter="${r.chapter}">
+          <div class="rule-num">${String(r.num).padStart(2,'0')}</div>
+          <div>
+            <p class="rule-title">${r.title}</p>
+            <p class="rule-desc">${r.desc}</p>
+            <span class="rule-src">from Chapter ${r.chapter} →</span>
+          </div>
+        </div>`;
+    });
+    html += `</div>`;
+  });
+  html += `</div>`;
+  mainEl.innerHTML = html;
+  document.querySelectorAll('.rule-card').forEach(el => {
+    el.addEventListener('click', () => renderChapter(Number(el.dataset.chapter)));
+  });
+  highlightTOC();
+  window.scrollTo(0,0);
+}
+
+document.getElementById('rules-btn').addEventListener('click', renderRulesIndex);
+
+// --- simple search across titles, tags, and stripped chapter text ---
+const searchIndex = BOOK.chapters.map(ch => ({
+  chapter: ch.chapter,
+  title: ch.title,
+  hay: (ch.title + ' ' + (ch.tags||[]).join(' ') + ' ' + ch.html.replace(/<[^>]+>/g,' ')).toLowerCase()
+}));
+
+const searchInput = document.getElementById('search');
+const hitsEl = document.getElementById('hits');
+searchInput.addEventListener('input', () => {
+  const q = searchInput.value.trim().toLowerCase();
+  if(!q){
+    document.querySelectorAll('.toc li').forEach(li => li.style.display = '');
+    hitsEl.textContent = '';
+    return;
+  }
+  let count = 0;
+  document.querySelectorAll('.toc li').forEach((li, i) => {
+    const match = searchIndex[i].hay.includes(q);
+    li.style.display = match ? '' : 'none';
+    if(match) count++;
+  });
+  hitsEl.textContent = `${count} chapter${count===1?'':'s'} match`;
+});
+
+buildTOC();
+renderChapter(BOOK.chapters[0].chapter);
+</script>
+
+</body>
+</html>
