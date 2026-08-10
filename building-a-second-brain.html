@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Building a Second Brain — Notes</title>
+<style>
+  :root{
+    --bg:#f7f6f3;
+    --panel:#ffffff;
+    --border:#e4e1da;
+    --text:#221f1b;
+    --text-soft:#6b6459;
+    --accent:#8a5a3b;
+    --accent-soft:#f0e4d8;
+    --link:#8a5a3b;
+    --quote-bg:#f4efe6;
+    --code-bg:#eee9df;
+    --pill-bg:#efe7d8;
+    --shadow:0 1px 2px rgba(0,0,0,0.04);
+  }
+  body.dark{
+    --bg:#181613;
+    --panel:#211e1a;
+    --border:#3a352d;
+    --text:#eae5db;
+    --text-soft:#a49a89;
+    --accent:#d9a066;
+    --accent-soft:#3a2f22;
+    --link:#e0ac74;
+    --quote-bg:#241f19;
+    --code-bg:#2a251e;
+    --pill-bg:#332c22;
+    --shadow:0 1px 2px rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    line-height:1.65;
+    transition:background .2s ease, color .2s ease;
+  }
+  .app{display:flex; min-height:100vh;}
+
+  /* Sidebar */
+  .sidebar{
+    width:270px;
+    flex-shrink:0;
+    background:var(--panel);
+    border-right:1px solid var(--border);
+    padding:1.4rem 1rem 2rem;
+    position:sticky;
+    top:0;
+    height:100vh;
+    overflow-y:auto;
+  }
+  .sidebar-title{
+    font-size:.7rem;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    color:var(--text-soft);
+    margin:0 0 1rem .4rem;
+  }
+  .toc-note{margin-bottom:1.1rem;}
+  .toc-note > a{
+    display:block;
+    font-weight:700;
+    font-size:.86rem;
+    color:var(--text);
+    text-decoration:none;
+    padding:.3rem .4rem;
+    border-radius:6px;
+  }
+  .toc-note > a:hover{background:var(--accent-soft);}
+  .toc-sub{list-style:none; margin:.15rem 0 0; padding-left:.7rem; border-left:1px solid var(--border);}
+  .toc-sub li a{
+    display:block;
+    font-size:.78rem;
+    color:var(--text-soft);
+    text-decoration:none;
+    padding:.22rem .5rem;
+    border-radius:5px;
+  }
+  .toc-sub li a:hover{background:var(--accent-soft); color:var(--text);}
+  .toc-sub li a.active{background:var(--accent-soft); color:var(--accent); font-weight:600;}
+
+  /* Main */
+  .main{flex:1; padding:2.4rem 3rem 6rem; max-width:760px; margin:0 auto;}
+  .note{margin-bottom:5rem; scroll-margin-top:1.5rem;}
+  .note h1{font-size:1.9rem; margin:0 0 .3rem; border-bottom:2px solid var(--border); padding-bottom:.5rem;}
+  .note .subtitle{font-style:italic; color:var(--text-soft); margin:0 0 1.1rem; font-size:.95rem;}
+  .note h2{font-size:1.3rem; margin:2.1rem 0 .7rem; scroll-margin-top:1.5rem; color:var(--text);}
+  .note h3{font-size:1.05rem; margin:1.4rem 0 .5rem; scroll-margin-top:1.5rem;}
+  .note p{margin:.6rem 0;}
+  .note ul, .note ol{margin:.5rem 0 .8rem 1.4rem; padding:0;}
+  .note li{margin:.28rem 0;}
+  .note blockquote{
+    background:var(--quote-bg);
+    border-left:3px solid var(--accent);
+    margin:1rem 0;
+    padding:.65rem 1rem;
+    font-style:italic;
+    border-radius:0 4px 4px 0;
+    font-size:.92rem;
+  }
+  .note blockquote cite{display:block; font-style:normal; font-size:.75rem; color:var(--text-soft); margin-top:.3rem;}
+  .note table{border-collapse:collapse; width:100%; margin:.8rem 0; font-size:.88rem;}
+  .note th, .note td{border:1px solid var(--border); padding:.5rem .7rem; text-align:left; vertical-align:top;}
+  .note th{background:var(--code-bg);}
+  .note hr{border:none; border-top:1px solid var(--border); margin:1.8rem 0;}
+  .note a{color:var(--link);}
+  .ghost{color:var(--text-soft); cursor:default; text-decoration:none; border-bottom:1px dotted var(--text-soft);}
+
+  .meta{
+    display:flex; flex-wrap:wrap; gap:.4rem;
+    margin-bottom:1.3rem;
+  }
+  .pill{
+    font-size:.68rem; text-transform:uppercase; letter-spacing:.04em;
+    background:var(--pill-bg); color:var(--text-soft);
+    padding:.22rem .55rem; border-radius:12px;
+  }
+  .pill.status{color:var(--accent); font-weight:600;}
+
+  .checklist{list-style:none; margin:.6rem 0; padding:0;}
+  .checklist li{display:flex; align-items:flex-start; gap:.5rem; margin:.4rem 0; font-size:.92rem;}
+  .checklist input{margin-top:.28rem;}
+  .checklist li.checked span{text-decoration:line-through; color:var(--text-soft);}
+
+  details.reflect{
+    background:var(--quote-bg);
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:.7rem 1rem;
+    margin:1rem 0;
+  }
+  details.reflect summary{cursor:pointer; font-weight:600; font-size:.9rem; color:var(--accent);}
+  details.reflect ul{margin-top:.7rem;}
+
+  /* Theme toggle */
+  .theme-toggle{
+    position:fixed; bottom:1.4rem; right:1.4rem;
+    background:var(--accent); color:#fff8ea; border:none;
+    padding:.6rem 1.1rem; border-radius:20px; font-size:.82rem;
+    cursor:pointer; box-shadow:0 4px 10px rgba(0,0,0,.25); z-index:20;
+  }
+  .theme-toggle:hover{filter:brightness(1.08);}
+
+  @media (max-width:820px){
+    .app{flex-direction:column;}
+    .sidebar{width:100%; height:auto; position:relative; border-right:none; border-bottom:1px solid var(--border);}
+    .main{padding:1.6rem 1.2rem 5rem;}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <nav class="sidebar" id="sidebar">
+    <p class="sidebar-title">📒 Contents</p>
+
+    <div class="toc-note">
+      <a href="#overview">Building a Second Brain</a>
+      <ul class="toc-sub">
+        <li><a href="#ov-summary">Summary</a></li>
+        <li><a href="#ov-code">The CODE Method</a></li>
+        <li><a href="#ov-para">PARA</a></li>
+        <li><a href="#ov-progressive">Progressive Summarization</a></li>
+        <li><a href="#ov-creative">Divergence &amp; Convergence</a></li>
+        <li><a href="#ov-superpowers">Why It Works</a></li>
+        <li><a href="#ov-actions">Action Steps</a></li>
+        <li><a href="#ov-reflect">Reflection</a></li>
+      </ul>
+    </div>
+
+    <div class="toc-note">
+      <a href="#ch1">Ch 1 — Where It All Started</a>
+      <ul class="toc-sub">
+        <li><a href="#ch1-crisis">The Origin Story</a></li>
+        <li><a href="#ch1-habit">Generalizing the Habit</a></li>
+        <li><a href="#ch1-asset">Notes as an Asset</a></li>
+        <li><a href="#ch1-teaching">Teaching the Method</a></li>
+        <li><a href="#ch1-birth">Birth of the "Second Brain"</a></li>
+        <li><a href="#ch1-reflect">Reflection</a></li>
+      </ul>
+    </div>
+
+    <div class="toc-note">
+      <a href="#ch2">Ch 2 — What Is a Second Brain?</a>
+      <ul class="toc-sub">
+        <li><a href="#ch2-overload">Information Overload</a></li>
+        <li><a href="#ch2-commonplace">Commonplace Book</a></li>
+        <li><a href="#ch2-note">Redefining the Note</a></li>
+        <li><a href="#ch2-nina">A Tale of Two Brains</a></li>
+        <li><a href="#ch2-superpowers">Four Superpowers</a></li>
+        <li><a href="#ch2-reflect">Reflection</a></li>
+      </ul>
+    </div>
+
+    <div class="toc-note">
+      <a href="#ch3">Ch 3 — How a Second Brain Works</a>
+      <ul class="toc-sub">
+        <li><a href="#ch3-superpowers">Four Superpowers</a></li>
+        <li><a href="#ch3-app">Choosing a Notes App</a></li>
+        <li><a href="#ch3-stages">Three Stages of PKM</a></li>
+        <li><a href="#ch3-code">CODE Method Preview</a></li>
+        <li><a href="#ch3-reflect">Reflection</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="main" id="content">
+
+    <!-- ============ OVERVIEW ============ -->
+    <section class="note" id="overview">
+      <h1>Building a Second Brain</h1>
+      <p class="subtitle">A Proven Method to Organize Your Digital Life and Unlock Your Creative Potential — Tiago Forte, 2022</p>
+      <div class="meta">
+        <span class="pill status">★★★★ · read</span>
+        <span class="pill">PKM</span><span class="pill">secondbrain</span><span class="pill">notetaking</span>
+        <span class="pill">productivity</span><span class="pill">creativity</span>
+      </div>
+
+      <h2 id="ov-summary">Summary</h2>
+      <p>We consume far more information than we can immediately use, and most of it is lost because we lack a system to capture and resurface it for our <strong>future self</strong>. A Second Brain is a digital, external system — built around a notes app — that stores, organizes, and refines ideas so they can be turned into creative output.</p>
+      <p>The method is rooted in the historical practice of <strong>commonplace books</strong> and adapted for the digital age through a four-step framework, <strong>CODE</strong>, and a four-category organizing system, <strong>PARA</strong>.</p>
+
+      <h2 id="ov-code">The CODE Method</h2>
+      <ul>
+        <li><strong>Capture</strong> — Keep what resonates. Only save ideas that inspire, are useful, personal, or surprising.</li>
+        <li><strong>Organize</strong> — Save for actionability. Use PARA to file notes by active projects and responsibilities.</li>
+        <li><strong>Distill</strong> — Find the essence. Use <em>Progressive Summarization</em> to surface the core insight.</li>
+        <li><strong>Express</strong> — Show your work. Assemble <em>Intermediate Packets</em> and turn knowledge into output.</li>
+      </ul>
+
+      <h2 id="ov-para">PARA — Organizing for Action</h2>
+      <table>
+        <tr><th>Category</th><th>Description</th></tr>
+        <tr><td><strong>Projects</strong></td><td>Short-term efforts you're actively working on (clear end date).</td></tr>
+        <tr><td><strong>Areas</strong></td><td>Long-term responsibilities you manage over time (Health, Finances).</td></tr>
+        <tr><td><strong>Resources</strong></td><td>Topics or interests you may refer to in the future.</td></tr>
+        <tr><td><strong>Archives</strong></td><td>Inactive items from the other three categories.</td></tr>
+      </table>
+      <blockquote>Organize by <strong>where</strong> information will be most useful (your projects), not by <strong>what</strong> it is (subject).</blockquote>
+
+      <h2 id="ov-progressive">Progressive Summarization</h2>
+      <ul>
+        <li><strong>Layer 1</strong> — Full excerpt (raw capture)</li>
+        <li><strong>Layer 2</strong> — Bold the main points</li>
+        <li><strong>Layer 3</strong> — Highlight the best of the bolded parts</li>
+        <li><strong>Layer 4</strong> — Executive summary, in your own words</li>
+      </ul>
+      <blockquote>Each layer should include only 10–20% of the previous layer.</blockquote>
+
+      <h2 id="ov-creative">The Creative Process: Divergence &amp; Convergence</h2>
+      <p><strong>Divergence</strong> — explore, gather, brainstorm (Capture &amp; Organize). <strong>Convergence</strong> — refine, cut, assemble (Distill &amp; Express).</p>
+      <ul>
+        <li><strong>Archipelago of Ideas</strong> — build an outline from your notes first, then fill the gaps.</li>
+        <li><strong>Hemingway Bridge</strong> — end each session knowing what comes next.</li>
+        <li><strong>Dial Down the Scope</strong> — ship a smaller, simpler version to get feedback early.</li>
+      </ul>
+
+      <h2 id="ov-superpowers">Why It Works (The "Superpowers")</h2>
+      <ol>
+        <li>Make ideas concrete</li>
+        <li>Reveal new associations</li>
+        <li>Incubate over time</li>
+        <li>Sharpen your unique perspective</li>
+      </ol>
+
+      <blockquote>"Your mind is for having ideas, not holding them." <cite>David Allen</cite></blockquote>
+      <blockquote>"We only know what we make." <cite>Giambattista Vico</cite></blockquote>
+      <blockquote>"An idea wants to be shared. And, in the sharing, it becomes more complex, more interesting, and more likely to work for more people." <cite>adrienne maree brown</cite></blockquote>
+
+      <h2 id="ov-actions">Practical Action Steps</h2>
+      <ul class="checklist" data-checklist>
+        <li><input type="checkbox" /><span>Choose a digital notes app (Obsidian, Notion, Evernote, etc.)</span></li>
+        <li><input type="checkbox" /><span>Set up PARA folders (Projects, Areas, Resources, Archives)</span></li>
+        <li><input type="checkbox" /><span>Capture at least 2 notes per day that resonate with you</span></li>
+        <li><input type="checkbox" /><span>Practice Progressive Summarization on one article this week</span></li>
+        <li><input type="checkbox" /><span>Create an Archipelago of Ideas for your next project</span></li>
+        <li><input type="checkbox" /><span>Schedule a weekly review</span></li>
+      </ul>
+
+      <h2 id="ov-reflect">Questions for Reflection</h2>
+      <details class="reflect">
+        <summary>Open the reflection questions</summary>
+        <ul>
+          <li>What are my <strong>twelve favorite problems</strong> that I'm always curious about?</li>
+          <li>Am I spending more time collecting or creating?</li>
+          <li>How can I <strong>dial down the scope</strong> of my current project to ship something small?</li>
+        </ul>
+      </details>
+      <p><em>Related:</em> <span class="ghost" title="Not included in this note set">Commonplace Books – History</span> · <span class="ghost" title="Not included in this note set">Intermediate Packets – Examples</span> · <span class="ghost" title="Not included in this note set">The 12 Favorite Problems Exercise</span></p>
+    </section>
+
+    <!-- ============ CHAPTER 1 ============ -->
+    <section class="note" id="ch1">
+      <h1>Chapter 1 — Where It All Started</h1>
+      <div class="meta">
+        <span class="pill status">read</span>
+        <span class="pill">origin-story</span><span class="pill">health</span><span class="pill">medical-advocacy</span><span class="pill">consulting</span>
+      </div>
+      <blockquote>"Your mind is for having ideas, not holding them." <cite>David Allen</cite></blockquote>
+
+      <h2 id="ch1-crisis">The Origin Story</h2>
+      <h3>The Crisis</h3>
+      <ul>
+        <li>During junior year of college, Forte developed a mysterious throat/voice condition.</li>
+        <li>Doctors couldn't diagnose it; pain worsened over months and years.</li>
+        <li>Anti-seizure medication masked the symptoms but caused severe short-term memory loss.</li>
+        <li>At 24, he felt like he had the mind of an 80-year-old; depression and withdrawal followed.</li>
+      </ul>
+      <h3>The Turning Point</h3>
+      <ul>
+        <li>In yet another doctor's office, he had an epiphany: take responsibility for his own treatment, or keep shuttling between doctors forever.</li>
+        <li>He journaled his own case history, in his own words, for the first time.</li>
+        <li>Requested his complete patient record (hundreds of pages) and digitized it — searchable, annotatable, shareable.</li>
+      </ul>
+      <h3>The System in Action</h3>
+      <ul>
+        <li>Became the project manager of his own condition; tracked every treatment and question.</li>
+        <li>Patterns emerged: discovered <strong>functional voice disorders</strong>, and that his medication was masking rather than solving the problem.</li>
+        <li>Combined lifestyle changes with voice exercises — relief came quickly.</li>
+      </ul>
+      <blockquote>"My notes were as important in finding relief as any medicine or procedure."</blockquote>
+
+      <h2 id="ch1-habit">Generalizing the Habit</h2>
+      <table>
+        <tr><th>Context</th><th>Result</th></tr>
+        <tr><td><strong>College</strong></td><td>Turned messy notebooks into searchable lesson collections; graduated with near-straight As.</td></tr>
+        <tr><td><strong>Peace Corps (Ukraine)</strong></td><td>Taught English with few resources; saved and mixed lessons; taught students productivity skills.</td></tr>
+        <tr><td><strong>Consulting (SF)</strong></td><td>Survived an overwhelming pace; became the go-to person for finding files and facts.</td></tr>
+      </table>
+
+      <h2 id="ch1-asset">Second Insight: Notes as an Asset</h2>
+      <p>Physical capital in the U.S. is roughly $10T — but <strong>human capital</strong> (knowledge, experience, wisdom, intuition) is valued at 5–10× that. His notes became a knowledge asset that compounds: a confidant when forgetful, a compass when lost, a muse when stuck.</p>
+
+      <h2 id="ch1-teaching">Teaching the Method</h2>
+      <p>Lunchtime chats with colleagues became a book club, then a workshop, then a paid public class — a way to organize holistically for any goal, and to solve problems now rather than someday.</p>
+
+      <h2 id="ch1-birth">Birth of the "Second Brain"</h2>
+      <p>He named the system, started a blog, and was featured in <em>Harvard Business Review</em>, <em>The Atlantic</em>, <em>Fast Company</em>, and <em>Inc.</em> The "Building a Second Brain" course launched in 2017 and has produced thousands of graduates from 100+ countries.</p>
+
+      <h2 id="ch1-reflect">Reflection Questions</h2>
+      <details class="reflect">
+        <summary>Open the reflection questions</summary>
+        <ul>
+          <li>Forte's system was born from medical self-advocacy. How does that context change how you think about its applicability to your own work?</li>
+          <li>He shifts from "notes helped me survive" to "notes are a business asset," backed by a human-capital stat. Convincing bridge, or rhetorical leap?</li>
+          <li>The crisis → epiphany → system → success arc is a classic founder's myth. Does it build trust, or make you want harder evidence?</li>
+          <li>What's one area of your life drowning in ambiguous information that could benefit from this kind of externalization?</li>
+        </ul>
+      </details>
+      <p><em>Related:</em> <a href="#overview">Building a Second Brain</a> · <a href="#ch2">Ch 2 — What Is a Second Brain?</a> · <span class="ghost" title="Not included in this note set">Commonplace Books – History</span></p>
+    </section>
+
+    <!-- ============ CHAPTER 2 ============ -->
+    <section class="note" id="ch2">
+      <h1>Chapter 2 — What Is a Second Brain?</h1>
+      <div class="meta">
+        <span class="pill status">★★★★ · read</span>
+        <span class="pill">information-overload</span><span class="pill">commonplace-books</span><span class="pill">notes</span>
+      </div>
+      <blockquote>"We extend beyond our limits, not by revving our brains like a machine or bulking them up like a muscle — but by strewing our world with rich materials, and by weaving them into our thoughts." <cite>Annie Murphy Paul</cite></blockquote>
+
+      <h2 id="ch2-overload">The Problem: Information Overload</h2>
+      <ul>
+        <li>Average person consumes <strong>34 GB</strong> of information daily — about 174 newspapers' worth, 5× more than in 1986.</li>
+        <li><strong>76 hours/year</strong> lost by the average US employee searching for misplaced notes or files.</li>
+        <li><strong>26%</strong> of a knowledge worker's day goes to finding and consolidating information — and <strong>56%</strong> of the time, they still can't find what they need.</li>
+        <li>Our brains haven't changed in 200,000 years; the cognitive demands of modern life have exploded.</li>
+      </ul>
+
+      <h2 id="ch2-commonplace">Historical Roots: The Commonplace Book</h2>
+      <p>A practice used by Leonardo da Vinci, John Locke, Virginia Woolf, and Octavia Butler.</p>
+      <blockquote>"Unlike modern readers, who follow the flow of a narrative from beginning to end, early modern Englishmen read in fits and starts... Reading and writing were therefore inseparable activities." <cite>Robert Darnton</cite></blockquote>
+      <p>Made digital, the commonplace book gains four powers: searchable, cloud-synced, easily shared, and able to hold text, images, links, audio, and files together.</p>
+
+      <h2 id="ch2-note">Redefining the Note</h2>
+      <p><strong>Old (school) view:</strong> notes are disposable test-prep. <strong>New (professional) view:</strong> a note is a <em>"knowledge building block"</em> — a discrete unit of information interpreted through your own perspective, stored outside your head.</p>
+      <blockquote>"If a piece of content has been interpreted through your lens, curated according to your taste, translated into your own words, or drawn from your life experience, and stored in a secure place, then it qualifies as a note."</blockquote>
+      <p>Like LEGO blocks, notes are discrete and combinable — build once, then mix and match.</p>
+
+      <h2 id="ch2-nina">A Tale of Two Brains: The Nina Story</h2>
+      <p><strong>Without a Second Brain:</strong> Nina wakes up already overwhelmed, gets swallowed by email all morning, and by the time she has time for her own passion project she's too drained to find her files or make progress.</p>
+      <p><strong>With one:</strong> Nina captures ideas in the shower, at breakfast, in the car, and in meetings. She arrives at the afternoon meeting already prepared, and over months her thinking sharpens as patterns emerge.</p>
+      <blockquote>"You are on your smartphone just like everyone else, but you aren't doing what they are doing. You are creating value instead of killing time."</blockquote>
+
+      <h2 id="ch2-superpowers">The Four Superpowers (preview)</h2>
+      <ol>
+        <li>Make ideas concrete</li>
+        <li>Reveal new associations</li>
+        <li>Incubate over time</li>
+        <li>Sharpen your unique perspective</li>
+      </ol>
+
+      <h2 id="ch2-reflect">Reflection Questions</h2>
+      <details class="reflect">
+        <summary>Open the reflection questions</summary>
+        <ul>
+          <li>Does the Nina story resonate, or does it feel too clean a contrast to be fair?</li>
+          <li>A "note" is redefined very broadly. Useful reframe, or too vague to guide action?</li>
+          <li>Does the commonplace-book lineage strengthen the argument, or is it mostly rhetorical — borrowing credibility from da Vinci and Woolf?</li>
+          <li>If you had a Second Brain today, what's the first thing you'd want to capture and resurface?</li>
+        </ul>
+      </details>
+      <p><em>Related:</em> <a href="#overview">Building a Second Brain</a> · <a href="#ch1">Ch 1 — Where It All Started</a> · <a href="#ch3">Ch 3 — How a Second Brain Works</a></p>
+    </section>
+
+    <!-- ============ CHAPTER 3 ============ -->
+    <section class="note" id="ch3">
+      <h1>Chapter 3 — How a Second Brain Works</h1>
+      <div class="meta">
+        <span class="pill status">★★★★ · read</span>
+        <span class="pill">CODE</span><span class="pill">PARA</span><span class="pill">superpowers</span><span class="pill">notes-apps</span>
+      </div>
+      <blockquote>"It is in the power of remembering that the self's ultimate freedom consists. I am free because I remember." <cite>Abhinavagupta</cite></blockquote>
+
+      <h2 id="ch3-superpowers">The Four Superpowers</h2>
+      <h3>1. Make Ideas Concrete</h3>
+      <p>Watson and Crick used cardboard cutouts to model DNA — physical externalization aiding abstract thought. Digital notes aren't physical, but they're visual and movable.</p>
+      <h3>2. Reveal New Associations</h3>
+      <p>Creativity is connecting ideas that don't seem connected. Keeping diverse material together raises the odds of noticing an unexpected link — like shuffling Scrabble tiles.</p>
+      <h3>3. Incubate Ideas Over Time</h3>
+      <p>The "heavy lift" (instant results, right now) versus the "slow burn" (ideas simmering over weeks or years) — countering recency bias.</p>
+      <h3>4. Sharpen Your Unique Perspective</h3>
+      <p>A Princeton study found the jobs hardest to automate require conveying "not just information but a particular interpretation of information." A Second Brain supplies the supporting material.</p>
+      <blockquote>"It's not that I'm blocked. It's that I don't have enough research to write with power and knowledge about that topic." <cite>Sebastian Junger</cite></blockquote>
+
+      <h2 id="ch3-app">Choosing a Notetaking App</h2>
+      <p>The hub of a Second Brain is a notes app, valued for four traits:</p>
+      <ul>
+        <li><strong>Multimedia</strong> — text, images, links, audio, files, all in one place.</li>
+        <li><strong>Informal</strong> — no need for polish, low friction to capture.</li>
+        <li><strong>Open-ended</strong> — free-form exploration before you have a goal.</li>
+        <li><strong>Action-oriented</strong> — built to capture stray thoughts fast.</li>
+      </ul>
+      <blockquote>"It's not about having the perfect tools — it's about having a reliable set of tools you can depend on."</blockquote>
+
+      <h2 id="ch3-stages">Three Stages of Personal Knowledge Management</h2>
+      <ul>
+        <li><strong>Remembering</strong> — memory aid. <em>Camille</em>, a designer, saves annotated research excerpts.</li>
+        <li><strong>Connecting</strong> — a thinking tool. <em>Fernando</em>, an oncologist, links research to patient needs.</li>
+        <li><strong>Creating</strong> — producing new things. <em>Terrell</em> turns his notes into a parenting YouTube channel.</li>
+      </ul>
+
+      <h2 id="ch3-code">The CODE Method (Preview)</h2>
+      <ul>
+        <li><strong>Capture</strong> — keep what resonates.</li>
+        <li><strong>Organize</strong> — save for actionability, around active projects, not subjects.</li>
+        <li><strong>Distill</strong> — find the essence, so future-you can use it fast.</li>
+        <li><strong>Express</strong> — the point is to produce something, not just collect notes.</li>
+      </ul>
+      <blockquote>"Information becomes knowledge — personal, embodied, verified — only when we put it to use."</blockquote>
+
+      <h2 id="ch3-reflect">Reflection Questions</h2>
+      <details class="reflect">
+        <summary>Open the reflection questions</summary>
+        <ul>
+          <li>"Organize by project, not subject" — does it hold up once a note is relevant to two projects at once?</li>
+          <li>"Capture what resonates" is an intuitive filter. Good enough, or a rationalized way to keep everything that catches your eye?</li>
+          <li>The four superpowers mix hard evidence (Watson &amp; Crick) with softer claims (the Princeton study). Equally load-bearing?</li>
+          <li>Of Remembering, Connecting, Creating — which stage are you currently stuck on?</li>
+        </ul>
+      </details>
+      <p><em>Related:</em> <a href="#ch2">Ch 2 — What Is a Second Brain?</a> · <span class="ghost" title="Not included in this note set">Watson and Crick – Physical Models</span></p>
+    </section>
+
+  </main>
+</div>
+
+<button class="theme-toggle" id="themeToggle">🌓 Toggle theme</button>
+
+<script>
+(function(){
+  // Theme toggle (in-memory only — no storage APIs)
+  var btn = document.getElementById('themeToggle');
+  btn.addEventListener('click', function(){
+    document.body.classList.toggle('dark');
+  });
+
+  // Smooth scroll for sidebar links
+  document.querySelectorAll('.sidebar a').forEach(function(link){
+    link.addEventListener('click', function(e){
+      var id = this.getAttribute('href').slice(1);
+      var target = document.getElementById(id);
+      if(target){
+        e.preventDefault();
+        target.scrollIntoView({behavior:'smooth', block:'start'});
+      }
+    });
+  });
+
+  // Scroll-spy: highlight the sub-heading currently in view
+  var subLinks = Array.prototype.slice.call(document.querySelectorAll('.toc-sub a'));
+  var targets = subLinks.map(function(a){
+    return document.getElementById(a.getAttribute('href').slice(1));
+  }).filter(Boolean);
+
+  function onScroll(){
+    var pos = window.scrollY + 120;
+    var current = null;
+    targets.forEach(function(t){
+      if(t.offsetTop <= pos) current = t;
+    });
+    subLinks.forEach(function(a){ a.classList.remove('active'); });
+    if(current){
+      var match = subLinks.find(function(a){ return a.getAttribute('href') === '#' + current.id; });
+      if(match) match.classList.add('active');
+    }
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  // Checklist toggling (in-memory)
+  document.querySelectorAll('.checklist input[type="checkbox"]').forEach(function(cb){
+    cb.addEventListener('change', function(){
+      cb.closest('li').classList.toggle('checked', cb.checked);
+    });
+  });
+})();
+</script>
+</body>
+</html>
