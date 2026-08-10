@@ -227,6 +227,68 @@
   <!-- 1 -->
   <section>
     <span class="section-number">01</span>
+    <h2>Ace, King, Queen — an equilibrium small enough to solve by hand</h2>
+    <p>Three cards: <b style="color:var(--gold);">A</b> beats <b style="color:var(--gold);">K</b> beats <b style="color:var(--gold);">Q</b>. Each player gets one. Player 1 checks or bets; if Player 1 bets, Player 2 calls or folds. Before touching any algebra, three of the four decisions fall out on their own:</p>
+
+    <ul class="insights">
+      <li><b>1A always bets.</b> Betting can only do as well as checking, and sometimes better — there's no downside.</li>
+      <li><b>2A always calls.</b> Calling nets +2, folding nets −1. Not close.</li>
+      <li><b>2Q always folds.</b> Calling loses −2, folding only loses −1.</li>
+      <li><b>1K always checks.</b> Betting into "2A calls, 2Q folds" nets an expected −0.5 — worse than checking's 0.</li>
+    </ul>
+
+    <p>That leaves exactly two open questions: does <b style="color:var(--gold);">1Q bluff</b>, and does <b style="color:var(--gold);">2K call</b>?</p>
+
+    <div class="terminal">1 never bluffs with a Q
+        │
+        ▼
+2K can safely fold every time
+        │
+        ▼
+1Q's bets are now unpunished... 1Q starts bluffing
+        │
+        ▼
+1 always bluffs with a Q
+        │
+        ▼
+2K should start calling
+        │
+        ▼
+bluffing gets punished... 1Q stops bluffing
+        │
+        └──────────────<span class="arrow">►</span> back to the start</div>
+
+    <p>Neither pure extreme holds still — that loop is the signature of a game that needs a <em>mixed</em> strategy. The fix is the same one CFR discovers automatically: set each player's frequency so the other is exactly indifferent. Solve for the point where 1Q is indifferent between betting and checking, and 2K is indifferent between calling and folding, and you get:</p>
+
+    <div class="math-box">
+      <span class="label">The equilibrium</span>
+      \[ p = q = \frac{1}{3} \]
+      <div class="legend">
+        <div>$p$ — how often Player 1 bluffs a Queen</div>
+        <div>$q$ — how often Player 2 calls a King</div>
+      </div>
+    </div>
+
+    <table class="abstract">
+      <thead><tr><th></th><th>2 calls w/ K (1/3 of the time)</th><th>2 folds K</th></tr></thead>
+      <tbody>
+        <tr><td>1 bluffs Q (1/3 of the time)</td><td>−1/6</td><td>+1/6</td></tr>
+        <tr><td>1 never bluffs</td><td>+1/6</td><td>0</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <p>At <b>p = q = 1/3</b>, neither row nor column can be improved by switching — that's what makes it an equilibrium, not just a guess. Bump the calling frequency up or down from 1/3 and bluffing suddenly becomes clearly right or clearly wrong; the same is true in reverse for the bluffing frequency.</p>
+    </div>
+
+    <p class="soft">This is the whole idea in miniature — set a frequency, not a rule, so the opponent can't profitably deviate either way. Everything CFR does at poker's actual scale is this same logic, run node by node, without the luxury of solving it by algebra.</p>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- 2 -->
+  <section>
+    <span class="section-number">02</span>
     <h2>The CFR loop — how solvers actually learn</h2>
     <p>Counterfactual Regret Minimization doesn't solve a game tree in one shot. It plays itself, over and over — millions of hands — and adjusts a little after each one. The loop is the whole algorithm:</p>
 
@@ -247,6 +309,23 @@
         └──────────────<span class="arrow">►</span> repeat, millions of times</div>
 
     <p>At each decision point, the agent asks a hypothetical: if it had taken a different action here, everything else held fixed, how much more would it have made? If the answer is "more," that action's regret score goes up, and it gets played more often next time. Actions with negative regret get suppressed.</p>
+
+    <h3 style="font-family:var(--font-serif); font-weight:600; font-size:19px; color:var(--gold); margin:26px 0 12px;">A concrete pass through the loop</h3>
+    <p>Strip it down to two strategies, A and B. Each round, one of them scores 1 and the other scores 0 — but which one flips unpredictably, so there's no way to know in advance. Here's what the first four rounds actually look like:</p>
+
+    <table class="abstract">
+      <thead><tr><th>Round</th><th>Played</th><th>A scores</th><th>B scores</th><th>Regret(A)</th><th>Regret(B)</th><th>Next round's mix</th></tr></thead>
+      <tbody>
+        <tr><td>t=1</td><td>100% A</td><td>0</td><td>1</td><td>0</td><td>1</td><td>100% B</td></tr>
+        <tr><td>t=2</td><td>100% B</td><td>1</td><td>0</td><td>1</td><td>1</td><td>50 / 50</td></tr>
+        <tr><td>t=3</td><td>50 / 50</td><td>0</td><td>1</td><td>0.5</td><td>1.5</td><td>25% / 75%</td></tr>
+        <tr><td>t=4</td><td>25% / 75%</td><td>0</td><td>1</td><td>−0.25</td><td>1.75</td><td>0% / 100%</td></tr>
+      </tbody>
+    </table>
+
+    <p>Read one row closely — round 3: playing the 50/50 mix actually earns 0.5 that round (half of B's payoff of 1). Strategy A "would have" scored 0, so its regret barely moves. Strategy B "would have" scored 1, a full point better than what was actually earned, so B's regret jumps from 1 to 1.5. That gap is what pushes B's share of the mix up to 75% for round 4.</p>
+
+    <p>Notice round 4: Regret(A) goes <em>negative</em> — the agent did better than A would have. Regret matching floors this at zero rather than penalizing it further, so A doesn't get erased, it just stops earning extra weight. That's the entire mechanism, run millions of times across every decision point in a much larger game.</p>
 
     <div class="callout">
       <p><b>Why this converges:</b> as the average regret at every decision point drifts toward zero, the running average of all strategies played — not the most recent one, the average — converges toward a Game Theory Optimal equilibrium.</p>
@@ -270,7 +349,7 @@
 
   <!-- 2 -->
   <section>
-    <span class="section-number">02</span>
+    <span class="section-number">03</span>
     <h2>Why GTO's guarantees vanish at 3+ players <span class="status">unsolved</span></h2>
     <p>In heads-up, zero-sum poker, the Minimax Theorem is a genuine safety net: play the equilibrium and your opponent — no matter what they do — cannot push your expected return below zero. That guarantee is a two-player, zero-sum artifact. Add a third player and it disappears.</p>
 
@@ -292,7 +371,7 @@
 
   <!-- 3 -->
   <section>
-    <span class="section-number">03</span>
+    <span class="section-number">04</span>
     <h2>Taming continuous bet sizes</h2>
     <p>Limit hold'em has a handful of fixed bet sizes, so its tree can be written down explicitly. No-limit doesn't — a bet can be any amount from one chip to a player's entire stack. That's an infinite action space, and solvers can't enumerate infinity.</p>
 
@@ -320,7 +399,7 @@
 
   <!-- 4 -->
   <section>
-    <span class="section-number">04</span>
+    <span class="section-number">05</span>
     <h2>How humans actually use this at the table</h2>
     <p>A solver hands a player the destination: a set of balanced frequencies. A human still has to get there in real time, with a fraction of a solver's memory and none of its patience. In practice, strong players approximate the theory with a few shortcuts:</p>
 
@@ -336,9 +415,52 @@
 
   <hr class="divider" />
 
-  <!-- 5 -->
+  <!-- 6 -->
   <section>
-    <span class="section-number">05</span>
+    <span class="section-number">06</span>
+    <h2>The Josephus Problem — surviving a death circle with math</h2>
+    <p>This one isn't poker, but it's the same habit of mind: find the position that wins, not by guessing, but by working out the structure underneath.</p>
+
+    <p>The story comes from the historian Flavius Josephus. During the Roman siege of the Jewish town of Yodfat in 67 CE, Josephus and roughly forty other men held out in a cave rather than surrender. Facing capture, the group is said to have agreed on a pact: form a circle and kill every other person, round after round, until only one man was left — who would then take his own life. Nobody would die alone, and nobody would be taken by the Romans alive.</p>
+
+    <p class="soft">Josephus, by his own account, didn't want to die. He worked out — quickly, and by his own telling almost too calmly — exactly where in the circle to stand so that he'd be among the last two left. When the killing reached that point, he and the one other survivor simply stepped out of the pact and surrendered to the Romans instead. (The exact headcount and counting rule shift a little depending on which telling you read — this is the shape of the story, not a forensic transcript.)</p>
+
+    <h3 style="font-family:var(--font-serif); font-weight:600; font-size:19px; color:var(--gold); margin:26px 0 12px;">The puzzle underneath it</h3>
+    <p>Strip away the history and it's a clean structural question: <em>n</em> people stand in a circle. Going around, every 2nd person is eliminated. Which starting position is the last one standing?</p>
+
+    <p>Work it by hand for 10 people and a pattern falls out almost immediately:</p>
+
+    <div class="terminal">Circle:  1  2  3  4  5  6  7  8  9  10
+Round 1: kill 2, 4, 6, 8, 10   → left: 1 3 5 7 9
+Round 2: kill 3, 7, 1          → left: 5 9
+Round 3: kill 9                → survivor: <span class="arrow">5</span></div>
+
+    <p>Five survives. That's not a coincidence — it's the position <em>2L + 1</em>, where L is what's left over once you subtract the largest power of two that still fits inside 10 (8, with 2 left over): 2(2)+1 = 5.</p>
+
+    <div class="math-box">
+      <span class="label">The closed-form answer</span>
+      \[ J(n) = 2L + 1, \quad \text{where } n = 2^m + L, \ 0 \le L < 2^m \]
+      <div class="legend">
+        <div>$n$ — the number of people in the circle</div>
+        <div>$2^m$ — the largest power of two that still fits inside $n$</div>
+        <div>$L$ — whatever's left over after subtracting it</div>
+      </div>
+    </div>
+
+    <p>The reason a power of two shows up: every time the circle completes a full lap with an even number of people in it, exactly half get eliminated and the survivors are back in a fresh circle of half the size, just relabeled. Powers of two are the sizes where that halving lands perfectly — everything else is just "a clean power-of-two circle, plus L extra people bolted on the front," and those L extras are exactly who determines the final answer.</p>
+
+    <div class="callout">
+      <p><b>The party trick version:</b> write $n$ in binary and rotate the leading 1 around to the end. For n = 10 (binary <code>1010</code>), rotating gives <code>0101</code> = 5 — the same answer, with no arithmetic at all.</p>
+    </div>
+
+    <p class="soft">The connective thread to everything above: regret matching finds a stable frequency by recursion, node by node. The Josephus problem finds a safe position by recursion, lap by lap. Neither one requires foresight into what the other side will do — just a structure that, worked correctly, gives you the answer whether or not you understand why it feels surprising.</p>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- 7 -->
+  <section>
+    <span class="section-number">07</span>
     <h2>Cross-domain: poker ↔ quantitative trading</h2>
     <p>Quant firms recruit poker players because the two disciplines run on the same underlying math: probabilistic decisions, made under incomplete information, against an adversary who is also trying to win.</p>
 
