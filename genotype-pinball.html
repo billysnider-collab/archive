@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Genome as Pinball Machine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0a0e17;
+    --panel: #10182b;
+    --panel-line: #223050;
+    --ink: #e9e4d6;
+    --muted: #8a93ab;
+    --amber: #f4b942;   /* eye */
+    --coral: #ff6b5e;   /* carcinization */
+    --teal: #4ecdc4;    /* echolocation */
+    --violet: #b98ce8;  /* sabre-teeth */
+    --sage: #86c19a;    /* flight */
+    --cyan: #5fd0f0;    /* bioelectric */
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(ellipse at 20% -10%, rgba(244,185,66,0.06), transparent 45%),
+      radial-gradient(ellipse at 90% 10%, rgba(95,208,240,0.05), transparent 40%),
+      var(--bg);
+    color:var(--ink);
+    font-family:'Source Serif 4', Georgia, serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.mono{font-family:'Space Grotesk', sans-serif;}
+  .label{font-family:'JetBrains Mono', monospace; letter-spacing:0.12em; text-transform:uppercase;}
+
+  header.hero{
+    max-width:1100px;
+    margin:0 auto;
+    padding:64px 28px 20px;
+    text-align:center;
+  }
+  .eyebrow{
+    font-size:12px;
+    color:var(--muted);
+    letter-spacing:0.22em;
+    margin-bottom:18px;
+  }
+  h1.title{
+    font-size:clamp(32px, 5.5vw, 64px);
+    font-weight:700;
+    line-height:1.05;
+    margin:0 0 14px;
+    letter-spacing:-0.01em;
+  }
+  h1.title span{
+    background:linear-gradient(90deg, var(--amber), var(--coral) 40%, var(--teal) 75%, var(--cyan));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+  .subtitle{
+    max-width:640px;
+    margin:0 auto;
+    font-size:18px;
+    color:var(--muted);
+    line-height:1.6;
+    font-style:italic;
+  }
+
+  .board-wrap{
+    max-width:1000px;
+    margin:44px auto 8px;
+    padding:0 20px;
+  }
+  .board-frame{
+    background:var(--panel);
+    border:1px solid var(--panel-line);
+    border-radius:6px;
+    padding:18px 18px 8px;
+    box-shadow: 0 30px 80px -30px rgba(0,0,0,0.7);
+  }
+  .board-frame .frame-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    padding:2px 4px 14px;
+    border-bottom:1px solid var(--panel-line);
+    margin-bottom:10px;
+  }
+  .frame-header .name{font-size:12px; color:var(--muted);}
+  .frame-header .hint{font-size:11px; color:var(--muted); opacity:0.7;}
+  canvas{
+    display:block;
+    width:100%;
+    height:auto;
+    cursor:pointer;
+    border-radius:3px;
+  }
+  .groove-legend{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px 18px;
+    padding:14px 6px 16px;
+    font-size:11px;
+  }
+  .groove-legend span{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    color:var(--muted);
+  }
+  .swatch{width:9px; height:9px; border-radius:2px; display:inline-block;}
+
+  .board-caption{
+    text-align:center;
+    font-size:13px;
+    color:var(--muted);
+    margin:14px auto 0;
+    max-width:520px;
+  }
+
+  section{
+    max-width:820px;
+    margin:0 auto;
+    padding:80px 28px;
+  }
+  section.tight{padding-top:20px;}
+
+  p.lede{
+    font-size:19px;
+    line-height:1.75;
+    color:var(--ink);
+  }
+  p.lede + p.lede{margin-top:20px;}
+
+  .divider{
+    max-width:820px;
+    margin:0 auto;
+    padding:0 28px;
+  }
+  .divider hr{
+    border:none;
+    border-top:1px solid var(--panel-line);
+    margin:0;
+  }
+
+  .pillars{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:26px;
+  }
+  @media (max-width:760px){ .pillars{grid-template-columns:1fr;} }
+  .pillar{
+    background:var(--panel);
+    border:1px solid var(--panel-line);
+    border-radius:6px;
+    padding:26px 22px;
+  }
+  .pillar .num{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    color:var(--muted);
+    margin-bottom:14px;
+    letter-spacing:0.1em;
+  }
+  .pillar h3{
+    font-size:19px;
+    margin:0 0 12px;
+    line-height:1.3;
+  }
+  .pillar p{
+    font-size:15px;
+    line-height:1.65;
+    color:#c7c2b3;
+    margin:0;
+  }
+  .pillar.amber h3{color:var(--amber);}
+  .pillar.coral h3{color:var(--coral);}
+  .pillar.teal h3{color:var(--teal);}
+
+  h2.section-title{
+    font-size:clamp(24px, 3.5vw, 32px);
+    margin:0 0 8px;
+    font-weight:600;
+  }
+  .section-eyebrow{
+    font-size:11px;
+    color:var(--muted);
+    margin-bottom:10px;
+  }
+
+  .gallery{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:16px;
+    margin-top:34px;
+  }
+  @media (max-width:760px){ .gallery{grid-template-columns:1fr 1fr;} }
+  @media (max-width:480px){ .gallery{grid-template-columns:1fr;} }
+  .trait-card{
+    border:1px solid var(--panel-line);
+    border-radius:6px;
+    padding:18px 16px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.015), transparent);
+  }
+  .trait-card .dot{
+    width:10px; height:10px; border-radius:50%;
+    margin-bottom:12px;
+  }
+  .trait-card h4{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:14.5px;
+    margin:0 0 6px;
+    font-weight:600;
+  }
+  .trait-card p{
+    font-size:13px;
+    color:var(--muted);
+    line-height:1.55;
+    margin:0;
+  }
+
+  blockquote.outro{
+    max-width:720px;
+    margin:0 auto;
+    padding:100px 28px 120px;
+    text-align:center;
+  }
+  blockquote.outro p{
+    font-size:clamp(21px, 3vw, 28px);
+    line-height:1.55;
+    font-style:italic;
+    color:var(--ink);
+    margin:0;
+  }
+  blockquote.outro .signoff{
+    margin-top:22px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    color:var(--muted);
+    font-style:normal;
+    letter-spacing:0.1em;
+  }
+
+  footer{
+    text-align:center;
+    padding:0 28px 60px;
+    font-size:11px;
+    color:#4b5470;
+    font-family:'JetBrains Mono', monospace;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    * { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="eyebrow label">Convergent Evolution — A Visual Essay</div>
+  <h1 class="title">The Genome as a <span>Pinball Machine</span></h1>
+  <p class="subtitle">Drop a marble anywhere on the board. Watch where it ends up.</p>
+</header>
+
+<div class="board-wrap">
+  <div class="board-frame">
+    <div class="frame-header">
+      <span class="name label">Genotype Space — Live Simulation</span>
+      <span class="hint label">click the board to drop a marble</span>
+    </div>
+    <canvas id="board" width="1000" height="560"></canvas>
+    <div class="groove-legend" id="legend"></div>
+  </div>
+  <p class="board-caption">Every marble starts somewhere different. The topology — grooves worn in by physics, chemistry, and conserved developmental toolkits — decides where it lands.</p>
+</div>
+
+<section class="tight">
+  <p class="lede">It's wild enough when physics or ecology forces disparate body plans into the same shape. But when you zoom into the genome and find nature hitting the exact same biological keystrokes across lineages separated by hundreds of millions of years, the phenomenon stops being a neat coincidence. It starts to look like a fundamental property of how life navigates possibility.</p>
+  <p class="lede">Picture genotype space as a warped board. At the top, billions of random mutations drop in like marbles. The surface looks vast and open — but it isn't flat. Deep grooves and funnels have been worn into it by the immutable laws of physics, chemistry, and ancient developmental toolkits. No matter which launcher releases the marble — the mammalian one or the cetacean one — the underlying topography can force it into the exact same narrow slot at the bottom.</p>
+</section>
+
+<div class="divider"><hr></div>
+
+<section>
+  <div class="section-eyebrow label">Why the attractor holds</div>
+  <h2 class="section-title">Three reasons the board is warped this way</h2>
+  <div class="pillars" style="margin-top:32px;">
+    <div class="pillar amber">
+      <div class="num label">01</div>
+      <h3>Physics doesn't care about taxonomy</h3>
+      <p>Fluid dynamics demands a streamlined body for any fast aquatic predator — ichthyosaur, shark, or dolphin. Optics demands a dark chamber and a focusing lens to project a 2D image onto a sensor. The number of ways to solve a physical problem well is genuinely finite.</p>
+    </div>
+    <div class="pillar coral">
+      <div class="num label">02</div>
+      <h3>The tinkerer's shelf is sparse</h3>
+      <p>Evolution rarely invents from scratch — it improvises with parts already in the shed. Because complex animals share an ancient, conserved genetic baseline, those parts can only be tweaked so many ways before the organism fails to develop. Downregulating a Hox gene is one of the very few safe levers to pull.</p>
+    </div>
+    <div class="pillar teal">
+      <div class="num label">03</div>
+      <h3>Deep homology</h3>
+      <p>An octopus and a human haven't shared an eyed ancestor for over 500 million years, yet both use variants of the Pax6 gene to trigger eye development. The manifestation is convergent. The genetic trigger was waiting in the dark the whole time.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><hr></div>
+
+<section>
+  <div class="section-eyebrow label">Six grooves in the board</div>
+  <h2 class="section-title">Where the marbles keep landing</h2>
+  <div class="gallery">
+    <div class="trait-card"><div class="dot" style="background:var(--amber)"></div><h4>Camera eyes</h4><p>Evolved independently 40+ times — vertebrates, cephalopods, box jellies. Nearly identical cross-sections, no shared eyed ancestor.</p></div>
+    <div class="trait-card"><div class="dot" style="background:var(--coral)"></div><h4>Carcinization</h4><p>The crab body plan re-evolved at least five separate times from lobster-like ancestors, via the same Hox gene downregulation each time.</p></div>
+    <div class="trait-card"><div class="dot" style="background:var(--teal)"></div><h4>Echolocation</h4><p>Bats and toothed whales converged on biosonar — and on the same mutations in the same gene, Prestin.</p></div>
+    <div class="trait-card"><div class="dot" style="background:var(--violet)"></div><h4>Sabre-teeth</h4><p>True cats, nimravids, and Thylacosmilus — a marsupial with no placental ancestry at all — independently built near-identical curved canines.</p></div>
+    <div class="trait-card"><div class="dot" style="background:var(--sage)"></div><h4>Flight</h4><p>Wings evolved at least four times — insect cuticle, pterosaur membrane, feathered forelimb, bat digit — each a different starting anatomy solving the same aerodynamics problem.</p></div>
+    <div class="trait-card"><div class="dot" style="background:var(--cyan)"></div><h4>Bioelectric organs</h4><p>Electric fish organs evolved independently at least six times, repeatedly repurposing the same muscle-derived tissue pathway.</p></div>
+  </div>
+</section>
+
+<blockquote class="outro">
+  <p>If we ever find complex life on an exoplanet with liquid water and a dense atmosphere — will we be shocked by how alien it looks? Or spooked by how eerily familiar its attractor shapes turn out to be?</p>
+  <div class="signoff">GENOTYPE SPACE / SIMULATION RUNNING</div>
+</blockquote>
+
+<footer>the board keeps dropping marbles whether you're watching or not</footer>
+
+<script>
+(function(){
+  const canvas = document.getElementById('board');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+
+  const slots = [
+    {name:'EYE', color:'#f4b942', count:0},
+    {name:'CARCINIZATION', color:'#ff6b5e', count:0},
+    {name:'ECHOLOCATION', color:'#4ecdc4', count:0},
+    {name:'SABRE-TEETH', color:'#b98ce8', count:0},
+    {name:'FLIGHT', color:'#86c19a', count:0},
+    {name:'BIOELECTRIC', color:'#5fd0f0', count:0},
+  ];
+
+  // legend
+  const legend = document.getElementById('legend');
+  slots.forEach(s=>{
+    const el = document.createElement('span');
+    el.innerHTML = `<span class="swatch" style="background:${s.color}"></span>${s.name}`;
+    legend.appendChild(el);
+  });
+
+  // pegs: staggered rows across the funnel region (y 60 to 400)
+  const pegs = [];
+  const rows = 9;
+  const topY = 70, botY = 420;
+  for(let r=0;r<rows;r++){
+    const y = topY + (botY-topY) * (r/(rows-1));
+    // funnel narrows as r increases
+    const spread = 1 - 0.72*(r/(rows-1)); // 1 -> 0.28
+    const marginX = W*(1-spread)/2;
+    const usableW = W - marginX*2;
+    const cols = 11 - Math.floor(r*0.5);
+    for(let c=0;c<cols;c++){
+      let x = marginX + usableW*(c/(cols-1));
+      if(r%2===1) x += (usableW/cols)*0.5*0; // stagger handled by cols offset naturally
+      pegs.push({x, y, r:3.2});
+    }
+  }
+
+  function wallX(y){
+    // converging funnel walls from top edges to a narrow neck, then straight
+    const neckY = 420, neckHalfW = W*0.44;
+    if(y >= neckY) return neckHalfW;
+    const t = (y - topY)/(neckY - topY);
+    const topHalfW = W*0.49;
+    return topHalfW + (neckHalfW-topHalfW)*t;
+  }
+
+  const slotW = (W)/slots.length;
+
+  let marbles = [];
+  function spawnMarble(x){
+    marbles.push({
+      x: x!==undefined ? x : 30 + Math.random()*(W-60),
+      y: 14,
+      vx: (Math.random()-0.5)*0.6,
+      vy: 0.6,
+      settled:false,
+      slot:null,
+      hue: Math.random()
+    });
+  }
+
+  for(let i=0;i<6;i++) spawnMarble();
+
+  canvas.addEventListener('click', (e)=>{
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = W/rect.width;
+    const x = (e.clientX - rect.left)*scaleX;
+    for(let i=0;i<3;i++) spawnMarble(x + (Math.random()-0.5)*20);
+  });
+
+  let frame = 0;
+  function step(){
+    frame++;
+    ctx.clearRect(0,0,W,H);
+
+    // background subtle grid
+    ctx.fillStyle = 'rgba(255,255,255,0.012)';
+    for(let gx=0; gx<W; gx+=40){ ctx.fillRect(gx,0,1,H); }
+
+    // funnel walls
+    ctx.strokeStyle = 'rgba(138,147,171,0.35)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    for(let y=topY;y<=420;y+=4){
+      const wx = W/2 - wallX(y);
+      if(y===topY) ctx.moveTo(wx,y); else ctx.lineTo(wx,y);
+    }
+    ctx.stroke();
+    ctx.beginPath();
+    for(let y=topY;y<=420;y+=4){
+      const wx = W/2 + wallX(y);
+      if(y===topY) ctx.moveTo(wx,y); else ctx.lineTo(wx,y);
+    }
+    ctx.stroke();
+
+    // neck straight walls down to slot row
+    ctx.strokeStyle = 'rgba(138,147,171,0.35)';
+    ctx.beginPath();
+    ctx.moveTo(W/2 - wallX(420), 420); ctx.lineTo(W/2 - wallX(420), 470);
+    ctx.moveTo(W/2 + wallX(420), 420); ctx.lineTo(W/2 + wallX(420), 470);
+    ctx.stroke();
+
+    // slot dividers + labels
+    ctx.font = '9px "JetBrains Mono", monospace';
+    ctx.textAlign = 'center';
+    for(let i=0;i<=slots.length;i++){
+      const x = i*slotW;
+      ctx.strokeStyle = 'rgba(138,147,171,0.25)';
+      ctx.beginPath();
+      ctx.moveTo(x, 470); ctx.lineTo(x, H-20);
+      ctx.stroke();
+    }
+    slots.forEach((s,i)=>{
+      const cx = slotW*i + slotW/2;
+      ctx.fillStyle = s.color;
+      ctx.globalAlpha = 0.85;
+      ctx.fillText(s.name, cx, H-32);
+      ctx.font = '15px "Space Grotesk", sans-serif';
+      ctx.fillText(s.count, cx, H-12);
+      ctx.font = '9px "JetBrains Mono", monospace';
+      ctx.globalAlpha = 1;
+    });
+    ctx.textAlign = 'left';
+
+    // pegs
+    pegs.forEach(p=>{
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle = 'rgba(233,228,214,0.55)';
+      ctx.fill();
+    });
+
+    // marbles physics
+    marbles.forEach(m=>{
+      if(m.settled) return;
+      m.vy += 0.045;
+      m.vy = Math.min(m.vy, 3.2);
+      m.x += m.vx;
+      m.y += m.vy;
+
+      // peg collisions
+      for(const p of pegs){
+        const dx = m.x-p.x, dy = m.y-p.y;
+        const dist = Math.sqrt(dx*dx+dy*dy);
+        const minD = p.r+3.5;
+        if(dist < minD && dist > 0){
+          const nx = dx/dist, ny = dy/dist;
+          m.x = p.x + nx*minD;
+          m.y = p.y + ny*minD;
+          m.vx = nx*1.1 + (Math.random()-0.5)*0.9;
+          m.vy = Math.max(ny*1.1, 0.3);
+        }
+      }
+
+      // funnel walls
+      if(m.y < 420){
+        const halfW = wallX(m.y);
+        const left = W/2 - halfW, right = W/2 + halfW;
+        if(m.x < left+3.5){ m.x = left+3.5; m.vx = Math.abs(m.vx)*0.6+0.3; }
+        if(m.x > right-3.5){ m.x = right-3.5; m.vx = -Math.abs(m.vx)*0.6-0.3; }
+      } else if(m.y < 470){
+        const halfW = wallX(420);
+        const left = W/2 - halfW, right = W/2 + halfW;
+        if(m.x < left+3.5){ m.x = left+3.5; m.vx *= -0.4; }
+        if(m.x > right-3.5){ m.x = right-3.5; m.vx *= -0.4; }
+      }
+
+      if(m.y >= H-24 && !m.settled){
+        m.settled = true;
+        const idx = Math.min(slots.length-1, Math.max(0, Math.floor(m.x/slotW)));
+        m.slot = idx;
+        slots[idx].count++;
+      }
+
+      // draw
+      let color = '#e9e4d6';
+      if(m.settled) color = slots[m.slot].color;
+      ctx.beginPath();
+      ctx.arc(m.x,m.y,4.2,0,Math.PI*2);
+      ctx.fillStyle = color;
+      ctx.shadowColor = color;
+      ctx.shadowBlur = m.settled ? 6 : 3;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+    });
+
+    // cull settled marbles that piled up too long, respawn ambient ones
+    marbles = marbles.filter(m => !(m.settled && frame % 400 === 0 && Math.random()<0.5));
+
+    if(frame % 90 === 0 && marbles.length < 40){
+      spawnMarble();
+    }
+
+    requestAnimationFrame(step);
+  }
+  step();
+})();
+</script>
+
+</body>
+</html>
