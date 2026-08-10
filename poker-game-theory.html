@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Game Theory & Poker — The Archive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" defer></script>
+<style>
+  :root{
+    --paper:#eae3d2;
+    --paper-2:#e2d9c4;
+    --card:#f4efe2;
+    --ink:#2a2622;
+    --ink-soft:#5b5347;
+    --rule:#c9bd9e;
+    --oxblood:#7c2e2a;
+    --oxblood-dim:#a8564f;
+    --green:#3a4a3a;
+    --gold:#a3792f;
+    --radius:3px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    background-image: radial-gradient(rgba(42,38,34,0.035) 1px, transparent 1px);
+    background-size: 3px 3px;
+    color:var(--ink);
+    font-family:'Source Serif 4', Georgia, serif;
+    line-height:1.68;
+  }
+  a{color:inherit;}
+  ::selection{background:var(--oxblood); color:var(--card);}
+
+  .backlink{
+    display:block;
+    max-width:760px;
+    margin: 28px auto 0;
+    padding: 0 28px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    letter-spacing:.04em;
+    color:var(--ink-soft);
+    text-decoration:none;
+  }
+  .backlink:hover{ color:var(--oxblood); }
+
+  header{
+    max-width: 760px;
+    margin: 14px auto 0;
+    padding: 30px 28px 34px;
+    border-bottom: 2px solid var(--ink);
+  }
+  .kicker{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--oxblood);
+    margin:0 0 10px;
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:42px;
+    margin:0 0 12px;
+    letter-spacing:-.01em;
+    line-height:1.08;
+  }
+  .lede{
+    color:var(--ink-soft);
+    font-style:italic;
+    font-size:16.5px;
+    max-width:60ch;
+    margin:0 0 18px;
+  }
+  .tag-row{ display:flex; flex-wrap:wrap; gap:6px; }
+  .tag{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10px;
+    padding:3px 9px;
+    border:1px solid var(--rule);
+    border-radius:20px;
+    color:var(--ink-soft);
+    background: var(--card);
+  }
+
+  main{
+    max-width:760px;
+    margin: 0 auto 100px;
+    padding: 0 28px;
+  }
+
+  .toc{
+    margin: 34px 0 46px;
+    padding: 18px 22px;
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+  }
+  .toc p{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin: 0 0 10px;
+  }
+  .toc ol{ margin:0; padding-left: 20px; }
+  .toc li{ font-size:14.5px; margin-bottom:6px; }
+  .toc a{ text-decoration:none; }
+  .toc a:hover{ color:var(--oxblood); }
+
+  section{
+    padding: 46px 0 6px;
+    border-top: 1px solid var(--rule);
+  }
+  section:first-of-type{ border-top:none; padding-top:0; }
+
+  .section-num{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    letter-spacing:.14em;
+    color:var(--oxblood);
+    display:block;
+    margin-bottom:10px;
+  }
+  h2{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:26px;
+    margin: 0 0 20px;
+    line-height:1.2;
+  }
+  h3{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:17px;
+    margin: 26px 0 10px;
+  }
+  p{ font-size:15.5px; color:var(--ink); margin: 0 0 16px; }
+  p.soft{ color:var(--ink-soft); }
+
+  .callout{
+    background: var(--card);
+    border-left: 3px solid var(--oxblood);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    margin: 20px 0;
+  }
+  .callout p{ margin:0; font-size:14.5px; color:var(--ink-soft); }
+  .callout b{ color:var(--ink); }
+
+  .diagram{
+    background: var(--ink);
+    color: var(--paper);
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 12px;
+    line-height:1.9;
+    padding: 22px 20px;
+    border-radius: var(--radius);
+    margin: 20px 0 24px;
+    overflow-x:auto;
+    white-space:pre;
+  }
+  .diagram .arrow{ color: var(--gold); }
+
+  .math-box{
+    background: var(--paper-2);
+    border: 1px dashed var(--rule);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin: 6px 0 24px;
+  }
+  .math-box .label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    display:block;
+    margin-bottom:10px;
+  }
+  .math-box .legend{
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-top: 12px;
+  }
+  .math-box .legend div{ margin-bottom:4px; }
+
+  ul.facts{ list-style:none; margin: 16px 0 22px; padding:0; }
+  ul.facts li{
+    padding: 10px 0 10px 22px;
+    position:relative;
+    font-size:15px;
+    color:var(--ink);
+    border-bottom: 1px dotted var(--rule);
+  }
+  ul.facts li:last-child{ border-bottom:none; }
+  ul.facts li::before{
+    content:"—";
+    position:absolute; left:0; top:10px;
+    color: var(--oxblood);
+    font-weight:600;
+  }
+  ul.facts li b{ color:var(--oxblood); }
+
+  table{
+    width:100%;
+    border-collapse: collapse;
+    margin: 18px 0 26px;
+    font-size: 13.5px;
+  }
+  thead th{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    text-align:left;
+    color: var(--card);
+    background: var(--oxblood);
+    padding: 9px 12px;
+  }
+  thead th:first-child{ border-top-left-radius:3px; }
+  thead th:last-child{ border-top-right-radius:3px; }
+  tbody td{
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--rule);
+    color: var(--ink);
+    vertical-align:top;
+  }
+  tbody tr:nth-child(odd){ background: rgba(124,46,42,0.035); }
+
+  .parallel-table td:first-child{ color: var(--oxblood-dim); font-style:italic; }
+
+  .pull{
+    margin: 30px 0;
+    padding: 20px 24px;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+  .pull p{
+    font-family:'Fraunces', serif;
+    font-style:italic;
+    font-weight:500;
+    font-size: 19px;
+    color: var(--ink);
+    margin:0;
+    line-height:1.5;
+  }
+  .pull .attr{
+    font-family:'IBM Plex Mono', monospace;
+    font-style:normal;
+    font-size:10.5px;
+    color:var(--ink-soft);
+    text-transform:uppercase;
+    letter-spacing:.1em;
+    display:block;
+    margin-top:10px;
+  }
+
+  .status-flag{
+    display:inline-block;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    padding:3px 9px;
+    border-radius:20px;
+    background:#e7ede2; color:var(--green); border:1px solid #b9c9ac;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+  .status-flag.warn{
+    background:#f6e5e2; color:var(--oxblood); border:1px solid #dcb0aa;
+  }
+
+  .takeaway{
+    margin-top: 40px;
+    padding: 34px 0 6px;
+    border-top: 2px solid var(--ink);
+    text-align:center;
+  }
+  .takeaway .kicker{ text-align:center; }
+  .takeaway p.line{
+    font-family:'Fraunces', serif;
+    font-style:italic;
+    font-weight:500;
+    font-size: 20px;
+    max-width: 56ch;
+    margin: 10px auto 0;
+    line-height:1.5;
+  }
+
+  footer{
+    max-width:760px;
+    margin: 40px auto 60px;
+    padding: 20px 28px 0;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:var(--ink-soft);
+    border-top:1px solid var(--rule);
+    text-align:center;
+  }
+  footer a{ color: var(--oxblood-dim); text-decoration:none; border-bottom: 1px dotted currentColor; }
+</style>
+</head>
+<body>
+
+<a class="backlink" href="index.html">← back to the archive</a>
+
+<header>
+  <p class="kicker">Reading Aid · Synthesized Notes</p>
+  <h1>Game Theory &amp; Poker</h1>
+  <p class="lede">How solvers actually learn, why the guarantees vanish at a three-handed table, and what any of this has to do with a market maker's bid-ask spread.</p>
+  <div class="tag-row">
+    <span class="tag">game-theory</span>
+    <span class="tag">poker</span>
+    <span class="tag">cfr</span>
+    <span class="tag">nash-equilibrium</span>
+    <span class="tag">quant-trading</span>
+  </div>
+</header>
+
+<main>
+
+  <div class="toc">
+    <p>Contents</p>
+    <ol>
+      <li><a href="#loop">The CFR loop — how solvers actually learn</a></li>
+      <li><a href="#multiplayer">Why GTO's guarantees vanish at 3+ players</a></li>
+      <li><a href="#bets">Taming continuous bet sizes</a></li>
+      <li><a href="#human">How humans actually use this at the table</a></li>
+      <li><a href="#trading">Cross-domain: poker ↔ quantitative trading</a></li>
+    </ol>
+  </div>
+
+  <!-- 1 -->
+  <section id="loop">
+    <span class="section-num">01</span>
+    <h2>The CFR loop — how solvers actually learn</h2>
+    <p>Counterfactual Regret Minimization doesn't solve a game tree in one shot. It plays itself, over and over — millions of hands — and adjusts a little after each one. The loop is the whole algorithm:</p>
+
+    <div class="diagram">[ Current strategy σᵗ ]
+        │
+        ▼
+[ Play many hands / traverse the tree ]
+        │
+        ▼
+[ Measure how much better each alternative action would have been ]
+        │
+        ▼
+[ Accumulate that "regret" ]
+        │
+        ▼
+[ Regret matching <span class="arrow">→</span> nudge frequencies toward the high-regret actions ]
+        │
+        └──────────────<span class="arrow">►</span> repeat, millions of times</div>
+
+    <p>At each decision point, the agent asks a hypothetical: <i>if I'd taken a different action here, everything else held fixed, how much more would I have made?</i> If the answer is "more," that action's regret score goes up, and it gets played more often next time. Actions with negative regret get suppressed. Nothing here requires understanding the opponent's strategy directly — just tracking your own hypothetical what-ifs, node by node.</p>
+
+    <div class="callout">
+      <p><b>Why this converges:</b> as the average regret at every decision point drifts toward zero, the running average of all strategies played — not the most recent one, the average — converges toward a Game Theory Optimal equilibrium.</p>
+    </div>
+
+    <div class="math-box">
+      <span class="label">For the curious — the formal regret term</span>
+      \[ R_T(I, K) = \sum_{t=1}^T \pi_{-i}^{\sigma^t}(I)\Big[u_i(\sigma^t_{I \to K}, I) - u_i(\sigma^t, I)\Big] \]
+      <div class="legend">
+        <div>$I$ — the decision point (information set)</div>
+        <div>$K$ — the alternative action being scored</div>
+        <div>$\pi_{-i}^{\sigma^t}(I)$ — probability of reaching $I$ at all, given the player is trying to</div>
+        <div>the bracket — utility with $K$ played, minus utility with the actual strategy</div>
+      </div>
+    </div>
+
+    <h3>What CFR+ changed — the version that solved heads-up limit hold'em</h3>
+    <ul class="facts">
+      <li><b>Zero-flooring regrets.</b> Negative regret used to accumulate forever, taking a long time to recover. CFR+ floors it at zero, so a previously-bad action can bounce back the moment it becomes good again.</li>
+      <li><b>Weighted averaging.</b> Later iterations count more than the noisy early ones — the strategy has had time to shake out its initial randomness, so weighting it more heavily speeds up clean convergence.</li>
+    </ul>
+  </section>
+
+  <!-- 2 -->
+  <section id="multiplayer">
+    <span class="section-num">02</span>
+    <h2>Why GTO's guarantees vanish at 3+ players <span class="status-flag warn">unsolved</span></h2>
+    <p>In heads-up, zero-sum poker, the Minimax Theorem is a genuine safety net: play the equilibrium and your opponent — no matter what they do — cannot push your expected return below zero. That guarantee is a two-player, zero-sum artifact. Add a third player and it quietly disappears.</p>
+
+    <ul class="facts">
+      <li><b>No proven convergence.</b> CFR has no guarantee of reaching a stable equilibrium once there are three or more players at the table.</li>
+      <li><b>Multiple, disjoint equilibria.</b> There isn't one GTO to converge to — there can be several, and which one a solver lands near depends on path and luck.</li>
+      <li><b>Equity doesn't have to go to you.</b> A rigid "balanced" strategy defends against individual, uncoordinated deviation — it does not defend against a chaotic multi-way pot.</li>
+    </ul>
+
+    <div class="pull">
+      <p>"If two players adopt uncoordinated or reckless sub-optimal strategies, they can dramatically increase game variance and bleed chips to each other — in ways that inadvertently destroy the expected value of the third, 'GTO' player."</p>
+      <span class="attr">the Rock-Maniac dynamic</span>
+    </div>
+
+    <p class="soft">Picture a wildly loose "maniac" shoving every hand. That equity has to go somewhere — but nothing forces it toward the disciplined GTO player. It often gets swallowed by whichever opponent adjusts <i>fastest</i>, not by whoever is most theoretically correct. Playing a textbook-balanced strategy in a three-way pot can, in practice, lose EV to a player who's simply reading the table better in the moment.</p>
+  </section>
+
+  <!-- 3 -->
+  <section id="bets">
+    <span class="section-num">03</span>
+    <h2>Taming continuous bet sizes</h2>
+    <p>Limit hold'em has a handful of fixed bet sizes, so its tree can be written down explicitly. No-limit doesn't — a bet can be any amount from one chip to a player's entire stack. That's an infinite action space, and solvers can't enumerate infinity.</p>
+
+    <h3>Action abstraction</h3>
+    <p>The fix is to restrict every decision point to a small, representative set of sizes — say 33% pot, 75% pot, 150% pot, and all-in — and solve only that restricted tree. If a real opponent bets something off that list (a 55% pot bet, say), the solver doesn't break; it uses interpolation to map the odd size onto the nearest branch it actually solved for.</p>
+
+    <h3>Information abstraction — card bucketing</h3>
+    <p>The card side of the tree gets the same treatment: hands with near-identical equity and similar board texture get grouped into a shared bucket, on later streets especially, compressing a state space that would otherwise run into the terabytes.</p>
+
+    <table>
+      <thead>
+        <tr><th>Game type</th><th>What makes it big</th><th>Typical fix</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Limit hold'em</td><td>Huge hand/street combinatorics (~6.5×10¹² river states)</td><td>Suit isomorphism + card bucketing</td></tr>
+        <tr><td>No-limit hold'em</td><td>Continuous bet sizes</td><td>Action abstraction: a few fixed sizes + interpolation for off-tree bets</td></tr>
+        <tr><td>Omaha Hi-Lo</td><td>4-card hands (~82.5× the limit-hold'em tree)</td><td>Hand-equity bucketing &amp; isomorphism</td></tr>
+        <tr><td>Razz (Stud)</td><td>Public up-cards (~2.4×10¹⁵ river hands)</td><td>Rank-order bucketing of visible boards</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <p>Using suit symmetry alone, the raw 22,100 possible flops collapse to <b>455 canonical structures</b> — monotone, two-tone, and rainbow textures that are strategically identical up to relabeling suits. That kind of shortcut is most of where the tractability comes from.</p>
+    </div>
+  </section>
+
+  <!-- 4 -->
+  <section id="human">
+    <span class="section-num">04</span>
+    <h2>How humans actually use this at the table</h2>
+    <p>A solver hands you the destination: a set of balanced frequencies. A human still has to get there in real time, with a fraction of a solver's memory and none of its patience. In practice, strong players approximate the theory with a handful of mental shortcuts:</p>
+
+    <ul class="facts">
+      <li><b>Range thinking, not hand thinking.</b> "What does my whole range look like from here?" rather than "is this specific hand good?"</li>
+      <li><b>Frequency anchors.</b> A rough rule like "bluff about a third as often as I value-bet on this texture" — close enough to balanced without recomputing from scratch each hand.</li>
+      <li><b>Blockers as soft information.</b> Holding the A♠ makes a nut-flush bluff less likely from the opponent — real signal, but easy to over-weight if it's the only thing you're looking at.</li>
+      <li><b>Default to balance, deviate on evidence.</b> Start near GTO, and only step off it once a specific opponent shows a repeated, provable leak — too much folding, too much calling, a sizing tell.</li>
+    </ul>
+
+    <p class="soft">The solver is the map. The player is still the one driving, reading traffic no map saw coming.</p>
+  </section>
+
+  <!-- 5 -->
+  <section id="trading">
+    <span class="section-num">05</span>
+    <h2>Cross-domain: poker ↔ quantitative trading</h2>
+    <p>Quant firms recruit poker players because the two disciplines run on the same underlying math: probabilistic decisions, made under incomplete information, against an adversary who is also trying to win.</p>
+
+    <table class="parallel-table">
+      <thead>
+        <tr><th>Poker concept</th><th>Trading analogue</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Hidden hole cards</td><td>Hidden order-book liquidity, dark pool prints</td></tr>
+        <tr><td>Card removal / blockers</td><td>Order cancellations, volume imbalance as a "removal effect" on hidden flow</td></tr>
+        <tr><td>Balanced value-bet / bluff mix</td><td>Setting a bid-ask spread that can't be picked off</td></tr>
+        <tr><td>Reading a calling station</td><td>Trading against toxic, predictable order flow</td></tr>
+        <tr><td>Enduring variance over 25M hands</td><td>Judging edge over thousands of trades, not one</td></tr>
+      </tbody>
+    </table>
+
+    <p>The common thread in every row: separate the short-term, noisy outcome from the long-run, statistically real edge — and don't let one bad beat (or one bad trade) convince you the underlying strategy was wrong.</p>
+  </section>
+
+  <div class="takeaway">
+    <p class="kicker">In one line</p>
+    <p class="line">Solvers work by obsessively tracking what would have been better at every decision point, and slowly adjusting until neither side can improve by changing — abstraction is what makes that computable, and multiplayer chaos is what keeps the real game unsolved.</p>
+  </div>
+
+</main>
+
+<footer>
+  synthesized from: Chen (SIG) · Schmid, <i>Game Theory and Poker</i> · MIT 15.S50 lecture notes ·
+  <a href="index.html">back to the archive</a>
+</footer>
+
+</body>
+</html>
