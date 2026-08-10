@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Reading Archive</title>
+<title>The Archive</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -224,14 +224,14 @@
 <body>
 
 <header>
-  <p class="kicker">Personal Library</p>
-  <h1>Reading Archive</h1>
-  <p class="lede">A running collection of book notes, chapter by chapter — each one rebuilt into a searchable reading aid with a synthesized rules/ideas index.</p>
+  <p class="kicker">Personal Archive</p>
+  <h1>The Archive</h1>
+  <p class="lede">A running collection of books, essays, and videos — each one rebuilt into a synthesized reading aid or notes page.</p>
   <p class="count" id="count"></p>
 </header>
 
 <div class="controls">
-  <input id="search" type="text" placeholder="search title, author, tag…" autocomplete="off">
+  <input id="search" type="text" placeholder="search title, creator, tag…" autocomplete="off">
   <button class="filter-pill active" data-status="all">All</button>
   <button class="filter-pill" data-status="reading">Reading</button>
   <button class="filter-pill" data-status="finished">Finished</button>
@@ -243,7 +243,7 @@
   <p id="empty">No books match that search.</p>
 </main>
 
-<footer>reading archive · add a book by appending one entry to the BOOKS array</footer>
+<footer>the archive · add an entry by appending one to the BOOKS array</footer>
 
 <script>
 /* ============================================================
@@ -299,13 +299,13 @@ const BOOKS = [
   },
   {
     title: "Why All Roads Lead To Crab",
-    author: "LivingZoo (video essay)",
+    author: "LivingZoo",
     href: "genotype-pinball.html",
     status: "finished",
     rating: null,
     chapters: null,
-    summary: "Carcinization as a lens on convergent evolution — why unrelated decapod lineages keep re-evolving the crab body plan, and what that says about how genomes navigate possibility. Built as an interactive Galton-board visualization.",
-    tags: ["biology", "evolution", "convergent-evolution", "visual-essay"],
+    summary: "Carcinization as a lens on convergent evolution — why unrelated decapod lineages keep re-evolving the crab body plan, and what that says about how genomes navigate possibility.",
+    tags: ["biology", "evolution", "convergent-evolution"],
     accent: "#a3792f"
   }
   // {
@@ -340,7 +340,7 @@ function render(){
     return statusOk && searchOk;
   });
 
-  countEl.textContent = `${BOOKS.length} book${BOOKS.length===1?'':'s'} in the archive`;
+  countEl.textContent = `${BOOKS.length} entr${BOOKS.length===1?'y':'ies'} in the archive`;
   shelf.innerHTML = '';
   emptyEl.style.display = filtered.length ? 'none' : 'block';
 
