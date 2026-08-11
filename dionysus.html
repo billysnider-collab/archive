@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dionysus — The God Who Refuses to Die</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* ===== CSS Variables (Light & Dark Themes) ===== */
+    :root {
+      --bg: #150a10;
+      --bg2: #1c0f16;
+      --panel: #20111a;
+      --wine: #5c1229;
+      --wine-bright: #93233f;
+      --gold: #c9a24a;
+      --gold-bright: #e9c873;
+      --ivy: #3c5734;
+      --ivy-light: #6b8c5f;
+      --bone: #ede4d3;
+      --bone-dim: #b7a98f;
+      --line: rgba(201,162,74,0.22);
+      --shadow: 0 0 60px rgba(147,35,63,0.45);
+      --mask-glow: drop-shadow(0 0 60px rgba(147,35,63,0.45));
+      --bg-radial-1: radial-gradient(ellipse 900px 500px at 50% -10%, rgba(147,35,63,0.35), transparent 60%);
+      --bg-radial-2: radial-gradient(ellipse 700px 500px at 90% 20%, rgba(60,87,52,0.12), transparent 60%);
+      --serif: 'Cormorant Garamond', serif;
+      --display: 'Cinzel Decorative', serif;
+      --mono: 'JetBrains Mono', monospace;
+    }
+    [data-theme="light"] {
+      --bg: #f5efe8;
+      --bg2: #e8dfd2;
+      --panel: #fcf8f0;
+      --wine: #8a2a3a;
+      --wine-bright: #b43a55;
+      --gold: #9a7a3a;
+      --gold-bright: #c9a24a;
+      --ivy: #4a6a3a;
+      --ivy-light: #6b8c5f;
+      --bone: #2a1e18;
+      --bone-dim: #4a3a32;
+      --line: rgba(154,122,58,0.25);
+      --shadow: 0 0 60px rgba(147,35,63,0.25);
+      --mask-glow: drop-shadow(0 0 60px rgba(147,35,63,0.25));
+      --bg-radial-1: radial-gradient(ellipse 900px 500px at 50% -10%, rgba(147,35,63,0.08), transparent 60%);
+      --bg-radial-2: radial-gradient(ellipse 700px 500px at 90% 20%, rgba(60,87,52,0.06), transparent 60%);
+    }
+
+    /* ===== Reset & Base ===== */
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg-radial-1), var(--bg-radial-2), var(--bg);
+      color: var(--bone);
+      font-family: var(--serif);
+      font-size: 19px;
+      line-height: 1.6;
+      transition: background 0.4s, color 0.3s;
+      overflow-x: hidden;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
+    }
+    ::selection { background: var(--wine-bright); color: var(--bone); }
+
+    a { color: var(--gold-bright); text-decoration: none; }
+    a:hover { color: var(--gold); }
+
+    h1, h2, h3, h4 { font-weight: 600; margin: 0; color: var(--bone); }
+
+    /* ===== Utility ===== */
+    .eyebrow {
+      font-family: var(--mono);
+      font-size: 12.5px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      display: flex;
+      align-items: center;
+      gap: 0.7em;
+    }
+    .eyebrow::before {
+      content: "";
+      width: 26px;
+      height: 1px;
+      background: var(--gold);
+      display: inline-block;
+    }
+
+    /* ===== Theme Toggle ===== */
+    #themeToggle {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      z-index: 200;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 18px;
+      line-height: 1;
+      color: var(--gold);
+      backdrop-filter: blur(6px);
+      transition: background 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+      #themeToggle:hover { background: var(--bg2); }
+
+    /* ===== Back to Top ===== */
+    #backToTop {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 150;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 12px 16px;
+      cursor: pointer;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      color: var(--gold);
+      backdrop-filter: blur(6px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s, transform 0.3s;
+      transform: translateY(12px);
+    }
+      #backToTop.visible {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(0);
+      }
+      #backToTop:hover { background: var(--bg2); }
+
+    /* ===== Chapter Navigation ===== */
+    #chapterNav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      padding: 16px 20px;
+      background: linear-gradient(to bottom, var(--bg), transparent);
+      pointer-events: none;
+    }
+    #chapterNav .inner {
+      pointer-events: auto;
+      display: flex;
+      gap: 2px;
+      background: color-mix(in srgb, var(--panel) 80%, transparent);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 6px;
+      backdrop-filter: blur(12px);
+      max-width: 94vw;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+      #chapterNav .inner::-webkit-scrollbar { display: none; }
+      #chapterNav a {
+        font-family: var(--mono);
+        font-size: 11px;
+        letter-spacing: 0.04em;
+        text-decoration: none;
+        color: var(--bone-dim);
+        padding: 8px 13px;
+        border-radius: 999px;
+        white-space: nowrap;
+        transition: color 0.25s, background 0.25s;
+      }
+      #chapterNav a:hover { color: var(--gold-bright); }
+      #chapterNav a.active {
+        color: var(--bg);
+        background: var(--gold);
+      }
+
+    /* ===== Hero ===== */
+    .hero {
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+      padding: 120px 20px 60px;
+    }
+    .mask-wrap {
+      width: min(360px, 62vw);
+      aspect-ratio: 1 / 1.15;
+      position: relative;
+      margin-bottom: 18px;
+      filter: var(--mask-glow);
+    }
+    #maskSvg { width: 100%; height: 100%; overflow: visible; }
+    .mask-eye { transform-origin: center; transition: transform 0.05s linear; }
+    .mask-glow { animation: flicker 5s ease-in-out infinite; }
+    @keyframes flicker {
+      0%, 100% { opacity: 1; }
+      38% { opacity: 0.85; }
+      45% { opacity: 1; }
+      62% { opacity: 0.92; }
+      70% { opacity: 1; }
+    }
+    .ivy-grow {
+      stroke-dasharray: 900;
+      stroke-dashoffset: 900;
+      animation: grow 2.6s ease-out 0.3s forwards;
+    }
+    @keyframes grow { to { stroke-dashoffset: 0; } }
+
+    .hero h1 {
+      font-family: var(--display);
+      font-size: clamp(48px, 11vw, 108px);
+      letter-spacing: 0.05em;
+      line-height: 0.95;
+      color: var(--bone);
+      text-shadow: 0 0 40px rgba(233, 200, 115, 0.25);
+    }
+    .hero .subtitle {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 500;
+      font-size: clamp(18px, 2.6vw, 26px);
+      color: var(--gold-bright);
+      margin-top: 10px;
+      max-width: 640px;
+    }
+    .hero .desc {
+      margin-top: 26px;
+      max-width: 560px;
+      color: var(--bone-dim);
+      font-size: 18px;
+    }
+    .hero .desc b { color: var(--bone); font-weight: 600; }
+    .scroll-cue {
+      margin-top: 50px;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--bone-dim);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    .scroll-cue .line {
+      width: 1px;
+      height: 34px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+      animation: pulse-line 2s ease-in-out infinite;
+    }
+    @keyframes pulse-line { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+
+    /* ===== Sections (Chapters) ===== */
+    main {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px 40px;
+    }
+    section.chapter {
+      padding: 130px 0 40px;
+      position: relative;
+    }
+    .chapter-head { margin-bottom: 44px; }
+    .chapter-head h2 {
+      font-family: var(--display);
+      font-size: clamp(30px, 5vw, 46px);
+      margin-top: 14px;
+      letter-spacing: 0.01em;
+    }
+    .chapter-head .roman {
+      font-family: var(--mono);
+      color: var(--wine-bright);
+      font-size: 13px;
+    }
+    .lede {
+      font-size: 21px;
+      font-style: italic;
+      color: var(--bone);
+      border-left: 2px solid var(--gold);
+      padding-left: 20px;
+      margin: 26px 0 6px;
+      max-width: 680px;
+    }
+
+    p { color: var(--bone-dim); margin: 16px 0; }
+    p b, li b { color: var(--bone); font-weight: 600; }
+    .prose p { color: var(--bone); }
+
+    h3.sub {
+      font-family: var(--serif);
+      font-weight: 700;
+      font-size: 24px;
+      color: var(--gold-bright);
+      margin: 44px 0 14px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+    }
+    h3.sub:first-of-type { border-top: none; padding-top: 0; margin-top: 32px; }
+
+    blockquote {
+      margin: 26px 0;
+      padding: 18px 24px;
+      background: color-mix(in srgb, var(--wine) 20%, transparent);
+      border-left: 3px solid var(--wine-bright);
+      border-radius: 2px;
+      font-style: italic;
+      color: var(--bone);
+      font-size: 20px;
+    }
+    blockquote cite {
+      display: block;
+      font-family: var(--mono);
+      font-style: normal;
+      font-size: 11.5px;
+      color: var(--gold);
+      margin-top: 10px;
+      letter-spacing: 0.04em;
+    }
+
+    /* ===== Cards ===== */
+    .grid {
+      display: grid;
+      gap: 16px;
+      margin: 28px 0;
+    }
+    .grid.cols-2 { grid-template-columns: 1fr 1fr; }
+    .grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+    @media (max-width: 720px) {
+      .grid.cols-2, .grid.cols-3 { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 20px 22px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
+    .card::before {
+      content: "";
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(to right, var(--wine-bright), var(--gold), transparent);
+    }
+    .card h4 {
+      font-family: var(--serif);
+      font-weight: 700;
+      font-size: 19px;
+      color: var(--gold-bright);
+      margin-bottom: 8px;
+    }
+    .card p { margin: 6px 0; font-size: 17px; }
+    .card .tag {
+      font-family: var(--mono);
+      font-size: 10.5px;
+      color: var(--ivy-light);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    /* ===== Accordion (Scholarly Layers) ===== */
+    details.layer {
+      background: color-mix(in srgb, var(--panel) 60%, transparent);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      margin: 14px 0;
+      padding: 0;
+    }
+    details.layer summary {
+      cursor: pointer;
+      padding: 14px 20px;
+      font-family: var(--mono);
+      font-size: 12.5px;
+      letter-spacing: 0.05em;
+      color: var(--gold);
+      text-transform: uppercase;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    details.layer summary::-webkit-details-marker { display: none; }
+    details.layer summary::after {
+      content: "+";
+      font-family: var(--serif);
+      font-size: 20px;
+      color: var(--bone-dim);
+      transition: transform 0.25s;
+    }
+    details.layer[open] summary::after { transform: rotate(45deg); }
+    details.layer .layer-body {
+      padding: 0 20px 20px;
+      color: var(--bone-dim);
+      font-size: 17.5px;
+    }
+    details.layer .layer-body p { font-size: inherit; }
+
+    /* ===== Tables ===== */
+    .tablewrap { overflow-x: auto; margin: 26px 0; border: 1px solid var(--line); border-radius: 6px; }
+    table { width: 100%; border-collapse: collapse; font-size: 16.5px; min-width: 560px; }
+    th {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--gold);
+      text-align: left;
+      padding: 12px 16px;
+      background: color-mix(in srgb, var(--wine) 25%, transparent);
+      border-bottom: 1px solid var(--line);
+    }
+    td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--line);
+      color: var(--bone-dim);
+      vertical-align: top;
+    }
+    tr:last-child td { border-bottom: none; }
+    td b, td strong { color: var(--bone); }
+
+    /* ===== Timeline ===== */
+    .timeline { position: relative; margin: 36px 0 10px; padding-left: 28px; }
+    .timeline::before {
+      content: "";
+      position: absolute; left: 6px; top: 6px; bottom: 6px; width: 1px;
+      background: linear-gradient(to bottom, var(--gold), var(--wine-bright));
+    }
+    .tl-step { position: relative; margin-bottom: 30px; }
+    .tl-step::before {
+      content: "";
+      position: absolute; left: -28px; top: 5px;
+      width: 11px; height: 11px; border-radius: 50%;
+      background: var(--bg);
+      border: 2px solid var(--gold);
+    }
+    .tl-step h4 { font-size: 19px; color: var(--bone); font-weight: 700; margin-bottom: 4px; }
+    .tl-step p { margin: 4px 0; }
+
+    /* ===== Revenge File ===== */
+    .file {
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--wine-bright);
+      background: var(--panel);
+      padding: 18px 22px;
+      margin: 16px 0;
+      border-radius: 4px;
+    }
+    .file .name { font-family: var(--serif); font-weight: 700; font-size: 21px; color: var(--gold-bright); }
+    .file .row { display: flex; gap: 10px; margin-top: 6px; flex-wrap: wrap; font-family: var(--mono); font-size: 11.5px; color: var(--bone-dim); }
+    .file .row span b { color: var(--ivy-light); text-transform: uppercase; letter-spacing: .05em; margin-right: 4px; }
+    .file .twist { margin-top: 10px; font-style: italic; color: var(--bone); }
+
+    /* ===== Epoch Strip ===== */
+    .epoch-strip {
+      display: flex;
+      overflow-x: auto;
+      gap: 2px;
+      margin: 30px 0;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .epoch {
+      flex: 1 0 180px;
+      padding: 20px 18px;
+      background: var(--panel);
+      border-right: 1px solid var(--line);
+    }
+    .epoch:last-child { border-right: none; }
+    .epoch .era {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+    .epoch h4 { margin: 8px 0 6px; font-size: 19px; color: var(--bone); }
+    .epoch p { font-size: 15.5px; margin: 0; }
+
+    /* ===== Cycle Diagram ===== */
+    .cycle {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin: 34px 0;
+      font-family: var(--mono);
+      font-size: 13px;
+    }
+    .cycle .node {
+      padding: 10px 16px;
+      border: 1px solid var(--gold);
+      border-radius: 999px;
+      color: var(--gold-bright);
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+    .cycle .arrow { color: var(--bone-dim); }
+
+    /* ===== Footer ===== */
+    footer {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 80px 24px 120px;
+      border-top: 1px solid var(--line);
+      margin-top: 60px;
+    }
+    footer .eyebrow { margin-bottom: 20px; }
+    footer .reading {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 10px 24px;
+      font-size: 16px;
+    }
+    footer .reading dt {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      padding: 10px 0 2px;
+      border-top: 1px solid var(--line);
+    }
+    footer .reading dd {
+      margin: 0;
+      padding: 10px 0 2px;
+      border-top: 1px solid var(--line);
+      color: var(--bone-dim);
+    }
+    footer .final {
+      margin-top: 60px;
+      text-align: center;
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 20px;
+      color: var(--bone);
+    }
+    footer .final small {
+      display: block;
+      margin-top: 10px;
+      font-family: var(--mono);
+      font-style: normal;
+      font-size: 11px;
+      color: var(--bone-dim);
+      letter-spacing: .05em;
+    }
+
+    /* ===== Print Styles ===== */
+    @media print {
+      #chapterNav, #themeToggle, #backToTop, .scroll-cue { display: none !important; }
+      body { background: white; color: black; }
+      .hero { min-height: auto; padding: 40px 0; }
+      section.chapter { padding: 40px 0; }
+      .card, .file, details.layer { background: #f5f5f5; border-color: #ccc; }
+      .card::before { display: none; }
+      .mask-wrap { filter: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== Theme Toggle ===== -->
+  <button id="themeToggle" aria-label="Switch between light and dark theme">
+    <span id="themeIcon">🌙</span>
+  </button>
+
+  <!-- ===== Back to Top ===== -->
+  <button id="backToTop" aria-label="Back to top">↑ Top</button>
+
+  <!-- ===== Navigation ===== -->
+  <nav id="chapterNav" aria-label="Chapter navigation">
+    <div class="inner">
+      <a href="#prologue">Prologue</a>
+      <a href="#origin">II · Origin</a>
+      <a href="#symbols">III · Symbols</a>
+      <a href="#powers">IV · Powers</a>
+      <a href="#entourage">V · Entourage</a>
+      <a href="#bacchae">The Bacchae</a>
+      <a href="#revenge">VI · Revenge</a>
+      <a href="#legacy">VII · Legacy</a>
+      <a href="#epilogue">Epilogue</a>
+    </div>
+  </nav>
+
+  <!-- ===== HERO ===== -->
+  <div class="hero">
+    <div class="mask-wrap">
+      <svg id="maskSvg" viewBox="0 0 300 340" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Dionysus mask with ivy">
+        <!-- Ivy vines -->
+        <path class="ivy-grow" d="M20 320 C 10 260, 40 220, 15 170 C -5 125, 30 90, 20 40" stroke="#6b8c5f" stroke-width="2.5" fill="none"/>
+        <path class="ivy-grow" d="M280 320 C 290 260, 260 220, 285 170 C 305 125, 270 90, 280 40" stroke="#6b8c5f" stroke-width="2.5" fill="none"/>
+        <circle cx="18" cy="150" r="5" fill="#3c5734"/>
+        <circle cx="24" cy="95" r="4" fill="#3c5734"/>
+        <circle cx="282" cy="150" r="5" fill="#3c5734"/>
+        <circle cx="277" cy="95" r="4" fill="#3c5734"/>
+        <!-- Mask -->
+        <g class="mask-glow">
+          <path d="M150 15 C 70 15, 35 75, 35 150 C 35 235, 80 300, 150 325 C 220 300, 265 235, 265 150 C 265 75, 230 15, 150 15 Z"
+                fill="var(--panel)" stroke="var(--gold)" stroke-width="2"/>
+          <!-- Crown / hair -->
+          <path d="M55 70 Q 150 5 245 70" stroke="var(--gold)" stroke-width="2" fill="none"/>
+          <path d="M70 55 Q 150 -15 230 55" stroke="var(--ivy)" stroke-width="3" fill="none"/>
+          <!-- Brows -->
+          <path d="M75 140 Q 100 122 128 136" stroke="var(--gold)" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <path d="M225 140 Q 200 122 172 136" stroke="var(--gold)" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <!-- Eyes (track cursor) -->
+          <g class="mask-eye" id="eyeL">
+            <ellipse cx="103" cy="162" rx="20" ry="14" fill="#0c0508" stroke="var(--gold)" stroke-width="1.5"/>
+            <circle cx="103" cy="162" r="6" fill="var(--gold-bright)"/>
+          </g>
+          <g class="mask-eye" id="eyeR">
+            <ellipse cx="197" cy="162" rx="20" ry="14" fill="#0c0508" stroke="var(--gold)" stroke-width="1.5"/>
+            <circle cx="197" cy="162" r="6" fill="var(--gold-bright)"/>
+          </g>
+          <!-- Nose -->
+          <path d="M150 170 L 140 210 Q 150 220 160 210 Z" stroke="var(--gold)" stroke-width="1.5" fill="none"/>
+          <!-- Mouth -->
+          <path d="M110 250 Q 150 280 190 250 Q 150 268 110 250 Z" fill="var(--wine)" stroke="var(--wine-bright)" stroke-width="1.5"/>
+          <path d="M95 260 Q 150 320 205 260" stroke="var(--gold)" stroke-width="1.2" fill="none" opacity="0.5"/>
+        </g>
+      </svg>
+    </div>
+
+    <div class="eyebrow" style="justify-content:center;">a compiled study</div>
+    <h1>DIONYSUS</h1>
+    <p class="subtitle">He does not merely give intoxication — he is the force of it.</p>
+    <p class="desc">A field guide to the god of ecstasy, madness, and the dissolution of the self: his birth, his symbols, his powers, his entourage, his enemies, and the two-and-a-half-thousand-year argument over whether he is a liberator or a warning. Drawn from Otto, Winnington-Ingram, Kiruta, Walton, and Suzuki's staging of <i>The Bacchae</i>.</p>
+    <div class="scroll-cue"><span>begin</span><span class="line"></span></div>
+  </div>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main>
+
+    <!-- ================= PROLOGUE ================= -->
+    <section class="chapter" id="prologue">
+      <div class="chapter-head">
+        <div class="roman">PROLOGUE</div>
+        <h2>Enthusiasmos</h2>
+      </div>
+
+      <p class="lede">To have the god inside you — and to stand outside yourself.</p>
+
+      <div class="prose">
+        <p>Dionysus is one of the oldest attested gods in mainland Greek culture — Linear B tablets from Pylos record his name, <i>Dwanusu</i>, around 1300 BC, long before the classical age that made him famous. His worship never looked like the orderly civic religion of the other Olympians. It centered on religious ecstasy: satyrs, panthers, wine, and a staff of ivy topped with a pine cone — the <b>thyrsus</b>.</p>
+
+        <p>Two Greek words explain why he mattered so much. <b>Enthusiasmos</b> — the root of "enthusiasm" — meant literally <i>to have the god inside you</i>. Drinking wine wasn't a metaphor; worshippers believed they were physically ingesting the god, who temporarily suspended the rules of ordinary life. <b>Ecstasis</b> — ecstasy — meant feeling something so completely that you stood <i>outside yourself</i>, the boundary between self and other dissolved.</p>
+      </div>
+
+      <h3 class="sub">The rational and the irrational</h3>
+      <p>The Greeks understood the mind as governed by two forces: the rational (Apollo) and the irrational (Dionysus). Denying the irrational entirely, in their view, produced psychological breaks — not health. Greek society was rigid, patriarchal, and tightly controlled, so Dionysian festivals functioned as a legally sanctioned safety valve: gender lines and class dissolved, rich and poor swapped clothes, and women and slaves — otherwise the most controlled members of society — took on dominant, high-status roles. The pressure that might have exploded into real rebellion was released instead inside a ritual.</p>
+      <p>Aristotle later gave this mechanism a name: <b>catharsis</b> — the purging of dangerous emotion by witnessing it safely, from the audience, inside a theatre.</p>
+
+      <h3 class="sub">Theatre as an act of worship</h3>
+      <p>Tragedy itself was written for Dionysus. Sophocles, Aeschylus, and Euripides composed their plays specifically for civic religious festivals — the Rural Dionysia and the City Dionysia. Otto later argued that acting is inherently Dionysian: putting on a mask and becoming someone else is a small, controlled act of <i>ecstasis</i>, the same dissolving of identity the god demands of his followers.</p>
+
+      <details class="layer">
+        <summary>Scholarly layer — the chorus as instructor</summary>
+        <div class="layer-body">
+          <p>In most Greek tragedy the chorus comments from a safe distance. Euripides breaks that convention in <i>The Bacchae</i>: his chorus of Asiatic Bacchants is Dionysus's own following, actively inside the plot, and it doubles as a teacher — explaining the mystery cult's esoteric logic directly to an uninitiated audience while also demonstrating, in its own shifts from serenity to bloodlust, exactly what that logic costs.</p>
+        </div>
+      </details>
+    </section>
+
+    <!-- ================= II ORIGIN ================= -->
+    <section class="chapter" id="origin">
+      <div class="chapter-head">
+        <div class="roman">CATEGORY II</div>
+        <h2>The Origin Story</h2>
+      </div>
+      <p class="lede">A god with a mortal mother, born twice, out of a family that refused to believe her.</p>
+
+      <div class="prose">
+        <p>Dionysus is unique among the major Olympians: he has a <b>mortal mother</b>. Semele, a princess of Thebes, became Zeus's lover. Hera, consumed by jealousy, tricked her into demanding Zeus reveal his true divine form — and the sight of his lightning incinerated her instantly. Zeus rescued the six-month fetus from the flames and sewed it into his own thigh until it came to term, earning Dionysus the title "Twice-Born."</p>
+        <p>Semele's family didn't believe her. Her sisters — Agave, Ino, Autonoe — spread the story that she'd lied about Zeus and been rightly struck down for it. That denial of his mother is the wound Dionysus carries back to Thebes, and it is the direct cause of everything that follows in <i>The Bacchae</i>.</p>
+      </div>
+
+      <h3 class="sub">The darker birth: Zagreus</h3>
+      <p>Before the "classical" Dionysus, an older and stranger myth existed. Zeus fathered a horned child, Zagreus, on Persephone. Hera persuaded the Titans to lure the infant with toys — a mirror among them — and when he looked at his own reflection, they seized him, tore him into pieces, and devoured him. Athena saved only his heart; Zeus used it to bring about the second birth, from Semele. Humanity itself, in this telling, was made from the ashes of the Titans who ate the god — which is why every person is said to carry two natures at once: a divine spark (the Dionysian heart) and a dark, elemental residue (the Titanic ash).</p>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr><th>Version</th><th>Parents</th><th>Outcome</th><th>Symbolic meaning</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><b>Zagreus</b><br>the chthonic god</td>
+              <td>Zeus + Persephone</td>
+              <td>Torn apart by the Titans; only the heart is saved.</td>
+              <td>The World Soul scattered into matter — the divine fragmented into individual souls.</td>
+            </tr>
+            <tr>
+              <td><b>Dionysus</b><br>the Olympian god</td>
+              <td>Zeus + Semele (mortal)</td>
+              <td>Born from Zeus's thigh; ascends to Olympus.</td>
+              <td>The divine spark resurrected — the promise that the fragmented soul can be recollected.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <details class="layer">
+        <summary>Otto — why Semele must be mortal</summary>
+        <div class="layer-body">
+          <p>Some scholars have argued Semele was originally a demoted earth-goddess. Otto rejects this outright: the myth only works if she is genuinely, fatally mortal. Her death — too weak to endure Zeus's "fulminating majesty" — is the necessary precondition for the second birth from the father. It's what makes Dionysus a native of two realms at once, human and divine, rather than simply another Olympian.</p>
+        </div>
+      </details>
+      <details class="layer">
+        <summary>Winnington-Ingram — the punishment fits the crime</summary>
+        <div class="layer-body">
+          <p>Cadmus, the grandfather, supports Dionysus's cult not from real piety but for family prestige — telling Pentheus to endorse the god as a "creditable lie" even if he doesn't believe it. W.-I. calls this just as spiritually bankrupt as Pentheus's open blasphemy. And the irony cuts deepest through Agave: the aunt who denied Dionysus's divinity becomes his most savage devotee, tearing her own son apart with her bare hands while believing him a lion. Skepticism isn't just defeated here — it's turned into the instrument of its own destruction.</p>
+        </div>
+      </details>
+    </section>
+
+    <!-- ================= III SYMBOLS ================= -->
+    <section class="chapter" id="symbols">
+      <div class="chapter-head">
+        <div class="roman">CATEGORY III</div>
+        <h2>Symbols &amp; Loot</h2>
+      </div>
+      <p class="lede">Every object he carries is a theological argument, not decoration.</p>
+
+      <h3 class="sub">The mask</h3>
+      <p>Otto gives the mask its own chapter, and for good reason: it has no back. It is pure surface — fixed, staring eyes you cannot look away from, and which cannot look away from you. That, Otto argues, is the god himself: <b>excruciatingly near and completely absent at the same time</b>. In cult, the mask hung on a column and wine was mixed directly in front of it — not a symbol of the god's presence, but the presence itself. Winnington-Ingram connects this to the play's obsession with sight and manifestation: Pentheus sees the Stranger but not the god inside him; Agave sees a lion's head, not her son. The mask is a symbol of delusion — of a reality that is always shifting and always deadly to misread.</p>
+
+      <div class="grid cols-2">
+        <div class="card symbol-card">
+          <span class="tag">weapon &amp; miracle</span>
+          <h4>The Thyrsus</h4>
+          <p>A fennel staff topped with a pine cone. Struck against the ground, it brings forth wine, milk, and honey — the Bacchants also use it to wound armed men, and Agave impales Pentheus's head on it as a trophy. The chorus itself calls the thyrsi "hubristic": the same object, in the same hands, nourishes or kills depending on the god's mood.</p>
+        </div>
+        <div class="card symbol-card">
+          <span class="tag">the animal avatar</span>
+          <h4>The Bull</h4>
+          <p>Raw, generative, dangerous. In the palace-miracle Pentheus thinks he's binding the disguised god and is instead wrestling a bull — Winnington-Ingram reads this as Pentheus's own futile attempt to constrain the animal desire inside himself, while the real god sits by, watching him fail.</p>
+        </div>
+        <div class="card symbol-card">
+          <span class="tag">the hunter's delusion</span>
+          <h4>The Lion</h4>
+          <p>The form the chorus prays Dionysus will take as destroyer — and the form Agave believes she's killing when she tears her son apart. The mother who denied her son's parentage now can't even recognize his species.</p>
+        </div>
+        <div class="card symbol-card">
+          <span class="tag">shared nature</span>
+          <h4>The Snake</h4>
+          <p>Pentheus is mocked as "earth-born," descended from the dragon's teeth Cadmus sowed — sub-human, monstrous. But Dionysus is invoked as a many-headed snake, and the Maenads wear live snakes in their hair. The insult boomerangs: they hate in Pentheus exactly what they worship in their own god.</p>
+        </div>
+      </div>
+
+      <h3 class="sub">The vine and the ivy</h3>
+      <p>Otto treats these as siblings raised in opposite directions. The vine is solar and fiery — it dies in winter and produces the elixir that inflames body and soul. The ivy is chthonic and cool — it blooms in autumn, stays green through winter, and produces a poison used to decorate graves; it was also the plant that shielded the infant Dionysus from his father's lightning. Together they are the god's whole nature in botanical form: the ecstasy of life beside the cold exhalation of death.</p>
+
+      <details class="layer">
+        <summary>Kiruta — the Labrys and the path through darkness</summary>
+        <div class="layer-body">
+          <p>In a rarer myth, an Ares-Dionysus figure carves the first Labyrinth out of primordial darkness with a double-headed axe, the <i>labrys</i>. One edge cuts outward, through the chaos of the material world; the other cuts inward, through the soul's own confusion. When the god finally reaches the center, the axe becomes pure light — a torch. The tool of destruction becomes the tool of illumination, but only after both kinds of darkness have been cut through.</p>
+        </div>
+      </details>
+    </section>
+
+    <!-- ================= IV POWERS ================= -->
+    <section class="chapter" id="powers">
+      <div class="chapter-head">
+        <div class="roman">CATEGORY IV</div>
+        <h2>Powers &amp; Job Description</h2>
+      </div>
+      <p class="lede">He doesn't give you madness. He is the madness — and he is completely sane about wielding it.</p>
+
+      <div class="prose">
+        <p>Otto's central claim: Dionysus's madness isn't sickness. It's <b>"the tumult which erupts from the innermost recesses of life when they mature and force their way to the surface"</b> — the madness inherent in birth, sex, creation, spring itself. Wherever life is generating most intensely, death stands right beside it, and that collision is what madness actually is.</p>
+
+        <p>Winnington-Ingram adds the uncomfortable twist: on stage, this "mad god" is the calmest, most rational character in the play. That's not a contradiction — it's the horror. His sanity is the sanity of a force that knows precisely what it's doing. He is not a raving lunatic; he is a cold, controlled architect of irrational destruction, and that control is what makes him frightening.</p>
+      </div>
+
+      <h3 class="sub">The power of delusion</h3>
+      <p>His greatest miracle in the play isn't fire or wine — it's making Pentheus <i>want</i> to put on women's clothes to go spy on his own mother. Dionysus doesn't force anything on him; he unbinds what was already repressed. The voyeur and the coward hidden inside the rigid king are simply let loose. When Pentheus finally puts on the disguise, he sees two suns and a doubled Thebes — the visual symptom of a mind no longer anchored to one reality. Agave's delusion runs the same circuit in reverse: she is made to see a lion instead of her son, because if she saw her son, she could not do what the god requires of her.</p>
+
+      <blockquote>
+        Dionysus's power is the power to make you see what you want to see — or what you need to see to destroy yourself.
+        <cite>— Winnington-Ingram, on the play's mechanics of illusion</cite>
+      </blockquote>
+
+      <div class="grid cols-3">
+        <div class="card">
+          <span class="tag">arrival</span>
+          <h4>The God Who Comes</h4>
+          <p>Other gods stay in their temples. Dionysus invades — ridden into the city on a wheeled ship, woken as a baby in his cradle, arriving in the flesh disguised as a foreign priest to walk the streets of Thebes himself.</p>
+        </div>
+        <div class="card">
+          <span class="tag">crowd</span>
+          <h4>Group Emotion</h4>
+          <p>The Bacchants explicitly reject "cleverness" for whatever the mass believes. Inside the thiasos there's no dissent and no individual conscience — which makes the group immune to reason and dangerously susceptible to sudden hatred.</p>
+        </div>
+        <div class="card">
+          <span class="tag">verdict</span>
+          <h4>Hollow Justice</h4>
+          <p>The chorus insists the god's vengeance is Dike — justice. Winnington-Ingram calls this savage irony: the innocent (Cadmus) and the guilty (Pentheus) are punished together. It isn't justice. It's the victory of the stronger.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= THE BACCHAE NARRATIVE ================= -->
+    <section class="chapter" id="bacchae">
+      <div class="chapter-head">
+        <div class="roman">THE PLAY</div>
+        <h2>How Pentheus Falls</h2>
+      </div>
+      <p class="lede">A king, a disguise, and a mother who cannot see her own son.</p>
+
+      <div class="timeline">
+        <div class="tl-step">
+          <h4>The return</h4>
+          <p>Dionysus arrives in Thebes disguised as a foreign priest, to clear his dead mother's name and force the city — his own family — to recognize him.</p>
+        </div>
+        <div class="tl-step">
+          <h4>The ban</h4>
+          <p>Pentheus, the young king, outlaws Dionysian worship. He's obsessed with control and with the perceived sexual depravity of the women who've fled to the mountain to worship — a rigidity Suzuki and Winnington-Ingram both read as a brittle, dangerous form of madness in its own right.</p>
+        </div>
+        <div class="tl-step">
+          <h4>The imprisonment &amp; the palace miracle</h4>
+          <p>Pentheus locks Dionysus up. The god responds with an earthquake and fire — not a stage trick, but a demonstration: suppress the Dionysiac force and it explodes.</p>
+        </div>
+        <div class="tl-step">
+          <h4>The trap</h4>
+          <p>Dionysus preys on Pentheus's repressed voyeurism, talking him into dressing as a woman — a long linen dress, a blonde wig — to secretly watch the Maenads on the mountain.</p>
+        </div>
+        <div class="tl-step">
+          <h4>The dismantling</h4>
+          <p>Pushed to the top of a fir tree for a better vantage, Pentheus is exposed to the women below. Led by his own mother, Agave, blind with divine madness, they pull him down. He begs; she doesn't recognize him. She tears his arm from his shoulder. The Maenads play with his limbs and set his head on a thyrsus.</p>
+        </div>
+        <div class="tl-step">
+          <h4>The awakening</h4>
+          <p>Agave returns to Thebes in triumph, certain she's holding the head of a mountain lion. Cadmus coaxes her back to reality, forcing her to look closely — until she understands what, and who, she's holding.</p>
+        </div>
+        <div class="tl-step">
+          <h4>The verdict</h4>
+          <p>Dionysus sheds his disguise and reveals his full divine terror. Agave is exiled; Cadmus and his wife are turned into snakes, doomed to lead barbarian hordes. When Cadmus protests the sentence is too harsh, the god's answer is flat: <i>"Too late. When there was time, you did not know me."</i></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= V ENTOURAGE ================= -->
+    <section class="chapter" id="entourage">
+      <div class="chapter-head">
+        <div class="roman">CATEGORY V</div>
+        <h2>His Entourage</h2>
+      </div>
+      <p class="lede">He is never alone — and no one around him is entirely who they seem.</p>
+
+      <h3 class="sub">The Maenads</h3>
+      <p>"Maenad" means, literally, the mad women. Otto calls them <b>nurses</b> — <i>Tithenai</i> — archetypal mothers who suckle fawns and wolf cubs at their breasts, and then tear the same animals apart with their hands. They leave their own human infants behind to nurse wild ones instead: a "touch of inhumanity that jars," in Otto's words, and the exact cost of their freedom from ordinary life. The thiasos — their band — becomes a surrogate family that replaces the city itself.</p>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr><th>Set</th><th>Origin</th><th>Behavior</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><b>The Asiatic chorus</b></td><td>Willing missionaries from Lydia and Phrygia — true believers.</td><td>Songs are beautiful, but reveal a fanatical hatred toward their enemies. They embody the cult's <i>ideology</i>.</td></tr>
+            <tr><td><b>The Theban women</b></td><td>Driven mad against their will, as punishment.</td><td>Far more violent and savage — the raw, uncontrolled eruption the chorus only sings about.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>They aren't as different as they look: the chorus preaches peace and prays for blood; the Theban women simply act out the violence the chorus sings about. Peace and fury, in this cult, are inseparable.</p>
+
+      <div class="grid cols-2">
+        <div class="card">
+          <span class="tag">the shadow bride</span>
+          <h4>Ariadne</h4>
+          <p>Abandoned by Theseus on Naxos, she's raised up by Dionysus to become his queen — mortal made immortal, a woman who dies (in childbirth) and is resurrected. Winnington-Ingram calls her the shadow that haunts the play: she gave herself to the god willingly. Agave, forced and destroyed rather than saved, is her perversion.</p>
+        </div>
+        <div class="card">
+          <span class="tag">the male foil</span>
+          <h4>Satyrs &amp; Silenus</h4>
+          <p>Where the Maenads are aloof and aggressively chaste, the satyrs are nakedly lustful — physical intoxication set against the Maenads' spiritual kind. Silenus, perpetually drunk, carries the dark wisdom that comes specifically from losing control.</p>
+        </div>
+      </div>
+
+      <h3 class="sub">Partial visions</h3>
+      <p>Winnington-Ingram's sharpest observation about the human cast: every one of them sees only part of the god. Teiresias sees a political problem to manage. Cadmus sees a family asset. Pentheus sees a threat. Agave sees, eventually, a liberator. None of them see him whole.</p>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr><th>Figure</th><th>Relationship to the god</th><th>Tragic role</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><b>Teiresias</b></td><td>Tries to "civilise" him.</td><td>Represents institutional religion — which W.-I. calls a lie. You cannot tame a tiger.</td></tr>
+            <tr><td><b>Cadmus</b></td><td>Supports him for family prestige.</td><td>His shallow piety is punished as harshly as open blasphemy.</td></tr>
+            <tr><td><b>Pentheus</b></td><td>Resists, while secretly full of repressed desire.</td><td>The hunter who becomes the hunted.</td></tr>
+            <tr><td><b>Agave</b></td><td>Denies him, then becomes his instrument.</td><td>The victim who becomes the monster.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <details class="layer">
+        <summary>The final irony — who survives</summary>
+        <div class="layer-body">
+          <p>The chorus survives the play. It suffers nothing, and returns to Asia with its mission complete. Winnington-Ingram calls this the bleakest note in the whole work: the fanatics endure. It's the individuals — Pentheus, Agave, Cadmus — who are destroyed.</p>
+        </div>
+      </details>
+    </section>
+
+    <!-- ================= VI REVENGE ================= -->
+    <section class="chapter" id="revenge">
+      <div class="chapter-head">
+        <div class="roman">CATEGORY VI</div>
+        <h2>The "Don't Cross Him" Files</h2>
+      </div>
+      <p class="lede">He rarely kills you directly. He makes you destroy what you love, and lets you live with it — or not.</p>
+
+      <div class="file">
+        <div class="name">Pentheus</div>
+        <div class="row"><span><b>crime</b>denied &amp; imprisoned the god</span><span><b>punishment</b>torn apart by his own mother</span></div>
+        <p class="twist">She believed, the entire time, that she was killing a lion.</p>
+      </div>
+      <div class="file">
+        <div class="name">Agave</div>
+        <div class="row"><span><b>crime</b>denied her nephew's divinity</span><span><b>punishment</b>driven mad, forced to kill her son, exiled</span></div>
+        <p class="twist">She returned to Thebes proudly displaying his head as a hunting trophy.</p>
+      </div>
+      <div class="file">
+        <div class="name">Lycurgus</div>
+        <div class="row"><span><b>crime</b>attacked the god's nurses</span><span><b>punishment</b>driven mad, killed his own son with an axe</span></div>
+        <p class="twist">He believed he was pruning a vine.</p>
+      </div>
+      <div class="file">
+        <div class="name">The Daughters of Minyas</div>
+        <div class="row"><span><b>crime</b>refused to leave their looms and join the dance</span><span><b>punishment</b>driven mad, tore apart one of their own children</span></div>
+        <p class="twist">They were considered the most virtuous women in Thebes.</p>
+      </div>
+      <div class="file">
+        <div class="name">The Tyrrhenian Pirates</div>
+        <div class="row"><span><b>crime</b>kidnapped him for ransom</span><span><b>punishment</b>transformed into dolphins</span></div>
+        <p class="twist">They were "saved" from death — and lost their humanity in the same instant.</p>
+      </div>
+
+      <h3 class="sub">The pattern</h3>
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr><th>Step</th><th>What happens</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>1 · Denial</td><td>The victim rejects the god outright.</td></tr>
+            <tr><td>2 · Madness</td><td>The victim is driven insane.</td></tr>
+            <tr><td>3 · Delusion</td><td>Reality and illusion swap places.</td></tr>
+            <tr><td>4 · Self-destruction</td><td>The victim destroys exactly what they love most.</td></tr>
+            <tr><td>5 · Exile or death</td><td>What's left of them is cast out.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <blockquote>
+        Gods should not be like in temper to mortals.
+        <cite>— Cadmus, protesting the sentence — read by Winnington-Ingram as Euripides's own moral voice, line 1348</cite>
+      </blockquote>
+    </section>
+
+    <!-- ================= VII LEGACY ================= -->
+    <section class="chapter" id="legacy">
+      <div class="chapter-head">
+        <div class="roman">CATEGORY VII</div>
+        <h2>His Legacy</h2>
+      </div>
+      <p class="lede">Five epochs tried to bury him, reduce him, or make sense of him. He kept coming back.</p>
+
+      <div class="epoch-strip">
+        <div class="epoch">
+          <div class="era">Antiquity</div>
+          <h4>The Mysteries</h4>
+          <p>The suffering, reborn god of Orphic and Pythagorean initiation — the soul's journey from fragmentation back to unity.</p>
+        </div>
+        <div class="epoch">
+          <div class="era">Philosophy</div>
+          <h4>The creative abyss</h4>
+          <p>Hegel's "bacchanalian revel," Schelling's "self-destroying madness," Nietzsche's Apollonian/Dionysian split behind the birth of tragedy.</p>
+        </div>
+        <div class="epoch">
+          <div class="era">Theatre</div>
+          <h4>Patron of the mask</h4>
+          <p>Tragedy grew directly out of his cult. Every actor who puts on a mask repeats a small act of his worship.</p>
+        </div>
+        <div class="epoch">
+          <div class="era">Victorian era</div>
+          <h4>The jolly Bacchus</h4>
+          <p>Reduced to a harmless wine-god for a society that wanted marble-white, rational Greece. Pentheus was made to die of "spontaneous combustion" rather than face the real horror.</p>
+        </div>
+        <div class="epoch">
+          <div class="era">Modern era</div>
+          <h4>Mass emotion, again</h4>
+          <p>Read after 1945 as a warning against fascism and mob rule; today, against cults, populism, and the charismatic leader.</p>
+        </div>
+      </div>
+
+      <h3 class="sub">The Victorian burial</h3>
+      <p>Between 1837 and 1901, England produced only ten new translations of <i>The Bacchae</i> — mostly dry classroom cribs. The play was too dangerous for a "muscular Christian" worldview built on an idealized, rational Greece. When the Victorians did engage with it, they could only manage burlesque: an 1866 stage version killed Pentheus off by spontaneous combustion rather than stage the real dismemberment, and turned Dionysus into a "god of cordials" fighting a tax on wine. The first serious English production, Gilbert Murray's 1908 translation, was withdrawn by its own translator after two performances — the god, even then, was too much for the stage.</p>
+
+      <h3 class="sub">Nietzsche and the philosophical turn</h3>
+      <p><i>The Birth of Tragedy</i> is the hinge: Nietzsche used the Apollonian (order, form, reason) against the Dionysian (chaos, passion, ecstasy) to explain where Greek tragedy came from at all, treating Dionysus as the primal will that shatters every boundary it meets. Otto traces the same current through Hegel and Schelling — the god not as a wine deity but as the chaos underneath all created form, and the force it eventually returns to.</p>
+
+      <details class="layer">
+        <summary>Winnington-Ingram's 1948 warning</summary>
+        <div class="layer-body">
+          <p>Writing after the Second World War, Winnington-Ingram reads the play as a direct warning about the "Dionysiac reaction of the crowd" — nationalist frenzy, the cruelty of the mob, the surrender of individual intellect to a charismatic leader. His conclusion: you cannot fight this force with violence, the way Pentheus tries, and you cannot worship it blindly, the way the chorus does. The only real defense is <i>sophia</i> — clear-eyed understanding of exactly what it is.</p>
+        </div>
+      </details>
+    </section>
+
+    <!-- ================= EPILOGUE — SUZUKI ================= -->
+    <section class="chapter" id="epilogue">
+      <div class="chapter-head">
+        <div class="roman">EPILOGUE</div>
+        <h2>A God for the Twentieth Century</h2>
+      </div>
+      <p class="lede">Tadashi Suzuki staged the myth as a study in fanaticism, cults, and history that refuses to end.</p>
+
+      <div class="prose">
+        <p>Suzuki's productions — <i>Bacchae</i> (1978) and later <i>Dionysus</i> (1992) — pulled the myth directly into the twentieth century: fanatical control of the many by the few, religious sects, Jim Jones and Jonestown, Japanese wartime militarism, and, in retrospect, the cult AUM Shinrikyō. The later production leaned even harder into cult leaders and the psychology of the people who follow them.</p>
+        <p>His staging opens with a tyrant. It ends with the tyrant's return. Beginning and end merge into a closed loop — <b>tyranny → destruction → return → tyranny</b> — dramatizing, almost too literally, the idea that those who fail to learn from history are condemned to repeat it.</p>
+      </div>
+
+      <div class="cycle">
+        <span class="node">order</span><span class="arrow">→</span>
+        <span class="node">suppression</span><span class="arrow">→</span>
+        <span class="node">rebellion</span><span class="arrow">→</span>
+        <span class="node">ecstasy / madness</span><span class="arrow">→</span>
+        <span class="node">mass movement</span><span class="arrow">→</span>
+        <span class="node">new authority</span><span class="arrow">→</span>
+        <span class="node">repetition</span>
+      </div>
+
+      <h3 class="sub">"Farewell to History"</h3>
+      <p>One of the strangest additions to Suzuki's later work is a cult called Farewell to History, built around his own line: <i>"consciousness is a prison, and the walls of the prison are history."</i> The logic looks liberating and isn't:</p>
+      <div class="timeline">
+        <div class="tl-step"><h4>History causes suffering</h4></div>
+        <div class="tl-step"><h4>So: escape history</h4></div>
+        <div class="tl-step"><h4>Join a movement promising liberation</h4></div>
+        <div class="tl-step"><h4>Become dependent on the movement</h4></div>
+        <div class="tl-step"><h4>Build another prison</h4></div>
+      </div>
+      <p>The people onstage want freedom from history badly enough that they'll surrender their independence to get it — which is exactly how a new prison gets built. Suzuki's wheelchair-bound followers in the later staging make the point physically: dependence dressed up as liberation.</p>
+
+      <blockquote>
+        Suzuki's Dionysus is not merely the god of wine and madness; he becomes a theatrical symbol for everything human beings try to suppress — and for the terrifying possibility that attempts to impose perfect order may produce an even more destructive form of madness.
+      </blockquote>
+
+      <h3 class="sub">Questions worth sitting with</h3>
+      <div class="grid cols-2">
+        <div class="card"><p>Is Dionysus liberating people, or enslaving them?</p></div>
+        <div class="card"><p>Is Pentheus defending civilization, or manufacturing the conditions for its collapse?</p></div>
+        <div class="card"><p>Can anyone actually escape history — or only trade one prison for another?</p></div>
+        <div class="card"><p>Is madness the opposite of reason, or something reason has to make room for?</p></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <div class="eyebrow">further reading</div>
+    <dl class="reading">
+      <dt>Mystical</dt><dd>Kiruta, <i>Dionysus: The Mystical and the Heroic</i>; the Orphic Hymns; Plutarch, <i>On Isis and Osiris</i>.</dd>
+      <dt>Philosophical</dt><dd>Nietzsche, <i>The Birth of Tragedy</i>; Hegel, <i>Phenomenology of Spirit</i>; Schelling, <i>The Ages of the World</i>.</dd>
+      <dt>Cultic &amp; historical</dt><dd>Otto, <i>Dionysus: Myth and Cult</i>; Rohde, <i>Psyche</i>; Burkert, <i>Greek Religion</i>.</dd>
+      <dt>The play itself</dt><dd>Winnington-Ingram, <i>Euripides and Dionysus</i>; Dodds, <i>The Greeks and the Irrational</i>; Euripides, <i>The Bacchae</i> (ed. Dodds).</dd>
+      <dt>Reception</dt><dd>Walton, <i>Dionysus: The Victorian Outcast</i>; Hall &amp; Macintosh, <i>Greek Tragedy and the British Theatre</i>.</dd>
+    </dl>
+
+    <p class="final">"Too late. When there was time, you did not know me."
+      <small>DIONYSUS, TO CADMUS — THE BACCHAE</small>
+    </p>
+  </footer>
+
+  <!-- ===== JAVASCRIPT ===== -->
+  <script>
+    (function() {
+      "use strict";
+
+      // ----- 1. THEME TOGGLE -----
+      const toggle = document.getElementById('themeToggle');
+      const icon = document.getElementById('themeIcon');
+      const html = document.documentElement;
+
+      // Check stored preference or system preference
+      const stored = localStorage.getItem('theme');
+      if (stored === 'light') {
+        html.setAttribute('data-theme', 'light');
+        icon.textContent = '☀️';
+      } else if (stored === 'dark') {
+        html.removeAttribute('data-theme');
+        icon.textContent = '🌙';
+      } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+        html.setAttribute('data-theme', 'light');
+        icon.textContent = '☀️';
+      }
+
+      toggle.addEventListener('click', function() {
+        if (html.hasAttribute('data-theme')) {
+          html.removeAttribute('data-theme');
+          icon.textContent = '🌙';
+          localStorage.setItem('theme', 'dark');
+        } else {
+          html.setAttribute('data-theme', 'light');
+          icon.textContent = '☀️';
+          localStorage.setItem('theme', 'light');
+        }
+      });
+
+      // ----- 2. BACK TO TOP -----
+      const backBtn = document.getElementById('backToTop');
+      window.addEventListener('scroll', function() {
+        if (window.scrollY > 400) {
+          backBtn.classList.add('visible');
+        } else {
+          backBtn.classList.remove('visible');
+        }
+      }, { passive: true });
+      backBtn.addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      // ----- 3. MASK EYE TRACKING -----
+      const eyeL = document.getElementById('eyeL');
+      const eyeR = document.getElementById('eyeR');
+      const maskWrap = document.querySelector('.mask-wrap');
+
+      function moveEyes(clientX, clientY) {
+        const rect = maskWrap.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height * 0.47;
+        let dx = clientX - cx;
+        let dy = clientY - cy;
+        const dist = Math.min(Math.hypot(dx, dy) / 40, 3);
+        if (dist < 0.1) { eyeL.style.transform = 'translate(0px,0px)'; eyeR.style.transform = 'translate(0px,0px)'; return; }
+        const angle = Math.atan2(dy, dx);
+        const ex = Math.cos(angle) * dist;
+        const ey = Math.sin(angle) * dist;
+        const t = 'translate(' + ex.toFixed(1) + 'px,' + ey.toFixed(1) + 'px)';
+        eyeL.style.transform = t;
+        eyeR.style.transform = t;
+      }
+
+      let lastMove = 0;
+      window.addEventListener('mousemove', function(e) {
+        // Throttle slightly for performance
+        const now = Date.now();
+        if (now - lastMove < 16) return;
+        lastMove = now;
+        moveEyes(e.clientX, e.clientY);
+      });
+
+      // On scroll, keep eyes centered if mask is off-screen, or use cursor if visible
+      window.addEventListener('scroll', function() {
+        const rect = maskWrap.getBoundingClientRect();
+        const isVisible = rect.bottom > 0 && rect.top < window.innerHeight;
+        if (isVisible) {
+          // If cursor is tracked, we don't need to do anything; mousemove handles it.
+        } else {
+          // Put eyes back to center when mask is not visible
+          eyeL.style.transform = 'translate(0px,0px)';
+          eyeR.style.transform = 'translate(0px,0px)';
+        }
+      }, { passive: true });
+
+      // Also handle window resize
+      let resizeTimer;
+      window.addEventListener('resize', function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function() {
+          // Reset eye position to center temporarily
+          eyeL.style.transform = 'translate(0px,0px)';
+          eyeR.style.transform = 'translate(0px,0px)';
+        }, 100);
+      });
+
+      // ----- 4. ACTIVE CHAPTER HIGHLIGHT -----
+      const sections = document.querySelectorAll('section.chapter[id]');
+      const navLinks = document.querySelectorAll('#chapterNav a');
+
+      function updateActive() {
+        const pos = window.scrollY + 160;
+        let current = null;
+        sections.forEach(function(s) {
+          if (s.offsetTop <= pos) current = s.id;
+        });
+        navLinks.forEach(function(l) {
+          l.classList.toggle('active', l.getAttribute('href') === '#' + current);
+        });
+      }
+
+      window.addEventListener('scroll', updateActive, { passive: true });
+      updateActive();
+
+    })();
+  </script>
+</body>
+</html>
