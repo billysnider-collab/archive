@@ -324,12 +324,45 @@
   .essay-cellar .callout h4{ color:var(--oxblood-dim); }
   .essay-fade{ height:56px; background:linear-gradient(var(--cellar), var(--paper)); margin:0 -28px; }
 
-  /* deeper grid */
+  /* deeper grid / positions */
   .grid{ display:grid; gap:16px; margin:24px 0 30px; }
   @media (min-width:640px){ .grid{ grid-template-columns:1fr 1fr; } }
+  @media (min-width:640px){ .grid.thirds{ grid-template-columns:1fr 1fr 1fr; } }
   .card{ background:var(--card); border:1px solid var(--rule); padding:18px 20px; }
   .card h4{ font-family:'Fraunces', serif; font-weight:600; font-size:15px; color:var(--oxblood); margin:0 0 8px; }
   .card p{ font-size:14.5px; color:var(--ink-soft); margin:0; }
+  .card .part{ margin-bottom:8px; }
+
+  /* thesis line, opening the notes */
+  .thesis{ max-width:560px; margin:26px auto 6px; text-align:center; }
+  .thesis p{
+    font-family:'Fraunces', serif;
+    font-style:italic;
+    font-weight:500;
+    font-size:clamp(19px,3vw,24px);
+    color:var(--ink);
+    line-height:1.5;
+    margin:0;
+  }
+
+  /* big-idea: promoted thesis moments within the essay */
+  .big-idea{ margin:38px 0 44px; }
+  .big-idea .idea-head{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-style:italic;
+    font-size:clamp(26px,4vw,32px);
+    color:var(--oxblood);
+    line-height:1.15;
+    margin:0 0 12px;
+  }
+  .big-idea p.idea-body{ font-size:16.5px; color:var(--ink-soft); max-width:54ch; margin:0 0 16px; }
+  .big-idea blockquote{ margin:0; padding:2px 0 2px 18px; border-left:2px solid var(--oxblood); }
+  .big-idea blockquote p{ font-family:'Fraunces', serif; font-style:italic; font-size:16px; color:var(--ink); margin:0; }
+  .essay-cellar .big-idea .idea-head{ color:var(--cellar-ink); }
+  .essay-cellar .big-idea p.idea-body{ color:var(--cellar-ink-dim); }
+  .essay-cellar .big-idea blockquote{ border-left-color:var(--oxblood-dim); }
+  .essay-cellar .big-idea blockquote p{ color:var(--cellar-ink); }
 
   /* personal */
   .personal{ border-left:3px solid var(--oxblood-dim); padding:2px 0 2px 20px; margin:26px 0; }
@@ -403,8 +436,8 @@
     <a href="#walkers-notes">The Walkers</a>
     <a href="#themes">Themes</a>
     <a href="#readings">Readings</a>
-    <a href="#deeper">Closer Look</a>
     <a href="#personal">Resonance</a>
+    <a href="#against">Against</a>
     <a href="#questions">Questions</a>
   </nav>
 </div>
@@ -482,6 +515,7 @@
 <div class="rise" aria-hidden="true"></div>
 
 <div class="notes-open"><p>Reading notes</p></div>
+<div class="thesis"><p>Le Guin's real experiment isn't whether happiness can justify suffering. It's whether knowing the cost changes what happiness means.</p></div>
 
 <div class="nav-wrapper" style="position:static; background:transparent; backdrop-filter:none; border:none;"></div>
 
@@ -491,16 +525,17 @@
   <section class="note" id="overview">
     <p class="part">Part 1</p>
     <h2>Where the story comes from</h2>
-    <p class="lede">Le Guin traced the central image to William James, who in an 1891 essay asked whether a utopia purchased by the torture of one lost soul could ever be accepted. She turned that question into narrative and, notably, refused to answer it.</p>
-    <p>What makes the story unusual isn't the dilemma itself — one-for-many trade-offs are old philosophical furniture, close cousins of the trolley problem and Rawls's veil of ignorance. It's that Le Guin builds an entire aesthetic argument around it before the dilemma even appears. The first third of the story is a meditation on why we find happiness boring to write and suffering interesting — and then she makes you sit with both, back to back, so you can feel the difference in registers for yourself.</p>
+    <p class="lede">Le Guin traced the image to William James's 1891 question: could a utopia purchased by one soul's torture ever be accepted? She dramatized it and refused to answer it.</p>
+    <p>The unusual part isn't the dilemma — trolley problems and veils of ignorance got there first. It's that Le Guin spends a third of the story arguing that happiness is harder to write than suffering, then makes you feel the difference by switching registers without warning.</p>
   </section>
 
   <section class="note" id="festival-notes">
     <p class="part">Part 2</p>
     <h2>The festival's rhetoric</h2>
-    <p>The opening pages are constructed, not just described — the narrator keeps negotiating with the reader in real time: add trains if you like, add an orgy if the city seems too wholesome, keep the drugs or leave them out. This isn't whimsy. It's a demonstration that utopias are collaborative fictions. Whatever furniture you accept for Omelas, you supplied yourself.</p>
-    <blockquote><p>The trouble is that we have a bad habit, encouraged by pedants and sophisticates, of considering happiness as something rather stupid. Only pain is intellectual, only evil interesting.</p></blockquote>
-    <p>Le Guin names this directly as "the treason of the artist" — a refusal to admit the banality of evil and the boredom of pain. The joke is that she then has to work hard, almost visibly straining, to make happiness readable at all. That strain is the point: if joy is this difficult to narrate convincingly, maybe our instinct that suffering is more "real" says more about our habits of attention than about the world.</p>
+    <p>The opening keeps negotiating with you in real time — add trains, add an orgy, keep the drugs or don't. That isn't whimsy. It's proof that utopias are built, not found: whatever furniture you accepted for Omelas, you supplied yourself.</p>
+    <p>Le Guin calls the alternative — writing only suffering as if it were the more serious subject — "the treason of the artist."</p>
+    <blockquote><p>Only pain is intellectual, only evil interesting.</p></blockquote>
+    <p>She then has to work visibly hard to make happiness readable at all. That strain is the point: if joy is this difficult to narrate, our instinct that suffering is more "real" says more about our habits of attention than about the world.</p>
   </section>
 
   <div class="essay-cellar">
@@ -508,12 +543,19 @@
       <section class="note" id="bargain">
         <p class="part">Part 3</p>
         <h2>The terms of the bargain</h2>
-        <p>The register change is the whole argument. Where the festival section runs long and self-interrupting, the child's description is flat and administrative: room dimensions, diet, the texture of the floor. Le Guin strips the suffering of any tragic shape on purpose — no noble sacrifice, no beautiful martyr, just neglect rendered like an inventory.</p>
-        <blockquote><p>They all understand that their happiness&nbsp;&hellip; depend[s] wholly on this child's abominable misery.</p></blockquote>
-        <p>The bargain is also, crucially, non-negotiable. Not "the child suffers unless someone intervenes" — the terms are absolute: no kind word, no blanket, no partial fix. That absoluteness is what turns this from a policy question into a binary one. There's no reform path inside the story, which is itself an argument: Le Guin is testing whether some systems can only be accepted or refused, never adjusted.</p>
+        <p>The register change is the argument. Where the festival runs long and self-interrupting, the child's description is flat and administrative — room dimensions, diet, the texture of the floor. No noble sacrifice, no beautiful martyr. Just neglect, itemized.</p>
+
+        <div class="big-idea">
+          <p class="idea-head">Suffering made boring</p>
+          <p class="idea-body">Le Guin strips the child's misery of tragic shape on purpose. It doesn't rise to meet you; it just sits there, itemized, closer to a maintenance log than a scene. That's a harder thing to look away from than a tragedy would be — tragedies at least reward your attention.</p>
+          <blockquote><p>It picks its nose.</p></blockquote>
+        </div>
+
+        <p>The terms are also non-negotiable: no kind word, no blanket, no partial fix. That absoluteness turns a policy question into a binary one — there's no reform path inside the story, which is itself an argument. The city tells its children the terms between eight and twelve, the age most people stop believing the world can be gentle with them for free.</p>
+
         <div class="callout">
           <h4>Not a simple allegory</h4>
-          <p>Le Guin resisted flattening the child into a single one-to-one stand-in for capitalism or colonialism, though she didn't deny those readings. She was equally insistent that the citizens who stay and grieve aren't villains — their tears are, in the story's own words, "the true source of the splendor of their lives." The story withholds a clean verdict on staying just as firmly as it withholds one on leaving.</p>
+          <p>Le Guin resisted flattening the child into a stand-in for any one system, though she didn't deny the resonances. She was just as insistent that the citizens who stay and grieve aren't villains — their tears are "the true source of the splendor of their lives." The story withholds a verdict on staying as firmly as it withholds one on leaving.</p>
         </div>
       </section>
     </div>
@@ -523,7 +565,7 @@
   <section class="note" id="walkers-notes">
     <p class="part">Part 4</p>
     <h2>What the walkers refuse</h2>
-    <p>Asked in interviews where the walkers go, Le Guin generally said she didn't know and didn't want to invent a second utopia to answer it. That refusal is structural, not coy — describing a better place would turn the story into a conventional escape narrative and let the reader off the hook. Walking away is written as a pure negation: not a plan, not a destination, just a "no" that doesn't come with a blueprint attached.</p>
+    <p>Asked where the walkers go, Le Guin generally said she didn't know and didn't want to invent a second utopia to answer it. That refusal is structural, not coy — a described destination would turn the story into an escape narrative and let the reader off the hook. Walking away is written as pure negation: a "no" with no blueprint attached.</p>
     <div class="table-wrap">
       <table>
         <thead><tr><th>Reading</th><th>What it emphasizes</th></tr></thead>
@@ -540,75 +582,79 @@
   <section class="note" id="themes">
     <p class="part">Part 5</p>
     <h2>What the story is actually arguing</h2>
-    <h3>Utilitarianism, taken literally</h3>
-    <p>Omelas is what strict aggregate-happiness reasoning looks like once you refuse to look away from its cost. The citizens don't reject the logic — they live inside it, grieving.</p>
-    <h3>Knowledge as a one-way door</h3>
-    <p>Once the citizens know about the child, they can't unknow it. The story quietly does the same thing to the reader: finishing it means you're now a citizen of Omelas too, deciding how to hold that knowledge.</p>
-    <h3>Freedom without comfort</h3>
-    <p>The walkers are arguably the only free people in the story, but their freedom buys them nothing — no safety, no answer, no return. Le Guin refuses to make moral clarity feel good.</p>
+
+    <div class="big-idea">
+      <p class="idea-head">Knowledge as a one-way door</p>
+      <p class="idea-body">Once the citizens know about the child, they can't unknow it. The story does the same thing to the reader: finishing it makes you a citizen of Omelas too, deciding what to do with the knowledge rather than whether to have it.</p>
+      <blockquote><p>It is because of the child that they are so gentle with children.</p></blockquote>
+    </div>
+
+    <div class="big-idea">
+      <p class="idea-head">Freedom without comfort</p>
+      <p class="idea-body">The walkers are arguably the only free people in the story, and their freedom buys them nothing — no safety, no answer, no return. Le Guin refuses to make moral clarity feel good.</p>
+      <blockquote><p>Each one goes alone, youth or girl, man or woman.</p></blockquote>
+    </div>
   </section>
 
   <section class="note" id="readings">
     <p class="part">Part 6</p>
     <h2>Ways people read it</h2>
     <ul>
-      <li><strong>Political</strong> — hidden exploitation behind prosperity; the child as the unseen labor or land a comfortable society depends on.</li>
-      <li><strong>Psychological</strong> — a taxonomy of coping: denial, rationalization, grief, or departure, none of them clean.</li>
-      <li><strong>Religious</strong> — the child as a scapegoat figure whose suffering "saves" everyone else, without redemption for anyone.</li>
+      <li><strong>Political</strong> — the child as the unseen labor or land a comfortable society depends on.</li>
+      <li><strong>Psychological</strong> — a taxonomy of coping: denial, rationalization, grief, or departure.</li>
+      <li><strong>Religious</strong> — a scapegoat whose suffering "saves" everyone else, with no redemption for anyone.</li>
       <li><strong>Feminist / ecological</strong> — the child's unspecified gender resists a familiar victim narrative; some read the child as the planet itself.</li>
     </ul>
     <div class="callout">
       <h4>The direct reply: N.K. Jemisin</h4>
-      <p>Jemisin's 2018 story "The Ones Who Stay and Fight" keeps Le Guin's city of happiness but rejects the premise that suffering is required — her citizens fight off the forces that would impose a scapegoat. That a writer felt compelled to answer Le Guin's terms fifty years later says something about how unresolved this bargain still feels.</p>
-    </div>
-  </section>
-
-  <section class="note" id="deeper">
-    <p class="part">Part 7</p>
-    <h2>A closer look</h2>
-    <div class="grid">
-      <div class="card">
-        <h4>Suffering made boring</h4>
-        <p>The child picks its nose and whines. Le Guin strips the scene of tragic grandeur on purpose — real neglect is mundane, which is exactly why it's easy to look away from.</p>
-      </div>
-      <div class="card">
-        <h4>No middle path</h4>
-        <p>No blanket, no kind word, no partial fix is allowed. The story removes reform as an option so the choice stays binary: accept, or leave.</p>
-      </div>
-      <div class="card">
-        <h4>A rite of passage</h4>
-        <p>Children learn about the cellar between eight and twelve — the age most people learn how the world actually works. Most grow up and accept it.</p>
-      </div>
-      <div class="card">
-        <h4>Technology is beside the point</h4>
-        <p>Le Guin makes the city's tech optional and irrelevant. The problem was never what tools Omelas has — it's what the city has agreed to call necessary.</p>
-      </div>
+      <p>Jemisin's 2018 "The Ones Who Stay and Fight" keeps Le Guin's city but rejects the premise that suffering is required — her citizens fight off the forces that would impose a scapegoat. That someone felt compelled to answer these terms fifty years later says something about how unresolved the bargain still feels.</p>
     </div>
   </section>
 
   <section class="note" id="personal">
-    <p class="part">Part 8</p>
+    <p class="part">Part 7</p>
     <h2>Where this lands, concretely</h2>
     <div class="personal">
-      <p class="label">A real version of the bargain</p>
-      <p>Living near the Fort Berthold Reservation, on top of the Bakken oil fields, the allegory stops being abstract. The extraction happening there — on land already reduced by broken treaties — runs directly through the fuel, plastics, and supply chains that make the rest of the country comfortable. It's not a metaphor standing in for something else; it's the same structure with the names filled in.</p>
+      <p class="label">A working comparison, not a claim of equivalence</p>
+      <p>Omelas doesn't describe the Bakken. But its structure gives a vocabulary for asking what prosperity looks like when its costs are geographically and socially displaced — in this case, onto the Fort Berthold Reservation, where oil extraction runs through land already reduced by broken treaties, fueling comfort that mostly lands elsewhere.</p>
     </div>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Omelas</th><th>Here</th></tr></thead>
-        <tbody>
-          <tr><td>The child in the cellar</td><td>Ongoing dispossession — broken treaties, extraction on reservation land</td></tr>
-          <tr><td>The happiness of the city</td><td>National comfort running on that extracted fuel</td></tr>
-          <tr><td>"Those are the terms"</td><td>The story that this cost is simply the unchangeable price of modern life</td></tr>
-        </tbody>
-      </table>
+
+    <h3>Three positions, not two</h3>
+    <p>The story offers a binary — stay or leave. Most people actually live in a third position:</p>
+    <div class="grid thirds">
+      <div class="card">
+        <p class="part">Stay</p>
+        <p>Accept the bargain. Take the benefit, carry the knowledge, feel the grief the story describes as genuine.</p>
+      </div>
+      <div class="card">
+        <p class="part">Leave</p>
+        <p>Refuse participation outright. Walk out of the system that depends on the harm — costly, and rare for a reason.</p>
+      </div>
+      <div class="card">
+        <p class="part">Walk slower</p>
+        <p>Stay inside the system while deliberately reducing your stake in its worst incentives — choosing work, spending, or time that funds less of what you object to.</p>
+      </div>
     </div>
-    <h3>"Walking slower"</h3>
-    <p>One response: choosing work that redirects labor away from what gets taxed into the systems you'd rather not fund. It's a real, material choice — and it's not walking away. You're still in the city, still fed, still protected by the same infrastructure, just paying a little less rent for the spot in the festival.</p>
-    <div class="callout">
-      <h4>The discomfort is doing something</h4>
-      <p>"Slower" can turn into a coping story — a way to feel you're doing enough while the terms stay exactly the same. But the gap between "this is what I do" and "this isn't enough" is arguably the thing that keeps a person from fully becoming a citizen of Omelas. The ones who accept the terms eventually feel fine about it. Staying uncomfortable is the whole thread worth holding onto.</p>
+
+    <div class="hinge">
+      <p>Is "walking slower" actually resistance — or just a more comfortable way of staying?</p>
     </div>
+
+    <p>It's a real, material choice, and it is not leaving. You're still fed, still protected by the same infrastructure, paying slightly less rent for the spot in the festival. "Slower" can become a coping story — proof you're doing enough while the terms stay exactly the same. But the gap between "this is what I do" and "this isn't enough" is arguably what keeps a person from fully becoming a citizen of Omelas. The ones who accept the terms eventually feel fine about it. Staying uncomfortable with your own answer may be the whole thread worth holding.</p>
+  </section>
+
+  <section class="note" id="against">
+    <p class="part">Part 8</p>
+    <h2>The case against Le Guin</h2>
+    <p class="lede">The story is built to make one response feel obviously wrong. It's worth arguing with the terms before accepting them.</p>
+    <ul>
+      <li><strong>The dilemma is rigged.</strong> Real trade-offs rarely come with terms this absolute. "No reform is possible" is Le Guin's premise, not a discovered fact.</li>
+      <li><strong>Reform might be possible.</strong> A story that forecloses every third option can only ever produce the conclusion it was built to produce.</li>
+      <li><strong>Leaving may abandon the child.</strong> Walking away changes nothing about the cellar. Staying and fighting the terms, even hopelessly, is at least directed at the child rather than at one's own conscience.</li>
+      <li><strong>The guilt might be the point.</strong> The citizens' grief isn't necessarily cowardice — carrying a cost you can't fix, instead of looking away from it, is itself a moral position the story may be too quick to treat as second-best.</li>
+      <li><strong>Walking away may accomplish nothing.</strong> It's framed as refusal, but refusal that changes no one's circumstances but your own is hard to distinguish from performance.</li>
+    </ul>
+    <p>None of this resolves the story — it's built to survive the argument. But the point of reading it isn't to agree with Le Guin's terms. It's to find out where you'd push back.</p>
   </section>
 
   <section class="note" id="questions">
@@ -616,9 +662,8 @@
     <h2>Worth sitting with</h2>
     <ol class="questions">
       <li>If the bargain were offered to you directly, stay or leave — and would you trust your own answer?</li>
-      <li>Is the story's "no reform possible" premise realistic, or is that Le Guin stacking the deck?</li>
-      <li>Where's the closest real-world equivalent of the locked door — something you benefit from that depends on terms you don't get to negotiate?</li>
-      <li>Is "walking slower" a real position, or a story we tell ourselves to avoid the binary?</li>
+      <li>Where's the closest real-world equivalent of the locked door — something you benefit from on terms you don't get to negotiate?</li>
+      <li>Is "walking slower" a real position, or a story you tell yourself to avoid the binary?</li>
       <li>Does the ending need a destination to mean something, or is the refusal itself the whole point?</li>
     </ol>
   </section>
@@ -626,7 +671,7 @@
 </main>
 
 <section class="closing">
-  <blockquote><p>"The place they go towards is a place even less imaginable to most of us than the city of happiness. I cannot describe it at all. It is possible that it does not exist."</p></blockquote>
+  <blockquote><p>"They seem to know where they are going."</p></blockquote>
   <p class="q">The festival is happening upstairs. The door is still locked.<br>What do you do with knowing both at once?</p>
 </section>
 
