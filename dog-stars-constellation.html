@@ -1,419 +1,1439 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Dog Stars — A Constellation</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,400&family=Newsreader:ital,wght@0,300;0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --bg-deep: #070a13;
-    --bg-nebula: #131a2c;
-    --star: #f2eee2;
-    --amber: #d0a24e;
-    --rust: #8b4636;
-    --sage: #7a8c6a;
-    --line: rgba(242,238,226,0.16);
-    --line-bright: rgba(208,162,78,0.65);
-  }
-  *{box-sizing:border-box;}
-  html,body{
-    margin:0; padding:0; width:100%; height:100%;
-    background: radial-gradient(ellipse at 50% 20%, var(--bg-nebula), var(--bg-deep) 65%);
-    color: var(--star);
-    font-family:'Newsreader', serif;
-    overflow-x:hidden;
-  }
-  @media (prefers-reduced-motion: reduce){
-    *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
-  }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Dog Stars — A Constellation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet" />
+    <style>
+        /* ----- reset & base ----- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  /* ambient starfield */
-  #ambient{position:fixed; inset:0; z-index:0; pointer-events:none;}
+        :root {
+            --bg: #0b0d12;
+            --surface: #141821;
+            --surface2: #1e2633;
+            --text: #e6e9ee;
+            --text-dim: #8b94a8;
+            --gold: #d4b68a;
+            --gold-glow: #d4b68a55;
+            --accent: #7a9bb5;
+            --accent-dim: #4a6a85;
+            --star: #f5f0e8;
+            --star-dim: #8b94a8;
+            --radius: 12px;
+            --transition: 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
 
-  /* ---------- HERO ---------- */
-  #hero{
-    position:relative; height:100vh; display:flex; flex-direction:column;
-    align-items:center; justify-content:center; text-align:center; z-index:2;
-  }
-  #hero .eyebrow{
-    font-family:'JetBrains Mono', monospace; font-size:0.72rem; letter-spacing:0.28em;
-    text-transform:uppercase; color:var(--amber); opacity:0; animation: rise 1.4s ease forwards 0.3s;
-  }
-  #hero h1{
-    font-family:'Fraunces', serif; font-weight:300; font-style:italic;
-    font-size:clamp(2.6rem, 8vw, 5.6rem); margin:0.3em 0 0.15em;
-    opacity:0; animation: rise 1.6s ease forwards 0.6s;
-    letter-spacing:0.01em;
-  }
-  #hero p.sub{
-    max-width:34em; font-size:1.05rem; line-height:1.6; color:#c8c3b4; font-weight:300;
-    opacity:0; animation: rise 1.6s ease forwards 1s;
-  }
-  #hero .prompt{
-    margin-top:2.6em; font-family:'Fraunces', serif; font-style:italic; font-size:1.15rem;
-    color:var(--amber); opacity:0; animation: rise 1.6s ease forwards 1.5s;
-  }
-  #hero .scrolldown{
-    position:absolute; bottom:2.4em; font-family:'JetBrains Mono',monospace; font-size:0.68rem;
-    letter-spacing:0.2em; text-transform:uppercase; color:#8a8677; opacity:0;
-    animation: rise 1.2s ease forwards 2.1s;
-  }
-  #hero .scrolldown::after{
-    content:''; display:block; width:1px; height:34px; background:linear-gradient(var(--amber), transparent);
-    margin:0.8em auto 0; animation: pulseline 2.4s ease-in-out infinite;
-  }
-  @keyframes rise{ from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:translateY(0);} }
-  @keyframes pulseline{ 0%,100%{opacity:0.3;} 50%{opacity:1;} }
+        html {
+            scroll-behavior: smooth;
+        }
 
-  /* ---------- NAV / MODE TOGGLE ---------- */
-  #modebar{
-    position:sticky; top:0; z-index:20; display:flex; justify-content:center; gap:0;
-    padding:1.1em 0; backdrop-filter: blur(10px);
-    background:linear-gradient(to bottom, rgba(7,10,19,0.92), rgba(7,10,19,0.4));
-    border-bottom:1px solid rgba(242,238,226,0.08);
-  }
-  #modebar button{
-    font-family:'JetBrains Mono', monospace; font-size:0.72rem; letter-spacing:0.16em;
-    text-transform:uppercase; background:none; border:none; color:#8a8677; cursor:pointer;
-    padding:0.5em 1.4em; border-bottom:1px solid transparent; transition: color 0.3s, border-color 0.3s;
-  }
-  #modebar button.active{ color:var(--amber); border-bottom-color:var(--amber); }
-  #modebar button:hover{ color:var(--star); }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
 
-  /* ---------- SKY / CONSTELLATION ---------- */
-  #sky-wrap{ position:relative; z-index:2; padding:2.5em 1em 1em; }
-  .sky-caption{
-    text-align:center; max-width:36em; margin:0 auto 1.4em; font-weight:300;
-    color:#a9a493; font-size:0.95rem; line-height:1.6;
-  }
-  .sky-caption b{ color:var(--amber); font-weight:500; }
-  #sky{
-    position:relative; width:100%; max-width:980px; margin:0 auto;
-    aspect-ratio: 16/11; touch-action:manipulation;
-  }
-  svg#lines{ position:absolute; inset:0; width:100%; height:100%; overflow:visible; }
-  svg#lines path{
-    fill:none; stroke:var(--line); stroke-width:1; stroke-dasharray: 4 260;
-    animation: draw 2.4s ease forwards;
-  }
-  @keyframes draw{ to{ stroke-dasharray: 264 0; } }
+        /* ----- scrollbar ----- */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--gold);
+            border-radius: 4px;
+        }
 
-  .star-node{
-    position:absolute; transform:translate(-50%,-50%); cursor:pointer;
-    display:flex; flex-direction:column; align-items:center; z-index:5;
-  }
-  .star-node .dot{
-    width:10px; height:10px; border-radius:50%; background:var(--star);
-    box-shadow:0 0 6px 1px rgba(242,238,226,0.5);
-    animation: twinkle 3.4s ease-in-out infinite;
-  }
-  .star-node.major .dot{ width:15px; height:15px; background:var(--amber); box-shadow:0 0 14px 3px rgba(208,162,78,0.55);}
-  .star-node:hover .dot, .star-node:focus-visible .dot{ transform:scale(1.5); box-shadow:0 0 20px 6px rgba(208,162,78,0.7); }
-  .star-node label{
-    margin-top:0.5em; font-family:'JetBrains Mono', monospace; font-size:0.68rem;
-    letter-spacing:0.1em; text-transform:uppercase; color:#a9a493; white-space:nowrap;
-    pointer-events:none; text-shadow:0 0 8px rgba(7,10,19,0.9);
-  }
-  .star-node.major label{ color:var(--amber); }
-  @keyframes twinkle{ 0%,100%{opacity:1;} 50%{opacity:0.55;} }
-  .star-node:focus-visible{ outline:1px solid var(--amber); outline-offset:6px; border-radius:50%; }
+        /* ----- starfield canvas ----- */
+        #stars-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+        }
 
-  /* ---------- PANEL ---------- */
-  #panel-backdrop{
-    position:fixed; inset:0; background:rgba(5,7,12,0.7); backdrop-filter: blur(3px);
-    z-index:50; opacity:0; pointer-events:none; transition:opacity 0.3s;
-  }
-  #panel-backdrop.open{ opacity:1; pointer-events:auto; }
-  #panel{
-    position:fixed; right:0; top:0; height:100%; width:min(440px, 92vw);
-    background: linear-gradient(180deg, #10152400, #0c101c 12%);
-    background-color:#0d1220; border-left:1px solid rgba(208,162,78,0.25);
-    z-index:51; transform:translateX(100%); transition: transform 0.45s cubic-bezier(.2,.8,.25,1);
-    overflow-y:auto; padding:2.6em 2.2em 3em;
-  }
-  #panel.open{ transform:translateX(0); }
-  #panel .close{
-    position:absolute; top:1.6em; right:1.8em; background:none; border:none; color:#8a8677;
-    font-size:1.4rem; cursor:pointer; line-height:1; font-family:'JetBrains Mono',monospace;
-  }
-  #panel .close:hover{ color:var(--star); }
-  #panel .kicker{
-    font-family:'JetBrains Mono', monospace; font-size:0.68rem; letter-spacing:0.2em;
-    text-transform:uppercase; color:var(--amber); margin-bottom:0.6em;
-  }
-  #panel h2{
-    font-family:'Fraunces', serif; font-weight:500; font-size:2rem; margin:0 0 0.5em;
-  }
-  #panel .quote{
-    font-family:'Fraunces', serif; font-style:italic; font-weight:400; font-size:1.15rem;
-    line-height:1.55; color:var(--amber); border-left:2px solid rgba(208,162,78,0.4);
-    padding-left:1em; margin:1.2em 0;
-  }
-  #panel .body p{ line-height:1.75; color:#cfcabb; font-weight:300; font-size:0.97rem; margin:0 0 1em; }
-  #panel .links{ margin-top:1.6em; }
-  #panel .links a{
-    display:inline-block; font-family:'JetBrains Mono',monospace; font-size:0.68rem;
-    letter-spacing:0.1em; text-transform:uppercase; color:#8a8677; text-decoration:none;
-    border:1px solid rgba(242,238,226,0.18); padding:0.5em 0.9em; border-radius:2px; margin:0 0.5em 0.5em 0;
-    transition: color 0.2s, border-color 0.2s;
-  }
-  #panel .links a:hover{ color:var(--amber); border-color:var(--amber); }
+        /* ----- constellation canvas (overlay) ----- */
+        #constellation-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+            pointer-events: none;
+        }
 
-  /* ---------- FOOTER SECTIONS ---------- */
-  #reflect{
-    position:relative; z-index:2; max-width:620px; margin:5em auto 7em; padding:0 1.4em; text-align:center;
-  }
-  #reflect .rule{ width:1px; height:60px; background:linear-gradient(var(--amber), transparent); margin:0 auto 2em; }
-  #reflect h3{ font-family:'Fraunces', serif; font-weight:300; font-style:italic; font-size:1.7rem; margin:0 0 0.6em; color:var(--star); }
-  #reflect p{ color:#a9a493; font-weight:300; line-height:1.7; font-size:0.98rem; }
-  #reflect .credit{ margin-top:3em; font-family:'JetBrains Mono',monospace; font-size:0.66rem; letter-spacing:0.14em; color:#5c5848; text-transform:uppercase; }
-</style>
+        /* ----- main wrapper ----- */
+        .app {
+            position: relative;
+            z-index: 2;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px 80px;
+        }
+
+        /* ----- hero ----- */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 40px 0;
+            position: relative;
+        }
+
+        .hero__badge {
+            font-size: 0.75rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--gold);
+            border: 1px solid var(--gold);
+            padding: 6px 18px;
+            border-radius: 40px;
+            margin-bottom: 32px;
+            background: var(--gold-glow);
+            backdrop-filter: blur(4px);
+            font-weight: 500;
+        }
+
+        .hero__title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3rem, 10vw, 6.5rem);
+            font-weight: 700;
+            line-height: 1.05;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #f5f0e8 0%, #d4b68a 60%, #a88b6a 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 16px;
+        }
+
+        .hero__sub {
+            font-size: clamp(1rem, 2vw, 1.3rem);
+            color: var(--text-dim);
+            max-width: 580px;
+            margin: 0 auto 40px;
+            font-weight: 300;
+            letter-spacing: 0.3px;
+        }
+
+        .hero__sub em {
+            color: var(--gold);
+            font-style: italic;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .hero__cta {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 32px;
+            border-radius: 40px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            text-decoration: none;
+            transition: var(--transition);
+            border: 1px solid transparent;
+            cursor: pointer;
+            background: transparent;
+            color: var(--text);
+        }
+
+        .btn--primary {
+            background: var(--gold);
+            color: var(--bg);
+            border-color: var(--gold);
+        }
+        .btn--primary:hover {
+            background: #c4a074;
+            border-color: #c4a074;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px var(--gold-glow);
+        }
+
+        .btn--outline {
+            border-color: var(--text-dim);
+            color: var(--text-dim);
+        }
+        .btn--outline:hover {
+            border-color: var(--text);
+            color: var(--text);
+            background: var(--surface2);
+        }
+
+        .hero__scroll {
+            margin-top: 60px;
+            color: var(--text-dim);
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            animation: pulse-down 2.4s ease-in-out infinite;
+        }
+
+        @keyframes pulse-down {
+            0%,
+            100% {
+                transform: translateY(0);
+                opacity: 0.6;
+            }
+            50% {
+                transform: translateY(8px);
+                opacity: 1;
+            }
+        }
+
+        /* ----- section common ----- */
+        section {
+            padding: 80px 0 60px;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .section__label {
+            font-size: 0.7rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .section__title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 4vw, 3.2rem);
+            font-weight: 600;
+            line-height: 1.2;
+            margin-bottom: 12px;
+        }
+
+        .section__title .highlight {
+            color: var(--gold);
+        }
+
+        .section__desc {
+            color: var(--text-dim);
+            max-width: 640px;
+            font-size: 1.05rem;
+            font-weight: 300;
+        }
+
+        /* ----- constellation grid (characters & themes) ----- */
+        .constellation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 24px;
+            margin-top: 40px;
+        }
+
+        .constellation-card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 28px 22px 24px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: var(--transition);
+            cursor: default;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .constellation-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .constellation-card:hover {
+            border-color: var(--gold-glow);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .constellation-card:hover::before {
+            opacity: 1;
+        }
+
+        .constellation-card__icon {
+            font-size: 2rem;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .constellation-card__name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .constellation-card__role {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--gold);
+            margin-bottom: 12px;
+        }
+
+        .constellation-card__desc {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            line-height: 1.5;
+        }
+
+        .constellation-card__quote {
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            font-style: italic;
+            font-size: 0.85rem;
+            color: var(--text);
+            font-weight: 300;
+        }
+
+        .constellation-card__quote::before {
+            content: '“';
+            color: var(--gold);
+            font-size: 1.2rem;
+        }
+        .constellation-card__quote::after {
+            content: '”';
+            color: var(--gold);
+            font-size: 1.2rem;
+        }
+
+        /* ----- theme cards (larger) ----- */
+        .theme-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 28px;
+            margin-top: 40px;
+        }
+
+        .theme-card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 32px 26px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: var(--transition);
+        }
+
+        .theme-card:hover {
+            border-color: var(--accent-dim);
+            transform: translateY(-3px);
+        }
+
+        .theme-card__title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--gold);
+        }
+
+        .theme-card__body {
+            color: var(--text-dim);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .theme-card__body strong {
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        /* ----- quote feature ----- */
+        .quote-block {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 48px 40px;
+            margin: 40px 0 20px;
+            border-left: 4px solid var(--gold);
+            position: relative;
+        }
+
+        .quote-block__text {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+            font-weight: 400;
+            line-height: 1.5;
+            font-style: italic;
+            color: var(--text);
+        }
+
+        .quote-block__attribution {
+            margin-top: 16px;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            letter-spacing: 0.5px;
+        }
+
+        .quote-block__attribution strong {
+            color: var(--gold);
+            font-weight: 500;
+        }
+
+        /* ----- poem section ----- */
+        .poem-section {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 60px 40px;
+            margin-top: 40px;
+            text-align: center;
+            border: 1px solid rgba(212, 182, 138, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .poem-section::before {
+            content: '✦';
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 2rem;
+            color: var(--gold-glow);
+            opacity: 0.3;
+        }
+
+        .poem-section__title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: var(--gold);
+            margin-bottom: 4px;
+        }
+
+        .poem-section__author {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            letter-spacing: 1px;
+            margin-bottom: 28px;
+        }
+
+        .poem-section__lines {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1rem, 1.8vw, 1.3rem);
+            line-height: 2;
+            color: var(--text);
+            max-width: 600px;
+            margin: 0 auto;
+            font-weight: 300;
+            font-style: italic;
+        }
+
+        .poem-section__lines .pause {
+            display: block;
+            height: 8px;
+        }
+
+        /* ----- flight map (simple interactive) ----- */
+        .flight-map {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 32px 28px;
+            margin-top: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .flight-map__title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .flight-map__title span {
+            color: var(--gold);
+        }
+
+        .flight-path {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px 4px;
+            padding: 12px 0 8px;
+        }
+
+        .flight-path__waypoint {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--surface2);
+            padding: 6px 16px 6px 12px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            transition: var(--transition);
+            cursor: default;
+            border: 1px solid transparent;
+        }
+
+        .flight-path__waypoint .dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--gold);
+            opacity: 0.4;
+            transition: var(--transition);
+        }
+
+        .flight-path__waypoint:hover {
+            border-color: var(--gold-glow);
+            color: var(--text);
+            background: var(--surface);
+        }
+
+        .flight-path__waypoint:hover .dot {
+            opacity: 1;
+            box-shadow: 0 0 12px var(--gold-glow);
+        }
+
+        .flight-path__waypoint.active {
+            border-color: var(--gold);
+            color: var(--text);
+            background: var(--surface);
+        }
+        .flight-path__waypoint.active .dot {
+            opacity: 1;
+            box-shadow: 0 0 12px var(--gold-glow);
+        }
+
+        .flight-path__connector {
+            color: var(--text-dim);
+            font-size: 0.7rem;
+            opacity: 0.3;
+            letter-spacing: 2px;
+        }
+
+        .flight-path__note {
+            margin-top: 16px;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            font-style: italic;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 16px;
+        }
+
+        /* ----- story timeline ----- */
+        .timeline {
+            margin-top: 32px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 24px;
+        }
+
+        .timeline__book {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 26px 24px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-top: 2px solid var(--gold);
+        }
+
+        .timeline__book-label {
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--gold);
+            font-weight: 500;
+        }
+
+        .timeline__book-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 4px 0 16px;
+        }
+
+        .timeline__events {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .timeline__events li {
+            position: relative;
+            padding-left: 18px;
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            line-height: 1.55;
+        }
+
+        .timeline__events li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--gold);
+            opacity: 0.7;
+        }
+
+        .timeline__events li strong {
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        /* ----- human nature spectrum ----- */
+        .spectrum {
+            margin-top: 40px;
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 36px 30px 30px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .spectrum__labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            margin-bottom: 14px;
+        }
+
+        .spectrum__labels .left {
+            color: var(--accent);
+        }
+        .spectrum__labels .right {
+            color: var(--gold);
+        }
+
+        .spectrum__bar {
+            position: relative;
+            height: 4px;
+            border-radius: 4px;
+            background: linear-gradient(90deg, var(--accent-dim), var(--surface2) 50%, var(--gold));
+            margin-bottom: 8px;
+        }
+
+        .spectrum__points {
+            position: relative;
+            height: 70px;
+        }
+
+        .spectrum__point {
+            position: absolute;
+            top: 0;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            width: 90px;
+        }
+
+        .spectrum__point .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--star);
+            border: 2px solid var(--bg);
+            box-shadow: 0 0 0 1px rgba(255,255,255,0.15);
+        }
+
+        .spectrum__point .label {
+            font-size: 0.78rem;
+            text-align: center;
+            color: var(--text);
+            line-height: 1.3;
+        }
+
+        .spectrum__note {
+            margin-top: 10px;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            font-style: italic;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 16px;
+        }
+
+        @media (max-width: 640px) {
+            .spectrum__points { height: auto; }
+            .spectrum__point {
+                position: static;
+                transform: none;
+                display: inline-flex;
+                flex-direction: row;
+                width: auto;
+                margin: 6px 10px 6px 0;
+            }
+        }
+
+        /* ----- footer ----- */
+        .footer {
+            margin-top: 60px;
+            padding-top: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 0.8rem;
+        }
+
+        .footer a {
+            color: var(--gold);
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* ----- responsive tweaks ----- */
+        @media (max-width: 768px) {
+            .app {
+                padding: 0 16px 60px;
+            }
+            .hero {
+                min-height: 90vh;
+                padding: 20px 0;
+            }
+            .constellation-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 16px;
+            }
+            .theme-grid {
+                grid-template-columns: 1fr;
+            }
+            .quote-block {
+                padding: 32px 20px;
+            }
+            .poem-section {
+                padding: 40px 20px;
+            }
+            .flight-path {
+                gap: 4px 2px;
+            }
+            .flight-path__waypoint {
+                font-size: 0.7rem;
+                padding: 4px 12px 4px 8px;
+            }
+            .flight-path__connector {
+                font-size: 0.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .constellation-grid {
+                grid-template-columns: 1fr;
+            }
+            .hero__cta {
+                flex-direction: column;
+                align-items: center;
+            }
+            .btn {
+                width: 100%;
+                max-width: 280px;
+                text-align: center;
+            }
+        }
+
+        /* ----- utility ----- */
+        .text-gold {
+            color: var(--gold);
+        }
+        .mt-8 {
+            margin-top: 8px;
+        }
+        .mt-16 {
+            margin-top: 16px;
+        }
+        .mt-24 {
+            margin-top: 24px;
+        }
+        .mb-8 {
+            margin-bottom: 8px;
+        }
+        .gap-8 {
+            gap: 8px;
+        }
+
+        /* fade-in on scroll (simple) */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* small star twinkle overlay */
+        .twinkle {
+            animation: twinkle 3s ease-in-out infinite alternate;
+        }
+        @keyframes twinkle {
+            0% {
+                opacity: 0.3;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+    </style>
 </head>
 <body>
 
-<canvas id="ambient"></canvas>
+    <!-- ----- starfield canvas (bg) ----- -->
+    <canvas id="stars-canvas"></canvas>
 
-<section id="hero">
-  <div class="eyebrow">Peter Heller · The Dog Stars</div>
-  <h1>The sky remembers<br>what the ground forgets.</h1>
-  <p class="sub">Nine years after the flu, Hig keeps a Cessna, a dog, a rifle he can't quite fire, and a radio that hasn't spoken back in a year. Below, the people, losses, and questions that make up his sky — plotted as a constellation you can read.</p>
-  <p class="prompt">What are you waiting for?</p>
-  <div class="scrolldown">scroll to find your bearings</div>
-</section>
+    <!-- ----- constellation canvas (lines) ----- -->
+    <canvas id="constellation-canvas"></canvas>
 
-<nav id="modebar">
-  <button class="active" data-mode="characters">Characters</button>
-  <button data-mode="themes">Themes</button>
-</nav>
+    <!-- ----- main app ----- -->
+    <div class="app">
 
-<div id="sky-wrap">
-  <p class="sky-caption" id="sky-caption"><b>Character constellation.</b> Six lives, plotted by how close they sit to Hig. Click any star.</p>
-  <div id="sky">
-    <svg id="lines"></svg>
-  </div>
-</div>
+        <!-- HERO -->
+        <header class="hero" id="home">
+            <div class="hero__badge">✦ a novel by peter heller</div>
+            <h1 class="hero__title">The Dog Stars</h1>
+            <p class="hero__sub">
+                <em>“What are we waiting for?”</em><br />
+                A journey through grief, survival, and the constellations we keep.
+            </p>
+            <div class="hero__cta">
+                <a href="#world" class="btn btn--primary">How the World Ended</a>
+                <a href="#characters" class="btn btn--outline">Characters</a>
+                <a href="#story" class="btn btn--outline">The Story</a>
+                <a href="#poem" class="btn btn--outline">The Poem</a>
+            </div>
+            <div class="hero__scroll">↓ scroll to begin</div>
+        </header>
 
-<section id="reflect">
-  <div class="rule"></div>
-  <h3>"His dog will never die. The biggest hole torn by a mutt."</h3>
-  <p>The novel never resolves whether tenderness or pragmatism is the right way to survive — it just shows both keeping different people alive. Explore the other constellation to see the argument laid out in full.</p>
-  <div class="credit">Reading companion · not affiliated with the author or publisher</div>
-</section>
+        <!-- THE WORLD -->
+        <section id="world">
+            <div class="fade-in">
+                <div class="section__label">Nine Years Out</div>
+                <h2 class="section__title">How the World <span class="highlight">Ended</span></h2>
+                <p class="section__desc">
+                    Not one collapse but three, stacked on top of each other — a virus, a second
+                    sickness born from the first, and a planet that was already dying underneath it all.
+                </p>
+            </div>
 
-<div id="panel-backdrop"></div>
-<aside id="panel" aria-hidden="true">
-  <button class="close" aria-label="Close">✕ close</button>
-  <div class="kicker" id="panel-kicker">—</div>
-  <h2 id="panel-title">—</h2>
-  <div class="quote" id="panel-quote" style="display:none;"></div>
-  <div class="body" id="panel-body"></div>
-  <div class="links" id="panel-links"></div>
-</aside>
+            <div class="theme-grid">
+                <div class="theme-card fade-in">
+                    <div class="theme-card__title">Stage One — The Flu</div>
+                    <div class="theme-card__body">
+                        A hyper-virulent, airborne influenza strain kills — by Hig's count —
+                        <strong>"ninety nine point whatever" percent</strong> of the population in a
+                        matter of weeks. The press blamed New Delhi; Cima, the epidemiologist, has
+                        heard the other rumor — a genetic accident at the Livermore weapons lab, a
+                        courier's plane down in Brampton. No one ever confirmed either story.
+                    </div>
+                </div>
 
-<script>
-/* ---------------- ambient starfield canvas ---------------- */
-const cv = document.getElementById('ambient');
-const ctx = cv.getContext('2d');
-let stars = [];
-function sizeCanvas(){
-  cv.width = window.innerWidth; cv.height = document.body.scrollHeight;
-  stars = [];
-  const count = Math.floor((cv.width*cv.height)/9000);
-  for(let i=0;i<count;i++){
-    stars.push({
-      x: Math.random()*cv.width, y: Math.random()*cv.height,
-      r: Math.random()*1.3+0.2, base: Math.random()*0.5+0.2,
-      speed: Math.random()*0.02+0.005, offset: Math.random()*Math.PI*2
-    });
-  }
-}
-let t=0;
-function drawStars(){
-  t += 0.016;
-  ctx.clearRect(0,0,cv.width,cv.height);
-  for(const s of stars){
-    const flicker = s.base + Math.sin(t*s.speed*40 + s.offset)*0.25;
-    ctx.globalAlpha = Math.max(0, Math.min(1, flicker));
-    ctx.fillStyle = '#f2eee2';
-    ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI*2); ctx.fill();
-  }
-  ctx.globalAlpha = 1;
-  requestAnimationFrame(drawStars);
-}
-window.addEventListener('resize', sizeCanvas);
-sizeCanvas(); drawStars();
-setTimeout(sizeCanvas, 600); // catch late layout/font shifts
+                <div class="theme-card fade-in">
+                    <div class="theme-card__title">Stage Two — The Blood Disease</div>
+                    <div class="theme-card__body">
+                        Survivors of the flu develop a slow autoimmune condition, <strong>"something
+                        like AIDS"</strong> — bruising, hemorrhage, organ damage, a body turning on
+                        itself. Children born after the pandemic inherit it. There is no cure, only
+                        Cima's guess that vitamin D deficiency speeds it along.
+                    </div>
+                </div>
 
-/* ---------------- data ---------------- */
-const DATA = {
-  characters: {
-    caption: '<b>Character constellation.</b> Six lives, plotted by how close they sit to Hig. Click any star.',
-    nodes: [
-      { id:'hig', x:50, y:52, major:true, label:'Hig',
-        kicker:'Narrator · pilot', title:'Hig',
-        quote:"I've never had it fucking in me. But I do it.",
-        body:[
-          "Hig can't pull the trigger — in the book's biggest firefight, Bangley has to take the shot for him. He still keeps a moral ledger from before the collapse: he buries a dead boy with his own hawk feather, an act Bangley would call pointless.",
-          "The End didn't harden Hig into a survivalist. It hollowed him into someone who does survival's necessary violence while still carrying pre-apocalypse grief and love with nowhere left to go — and that unresolved gap is what eventually sends him flying past the point of no return."
-        ] },
-      { id:'bangley', x:20, y:34, label:'Bangley',
-        kicker:'Neighbor · defense', title:'Bangley',
-        quote:"Old rules are done, Hig. New world now. New world new rules.",
-        body:[
-          "Bangley had, in Hig's words, been waiting for the End his whole life — he does nothing that isn't aimed at surviving, and he plainly enjoys the killing part.",
-          "The alliance starts purely transactional: Bangley's firepower for Hig's perimeter work and hunting. It only becomes something like family after Bangley is found nearly dead behind Red Square, having single-handedly fought off more than a dozen armed intruders, and Hig and Cima spend weeks nursing him back."
-        ] },
-      { id:'jasper', x:32, y:70, label:'Jasper',
-        kicker:'Dog · copilot', title:'Jasper',
-        quote:'His dog will never die. The biggest hole torn by a mutt.',
-        body:[
-          "Jasper is the last living witness to the world before — the one creature that still needed and loved Hig the old way. His death lands harder than almost any other loss in the book.",
-          "The grief reads almost as dissociation: on the third morning Hig still expects him to come back. Afterward Hig goes hunting reckless and careless, stranded overnight in a snowstorm — the carelessness of someone who's stopped protecting his own life. Everything that follows, including the flight past the point of no return, only makes sense with Jasper gone."
-        ] },
-      { id:'melissa', x:68, y:24, label:'Melissa',
-        kicker:'Wife · memory', title:'Melissa',
-        quote:null,
-        body:[
-          "Melissa and their unborn child died in the first wave of the collapse. She surfaces throughout the novel as memory rather than scene — the pre-flu life Hig keeps measuring the present against.",
-          "When Hig discovers a dead child during an ambush, he can't stop calculating the boy's age against what Melissa's child would have been. Bangley reads the reaction as weakness; for Hig, it's the last thread connecting him to who he was."
-        ] },
-      { id:'cima', x:78, y:58, major:true, label:'Cima',
-        kicker:"Pops's daughter", title:'Cima',
-        quote:'A double squeeze, and quiet disappointment rather than rejection.',
-        body:[
-          "Cima is the first person in the novel who meets Hig on equal emotional footing — not as a threat, not as a dependent. She has her own catalog of loss, including having to end her husband Tomas's life in what reads as a mercy killing.",
-          "When Hig loses his composure mid-intimacy, haunted by an image of Tomas, Cima's response — quiet, without punishment — is more moving than a clean success would have been. Their bond isn't innocence meeting innocence; it's two people who've each done terrible, necessary things finding the other still has room for tenderness."
-        ] },
-      { id:'pops', x:88, y:38, label:'Pops',
-        kicker:"Cima's father", title:'Pops',
-        quote:'Getting warmer. Just like they said it would.',
-        body:[
-          "Cima's father runs the settlement Hig flies toward — the answer, or partial answer, to the radio voice that pulled him past the point of no return. When he asks Hig directly why he came so far, Hig can't fully answer.",
-          "By the novel's end Pops has become part of an unlikely found family with Bangley — chess on the porch, sandbagged windows, what the book calls an apocalyptic parody of Norman Rockwell."
-        ] }
-    ],
-    edges: [['hig','bangley'],['hig','jasper'],['hig','melissa'],['hig','cima'],['cima','pops'],['bangley','pops']]
-  },
-  themes: {
-    caption: '<b>Theme constellation.</b> The pressures that shape every decision in the book. Click any star.',
-    nodes: [
-      { id:'grief', x:24, y:30, major:true, label:'Grief',
-        kicker:'Theme', title:'Grief',
-        quote:'The Pain puts its arm over your shoulders. It is your closest friend.',
-        body:[
-          "Grief in this novel is written as a physical presence, not a feeling that passes. After Jasper dies, Hig stops distinguishing between mourning the dog and mourning everything else at once.",
-          "It's also the engine of the plot: with his last anchor gone, Hig is free to take the risk — flying past the point of no return — that the rest of the story turns on."
-        ] },
-      { id:'hope', x:58, y:16, major:true, label:'Hope',
-        kicker:'Theme', title:'Hope / faith',
-        quote:'What are you waiting for?',
-        body:[
-          "Hope here is deliberately small and unresolved rather than triumphant. Cima doesn't replace Melissa and the novel doesn't pretend she does — what she offers is proof that someone who has lost everything can still make room for someone new.",
-          "The radio voice functions the same way: not a promise, just the first signal in nine years that there might be more than bare survival on the other end of a transmission."
-        ] },
-      { id:'violence', x:14, y:62, label:'Violence',
-        kicker:'Theme', title:'Violence',
-        quote:'Good job. Not sure you still had it in you.',
-        body:[
-          "Bangley's mantra — old rules are done, new world, never negotiate — captures the book's logic of total scarcity and no enforceable law: striking first stops being cruelty and becomes rational self-defense.",
-          "Hig never gets comfortable with it. He's said outright that killing even a doe never sat right with him, and he performs small rites of respect — like burying an enemy combatant, a child, with his own hawk feather — that Bangley finds pointless."
-        ] },
-      { id:'memory', x:40, y:78, label:'Memory',
-        kicker:'Theme', title:'Memory',
-        quote:'The trout are gone every one.',
-        body:[
-          "Memory operates on two tracks at once: personal (Melissa, the life before) and ecological (the trout, the animals, the climate as it used to be). Both are treated as equally real losses.",
-          "The prose keeps circling back to what's gone rather than building toward what's next — the book reads closer to a meditation on grief and perception than a plot-driven survival thriller."
-        ] },
-      { id:'home', x:72, y:70, label:'Home',
-        kicker:'Theme', title:'Home',
-        quote:"You been a good partner, Hig... Like family.",
-        body:[
-          "Home shifts across the novel from a fortified perimeter (Bangley's domain) to something closer to found family by the end — chess on the porch, a new neighbor, mutual care replacing transactional alliance.",
-          "Bangley shows up before Hig's flight with a basket of grenades disguised as a small domestic joke, then delivers one of the book's most emotionally exposed lines. Tenderness and violence share the same sentence throughout."
-        ] },
-      { id:'nature', x:88, y:44, label:'Nature',
-        kicker:'Theme', title:'Nature / collapse',
-        quote:'Getting warmer. Just like they said it would.',
-        body:[
-          "The collapse is two-layered: a superflu, then a blood-borne autoimmune disease in survivors — with climate breakdown running underneath both as the slower, ongoing engine of loss, not just the trigger.",
-          "Most epidemiologists would treat the pandemic's near-total mortality as an extreme-case scenario. The ecological backdrop — warming, drought, vanished species — tracks much closer to mainstream projections, which is likely why it reads as the more immediately convincing layer of the book's warning."
-        ] }
-    ],
-    edges: [['grief','hope'],['grief','memory'],['violence','home'],['home','hope'],['memory','nature'],['nature','violence'],['grief','violence']]
-  }
-};
+                <div class="theme-card fade-in">
+                    <div class="theme-card__title">Stage Three — The Land Itself</div>
+                    <div class="theme-card__body">
+                        Underneath both plagues, the climate was already failing: warming streams
+                        killed the trout, drought and beetles killed the forests, snowpack thinned
+                        until whole canyons dried up. <strong>Elk, geese, tigers, apes — gone.</strong>
+                        Only the adaptable survive: carp, coyotes, raptors, and the people still
+                        stubborn enough to farm.
+                    </div>
+                </div>
 
-/* ---------------- render ---------------- */
-const sky = document.getElementById('sky');
-const linesSvg = document.getElementById('lines');
-const captionEl = document.getElementById('sky-caption');
-let currentMode = 'characters';
+                <div class="theme-card fade-in">
+                    <div class="theme-card__title">Why Survivors Turned Feral</div>
+                    <div class="theme-card__body">
+                        No law, no courts, no hospitals — just scarcity and the people it makes of us.
+                        Bangley's doctrine, <strong>"New world now. New world new rules,"</strong>
+                        is the logic almost everyone left alive has adopted: the men at the Coke
+                        truck, the marauders on the plains, the couple at Grand Junction who rigged
+                        a radio beacon to lure pilots into a cable trap. Trust became a luxury
+                        no one could afford.
+                    </div>
+                </div>
+            </div>
+        </section>
 
-function render(mode){
-  currentMode = mode;
-  const set = DATA[mode];
-  captionEl.innerHTML = set.caption;
-  sky.querySelectorAll('.star-node').forEach(n=>n.remove());
-  linesSvg.innerHTML = '';
+        <!-- CHARACTERS -->
+        <section id="characters">
+            <div class="fade-in">
+                <div class="section__label">Constellations</div>
+                <h2 class="section__title">Who <span class="highlight">Endures</span></h2>
+                <p class="section__desc">
+                    The survivors — each a star in a broken sky, bound by grief, love, and the
+                    stubborn will to keep going.
+                </p>
+            </div>
 
-  const byId = {};
-  set.nodes.forEach(n=>byId[n.id]=n);
+            <div class="constellation-grid">
+                <!-- Hig -->
+                <div class="constellation-card fade-in">
+                    <span class="constellation-card__icon">✈︎</span>
+                    <div class="constellation-card__name">Hig</div>
+                    <div class="constellation-card__role">Pilot · Narrator</div>
+                    <div class="constellation-card__desc">
+                        A poet, carpenter, and reluctant killer. He flies the Beast, tends his garden,
+                        and carries the weight of a world he couldn't save.
+                    </div>
+                    <div class="constellation-card__quote">
+                        I keep the Beast running, I keep the 100 low lead on tap, I foresee attacks.
+                        I am young enough, I am old enough.
+                    </div>
+                </div>
 
-  set.edges.forEach(([a,b])=>{
-    const na = byId[a], nb = byId[b];
-    const path = document.createElementNS('http://www.w3.org/2000/svg','path');
-    path.setAttribute('d', `M ${na.x} ${na.y} L ${nb.x} ${nb.y}`);
-    linesSvg.appendChild(path);
-  });
-  linesSvg.setAttribute('viewBox','0 0 100 100');
-  linesSvg.setAttribute('preserveAspectRatio','none');
+                <!-- Bangley -->
+                <div class="constellation-card fade-in">
+                    <span class="constellation-card__icon">⚔</span>
+                    <div class="constellation-card__name">Bangley</div>
+                    <div class="constellation-card__role">Survivalist · Protector</div>
+                    <div class="constellation-card__desc">
+                        Ruthless, pragmatic, and utterly alone. He lives for the perimeter,
+                        kills without hesitation, and guards Hig like a difficult brother.
+                    </div>
+                    <div class="constellation-card__quote">
+                        Never ever negotiate. You are negotiating your own death.
+                    </div>
+                </div>
 
-  set.nodes.forEach(n=>{
-    const el = document.createElement('button');
-    el.className = 'star-node' + (n.major ? ' major' : '');
-    el.style.left = n.x + '%';
-    el.style.top = n.y + '%';
-    el.setAttribute('aria-label', n.title);
-    el.innerHTML = `<span class="dot"></span><label>${n.label}</label>`;
-    el.addEventListener('click', ()=>openPanel(n));
-    sky.appendChild(el);
-  });
-}
+                <!-- Jasper -->
+                <div class="constellation-card fade-in">
+                    <span class="constellation-card__icon">🐾</span>
+                    <div class="constellation-card__name">Jasper</div>
+                    <div class="constellation-card__role">Copilot · Heart</div>
+                    <div class="constellation-card__desc">
+                        Hig's blue heeler, his last tether to tenderness. He dies in the mountains,
+                        leaving Hig with nothing but the stars.
+                    </div>
+                    <div class="constellation-card__quote">
+                        Goodbye, bud. You are Jasper. My heart. We are never apart, not here, not there.
+                    </div>
+                </div>
 
-/* ---------------- panel ---------------- */
-const panel = document.getElementById('panel');
-const backdrop = document.getElementById('panel-backdrop');
-function openPanel(n){
-  document.getElementById('panel-kicker').textContent = n.kicker;
-  document.getElementById('panel-title').textContent = n.title;
-  const q = document.getElementById('panel-quote');
-  if(n.quote){ q.style.display='block'; q.textContent = '“' + n.quote + '”'; }
-  else { q.style.display='none'; }
-  document.getElementById('panel-body').innerHTML = n.body.map(p=>`<p>${p}</p>`).join('');
-  panel.classList.add('open'); backdrop.classList.add('open');
-  panel.setAttribute('aria-hidden','false');
-}
-function closePanel(){
-  panel.classList.remove('open'); backdrop.classList.remove('open');
-  panel.setAttribute('aria-hidden','true');
-}
-backdrop.addEventListener('click', closePanel);
-panel.querySelector('.close').addEventListener('click', closePanel);
-document.addEventListener('keydown', e=>{ if(e.key==='Escape') closePanel(); });
+                <!-- Cima -->
+                <div class="constellation-card fade-in">
+                    <span class="constellation-card__icon">🌿</span>
+                    <div class="constellation-card__name">Cima</div>
+                    <div class="constellation-card__role">Doctor · Healer</div>
+                    <div class="constellation-card__desc">
+                        A survivor who carries her own losses — a twin brother, a husband she had
+                        to kill. She meets Hig in their shared brokenness.
+                    </div>
+                    <div class="constellation-card__quote">
+                        If you want, you can just look at me. It's probably been a long time. I'm in no hurry.
+                    </div>
+                </div>
 
-/* ---------------- mode toggle ---------------- */
-document.querySelectorAll('#modebar button').forEach(btn=>{
-  btn.addEventListener('click', ()=>{
-    document.querySelectorAll('#modebar button').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    render(btn.dataset.mode);
-  });
-});
+                <!-- Melissa -->
+                <div class="constellation-card fade-in">
+                    <span class="constellation-card__icon">🕊</span>
+                    <div class="constellation-card__name">Melissa</div>
+                    <div class="constellation-card__role">Memory · Love</div>
+                    <div class="constellation-card__desc">
+                        Hig's wife, lost to the flu. He smothered her at her request — the act
+                        that haunts him more than any other.
+                    </div>
+                    <div class="constellation-card__quote">
+                        I loved her. This is what I live with.
+                    </div>
+                </div>
 
-render('characters');
-</script>
+                <!-- Pops -->
+                <div class="constellation-card fade-in">
+                    <span class="constellation-card__icon">🏔</span>
+                    <div class="constellation-card__name">Pops</div>
+                    <div class="constellation-card__role">Rancher · Father</div>
+                    <div class="constellation-card__desc">
+                        Cima's father, a former Navy SEAL who carries the old West in his bones.
+                        Dignified, weary, and quietly hopeful.
+                    </div>
+                    <div class="constellation-card__quote">
+                        The green patches are spreading year by year.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- THEMES -->
+        <section id="themes">
+            <div class="fade-in">
+                <div class="section__label">The Arc of the Sky</div>
+                <h2 class="section__title">Themes that <span class="highlight">Burn</span></h2>
+                <p class="section__desc">
+                    Loss, memory, violence, hope — the novel's constellations are carved from
+                    what remains when civilization falls away.
+                </p>
+            </div>
+
+            <div class="theme-grid">
+                <div class="theme-card fade-in">
+                    <div class="theme-card__title">Grief as an Element</div>
+                    <div class="theme-card__body">
+                        <strong>“Grief is an element. It has its own cycle like the carbon cycle, the nitrogen.
+                            It never diminishes not ever.”</strong>
+                        <br /><br />
+                        Hig carries grief the way the earth carries water — it cycles through him,
+                        never disappearing, only changing form.
+                    </div>
+                </div>
+
+                <div class="theme-card fade-in">
+                    <div class="theme-card__title">Survival vs. Living</div>
+                    <div class="theme-card__body">
+                        <strong>Bangley survives. Hig lives.</strong>
+                        <br /><br />
+                        The novel asks: what are we waiting for? Mere survival is not enough —
+                        we need love, beauty, connection. The risk is everything.
+                    </div>
+                </div>
+
+                <div class="theme-card fade-in">
+                    <div class="theme-card__title">The Collapse of Nature</div>
+                    <div class="theme-card__body">
+                        <strong>“If I ever woke up crying in the middle of a dream… it's because the trout
+                            are gone every one.”</strong>
+                        <br /><br />
+                        The warming streams, the dying forests, the vanishing elk — the apocalypse
+                        is ecological as much as human.
+                    </div>
+                </div>
+
+                <div class="theme-card fade-in">
+                    <div class="theme-card__title">Memory as Home</div>
+                    <div class="theme-card__body">
+                        <strong>“I lift my head off the pillow / I see the frost the moon. /
+                            Lowering my head I think of home.”</strong>
+                        <br /><br />
+                        Home is not a place — it's a person, a memory, a promise. Hig carries
+                        Melissa, Jasper, and the life before in every breath.
+                    </div>
+                </div>
+
+                <div class="theme-card fade-in">
+                    <div class="theme-card__title">Violence &amp; Compassion</div>
+                    <div class="theme-card__body">
+                        <strong>“Try to do the right thing. Circumstance intervenes.”</strong>
+                        <br /><br />
+                        Hig kills because he must, but never without cost. The novel refuses
+                        to resolve the tension — both cruelty and tenderness are real.
+                    </div>
+                </div>
+
+                <div class="theme-card fade-in">
+                    <div class="theme-card__title">Found Family</div>
+                    <div class="theme-card__body">
+                        <strong>By the end, Hig has a family again.</strong>
+                        <br /><br />
+                        Cima, Pops, and even Bangley become something like a household —
+                        an apocalyptic parody of Norman Rockwell, but real.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- HUMAN NATURE SPECTRUM -->
+        <section id="human-nature">
+            <div class="fade-in">
+                <div class="section__label">Who We Become</div>
+                <h2 class="section__title">A <span class="highlight">Spectrum</span>, Not a Verdict</h2>
+                <p class="section__desc">
+                    The novel refuses to say humans are fundamentally good or fundamentally cruel.
+                    Instead it lines its characters up along a spectrum and asks what circumstance —
+                    and choice — does to each of them.
+                </p>
+            </div>
+
+            <div class="spectrum fade-in">
+                <div class="spectrum__labels">
+                    <span class="left">◂ pure predator</span>
+                    <span class="right">community &amp; faith ▸</span>
+                </div>
+                <div class="spectrum__bar"></div>
+                <div class="spectrum__points">
+                    <div class="spectrum__point" style="left: 6%;">
+                        <span class="dot"></span>
+                        <span class="label">Coke Truck Men &amp; the Grand Junction couple</span>
+                    </div>
+                    <div class="spectrum__point" style="left: 32%;">
+                        <span class="dot"></span>
+                        <span class="label">Bangley — pragmatic survivor</span>
+                    </div>
+                    <div class="spectrum__point" style="left: 55%;">
+                        <span class="dot"></span>
+                        <span class="label">Hig — moral survivor</span>
+                    </div>
+                    <div class="spectrum__point" style="left: 75%;">
+                        <span class="dot"></span>
+                        <span class="label">Cima — healer</span>
+                    </div>
+                    <div class="spectrum__point" style="left: 94%;">
+                        <span class="dot"></span>
+                        <span class="label">The Mennonites</span>
+                    </div>
+                </div>
+                <div class="spectrum__note">
+                    <span class="text-gold">✦</span> “New world now. New world new rules,” Bangley says —
+                    and the novel doesn't disprove him. It just refuses to let that be the only rule
+                    anyone lives by.
+                </div>
+            </div>
+        </section>
+
+        <!-- QUOTE BLOCK -->
+        <div class="quote-block fade-in">
+            <div class="quote-block__text">
+                “I wonder what it is this need to tell. To animate somehow the deathly stillness
+                of the profoundest beauty. Breathe life in the telling.”
+            </div>
+            <div class="quote-block__attribution">— <strong>Hig</strong>, on why he tells the story at all</div>
+        </div>
+
+        <!-- STORY TIMELINE -->
+        <section id="story">
+            <div class="fade-in">
+                <div class="section__label">The Flight Log</div>
+                <h2 class="section__title">Past the <span class="highlight">Point of No Return</span></h2>
+                <p class="section__desc">
+                    Hig's route across Colorado in three books — from the fortified perimeter at
+                    Erie, through grief and ambush, to a hidden canyon and back again.
+                </p>
+            </div>
+
+            <div class="flight-map fade-in">
+                <div class="flight-map__title">
+                    <span>✦</span> The Beast's Route
+                </div>
+                <div class="flight-path">
+                    <span class="flight-path__waypoint active"><span class="dot"></span> Erie</span>
+                    <span class="flight-path__connector">—</span>
+                    <span class="flight-path__waypoint"><span class="dot"></span> The Coke Truck</span>
+                    <span class="flight-path__connector">—</span>
+                    <span class="flight-path__waypoint"><span class="dot"></span> The Mountains</span>
+                    <span class="flight-path__connector">—</span>
+                    <span class="flight-path__waypoint"><span class="dot"></span> Grand Junction</span>
+                    <span class="flight-path__connector">—</span>
+                    <span class="flight-path__waypoint"><span class="dot"></span> The Canyon</span>
+                    <span class="flight-path__connector">—</span>
+                    <span class="flight-path__waypoint"><span class="dot"></span> Home</span>
+                </div>
+            </div>
+
+            <div class="timeline fade-in">
+                <div class="timeline__book">
+                    <div class="timeline__book-label">Book One</div>
+                    <div class="timeline__book-title">Life on the Perimeter</div>
+                    <ul class="timeline__events">
+                        <li>Hig and Bangley hold the Erie airport — Hig flies patrol in the Beast, Bangley mans the sniper tower, and an uneasy alliance keeps them both alive.</li>
+                        <li>Hig secretly runs supplies to a Mennonite community dying of the blood disease, against Bangley's warnings.</li>
+                        <li>A mysterious radio transmission reaches him from Grand Junction — a voice he puts off chasing for years.</li>
+                        <li>On a last hunting trip into the mountains, <strong>Jasper dies in his sleep.</strong> Hig is left with nothing but the stars.</li>
+                    </ul>
+                </div>
+                <div class="timeline__book">
+                    <div class="timeline__book-label">Book Two</div>
+                    <div class="timeline__book-title">The Journey West</div>
+                    <ul class="timeline__events">
+                        <li>Grieving and unmoored, Hig is ambushed by nine marauders on the plains — Bangley saves him with mortars fired from the perimeter.</li>
+                        <li>Hig finally flies past his "point of no return," discovering a hidden box canyon with a stone house, a garden, and cattle.</li>
+                        <li>He meets <strong>Cima</strong>, a doctor, and her father <strong>Pops</strong>, a former Navy SEAL — hostile at first, then cautiously trusting.</li>
+                        <li>Hig and Cima fall into a tender relationship. Pops reveals the canyon's creek is drying up; the three plan to leave together.</li>
+                    </ul>
+                </div>
+                <div class="timeline__book">
+                    <div class="timeline__book-label">Book Three</div>
+                    <div class="timeline__book-title">Return and Reckoning</div>
+                    <ul class="timeline__events">
+                        <li>The radio transmission from Grand Junction turns out to be a trap — an elderly couple luring pilots into a cable strung across the runway. Pops kills them.</li>
+                        <li>Back at Erie, they find Bangley's house destroyed — he's alive behind a tool chest, having fought off fourteen attackers alone. Cima nurses him back.</li>
+                        <li>The four become a household — Hig, Bangley, Cima, and Pops — an apocalyptic version of a family.</li>
+                        <li>Unidentified jets, crews speaking Arabic, pass overhead. The novel ends open — other survivors, other threats, the world still turning.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- POEM -->
+        <section id="poem">
+            <div class="fade-in">
+                <div class="section__label">The Final Word</div>
+                <h2 class="section__title">When Will I Be <span class="highlight">Home?</span></h2>
+                <p class="section__desc">
+                    The novel closes with Li Shang-Yin's poem — a meditation on longing,
+                    reunion, and the hope that burns even in the darkest night.
+                </p>
+            </div>
+
+            <div class="poem-section fade-in">
+                <div class="poem-section__title">When Will I Be Home?</div>
+                <div class="poem-section__author">— Li Shang-Yin (Tang Dynasty)</div>
+                <div class="poem-section__lines">
+                    When will I be home? I don't know.<br />
+                    In the mountains, in the rainy night,<br />
+                    The Autumn lake is flooded.<br />
+                    <span class="pause"></span>
+                    Someday we will be back together again.<br />
+                    We will sit in the candlelight by the West window.<br />
+                    And I will tell you how I remembered you<br />
+                    Tonight on the stormy mountain.
+                </div>
+            </div>
+
+            <div class="quote-block fade-in" style="margin-top: 24px;">
+                <div class="quote-block__text" style="font-size: clamp(1rem, 1.6vw, 1.3rem);">
+                    “The love is the creek bed and the pain fills it. Fills it every day with tears.”
+                </div>
+                <div class="quote-block__attribution">— <strong>Hig</strong>, on the nature of grief</div>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="footer">
+            <p>
+                ✦ <em>The Dog Stars</em> by Peter Heller · A constellation of memory, grief, and hope ✦
+                <br />
+                <span style="font-size:0.75rem; opacity:0.5; margin-top: 8px; display: inline-block;">
+                    Built with care for a novel that refuses to let the stars go out.
+                </span>
+            </p>
+        </footer>
+
+    </div>
+
+    <!-- ----- JavaScript ----- -->
+    <script>
+        (function() {
+            'use strict';
+
+            // ---------- STARFIELD ----------
+            const starCanvas = document.getElementById('stars-canvas');
+            const starCtx = starCanvas.getContext('2d');
+            let stars = [];
+
+            function resizeStarCanvas() {
+                starCanvas.width = window.innerWidth;
+                starCanvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resizeStarCanvas);
+            resizeStarCanvas();
+
+            function initStars(count = 320) {
+                stars = [];
+                for (let i = 0; i < count; i++) {
+                    stars.push({
+                        x: Math.random() * starCanvas.width,
+                        y: Math.random() * starCanvas.height,
+                        r: Math.random() * 1.6 + 0.4,
+                        a: Math.random() * 0.8 + 0.2,
+                        speed: 0.002 + Math.random() * 0.006,
+                        phase: Math.random() * Math.PI * 2,
+                    });
+                }
+            }
+            initStars(360);
+
+            function drawStars(time) {
+                starCtx.clearRect(0, 0, starCanvas.width, starCanvas.height);
+                for (const s of stars) {
+                    const flicker = 0.6 + 0.4 * Math.sin(time * s.speed + s.phase);
+                    const alpha = s.a * flicker;
+                    starCtx.beginPath();
+                    starCtx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+                    starCtx.fillStyle = `rgba(245, 240, 232, ${alpha})`;
+                    starCtx.fill();
+                }
+            }
+
+            // ---------- CONSTELLATION LINES (decorative) ----------
+            const constCanvas = document.getElementById('constellation-canvas');
+            const constCtx = constCanvas.getContext('2d');
+
+            function resizeConstCanvas() {
+                constCanvas.width = window.innerWidth;
+                constCanvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resizeConstCanvas);
+            resizeConstCanvas();
+
+            // generate some fixed points for constellation lines
+            let constellationPoints = [];
+
+            function generateConstellationPoints() {
+                const w = constCanvas.width;
+                const h = constCanvas.height;
+                const points = [];
+                const count = 28;
+                for (let i = 0; i < count; i++) {
+                    points.push({
+                        x: 0.1 + Math.random() * 0.8,
+                        y: 0.1 + Math.random() * 0.8,
+                        r: 2 + Math.random() * 3,
+                    });
+                }
+                return points;
+            }
+            constellationPoints = generateConstellationPoints();
+
+            function drawConstellationLines(time) {
+                const w = constCanvas.width;
+                const h = constCanvas.height;
+                constCtx.clearRect(0, 0, w, h);
+
+                // only draw if we have points
+                if (constellationPoints.length < 2) return;
+
+                // draw lines between nearby points
+                const threshold = 0.22;
+                const pts = constellationPoints.map(p => ({
+                    x: p.x * w,
+                    y: p.y * h,
+                    r: p.r,
+                }));
+
+                for (let i = 0; i < pts.length; i++) {
+                    for (let j = i + 1; j < pts.length; j++) {
+                        const dx = pts[i].x - pts[j].x;
+                        const dy = pts[i].y - pts[j].y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        const maxDist = Math.min(w, h) * threshold;
+                        if (dist < maxDist) {
+                            const alpha = 0.08 + 0.12 * (1 - dist / maxDist);
+                            constCtx.beginPath();
+                            constCtx.moveTo(pts[i].x, pts[i].y);
+                            constCtx.lineTo(pts[j].x, pts[j].y);
+                            constCtx.strokeStyle = `rgba(212, 182, 138, ${alpha})`;
+                            constCtx.lineWidth = 0.6;
+                            constCtx.stroke();
+                        }
+                    }
+                }
+
+                // draw small glowing dots at points
+                for (const p of pts) {
+                    const glow = 0.3 + 0.2 * Math.sin(time * 0.001 + p.x * 0.01);
+                    const grad = constCtx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 3);
+                    grad.addColorStop(0, `rgba(212, 182, 138, ${glow})`);
+                    grad.addColorStop(1, `rgba(212, 182, 138, 0)`);
+                    constCtx.beginPath();
+                    constCtx.arc(p.x, p.y, p.r * 3, 0, Math.PI * 2);
+                    constCtx.fillStyle = grad;
+                    constCtx.fill();
+
+                    constCtx.beginPath();
+                    constCtx.arc(p.x, p.y, p.r * 0.8, 0, Math.PI * 2);
+                    constCtx.fillStyle = `rgba(245, 240, 232, ${0.3 + 0.3 * Math.sin(time * 0.002 + p.x)})`;
+                    constCtx.fill();
+                }
+            }
+
+            // ---------- ANIMATION LOOP ----------
+            let animationFrame = null;
+
+            function animate(time) {
+                drawStars(time);
+                drawConstellationLines(time);
+                animationFrame = requestAnimationFrame(animate);
+            }
+
+            // handle resize for constellation points too
+            window.addEventListener('resize', () => {
+                resizeStarCanvas();
+                resizeConstCanvas();
+                constellationPoints = generateConstellationPoints();
+            });
+
+            animate(0);
+
+            // ---------- FADE-IN OBSERVER ----------
+            const fadeEls = document.querySelectorAll('.fade-in');
+
+            const observer = new IntersectionObserver((entries) => {
+                for (const entry of entries) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                }
+            }, {
+                threshold: 0.15,
+                rootMargin: '0px 0px -40px 0px',
+            });
+
+            for (const el of fadeEls) {
+                observer.observe(el);
+            }
+
+            // ---------- SMOOTH SCROLL FOR NAV ----------
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    const target = document.querySelector(targetId);
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                });
+            });
+
+            // ---------- WAYPOINT INTERACTION (simple) ----------
+            const waypoints = document.querySelectorAll('.flight-path__waypoint');
+            waypoints.forEach((wp, idx) => {
+                wp.addEventListener('click', function() {
+                    waypoints.forEach(w => w.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            // ---------- KEYBOARD ACCESSIBILITY ----------
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    // subtle: remove active from waypoints
+                    waypoints.forEach(w => w.classList.remove('active'));
+                    // but keep Erie active
+                    const first = document.querySelector('.flight-path__waypoint');
+                    if (first) first.classList.add('active');
+                }
+            });
+
+            console.log('✦ The Dog Stars — a constellation of grief and hope ✦');
+            console.log('“What are we waiting for?”');
+
+        })();
+    </script>
+
 </body>
 </html>
