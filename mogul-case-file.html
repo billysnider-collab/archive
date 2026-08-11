@@ -464,6 +464,36 @@ a{color:inherit;}
 .scorecard td.myth{ color:var(--redact); }
 .scorecard td.truth{ color:var(--signal); }
 
+/* counter table */
+.counter-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+  margin-top:16px;
+}
+@media (max-width:700px){
+  .counter-grid{ grid-template-columns:1fr; }
+}
+.counter-item{
+  background:var(--night-2);
+  border:1px solid var(--rule);
+  padding:20px 22px;
+}
+.counter-item .obj{
+  font-family:'IBM Plex Mono', monospace;
+  font-size:12px;
+  letter-spacing:0.04em;
+  color:var(--redact);
+  margin-bottom:6px;
+  font-weight:600;
+}
+.counter-item .rep{
+  font-size:14px;
+  color:var(--paper-dim);
+  margin:0;
+}
+.counter-item .rep strong{ color:var(--signal); }
+
 /* glossary grid */
 .glossary-grid{
   display:grid;
@@ -577,6 +607,7 @@ footer a{ color:var(--brass); text-decoration:none; border-bottom:1px dotted var
   .stamp{ width:140px; height:140px; }
   .stamp-inner{ width:118px; height:118px; }
   .glossary-grid{ grid-template-columns:1fr; }
+  .counter-grid{ grid-template-columns:1fr; }
 }
 </style>
 </head>
@@ -595,6 +626,7 @@ footer a{ color:var(--brass); text-decoration:none; border-bottom:1px dotted var
     <a class="folder-tab" href="#ex-f">F · BELIEF</a>
     <a class="folder-tab" href="#ex-g">G · TAXONOMY</a>
     <a class="folder-tab" href="#ex-h">H · MEDIA</a>
+    <a class="folder-tab" href="#ex-i">I · REBUTTALS</a>
     <a class="folder-tab" href="#verdict">VERDICT</a>
   </div>
 </nav>
@@ -637,7 +669,7 @@ footer a{ color:var(--brass); text-decoration:none; border-bottom:1px dotted var
 
 <main class="wrap">
 
-  <!-- ========== NEW: PRIMER (INTRODUCTION) ========== -->
+  <!-- ========== PRIMER (INTRODUCTION) ========== -->
   <section class="exhibit" id="primer">
     <div class="exhibit-kicker"><span class="tag">PRIMER</span><span class="cat">What you need to know</span></div>
     <h2>The crash, the cover-up, and the correction</h2>
@@ -669,7 +701,7 @@ footer a{ color:var(--brass); text-decoration:none; border-bottom:1px dotted var
     </div>
   </section>
 
-  <!-- ========== NEW: GLOSSARY (KEY TERMS) ========== -->
+  <!-- ========== GLOSSARY (KEY TERMS) ========== -->
   <section class="exhibit" id="glossary">
     <div class="exhibit-kicker"><span class="tag">GLOSSARY</span><span class="cat">Key terms &amp; people</span></div>
     <h2>Who, what, and where — in plain English</h2>
@@ -738,6 +770,7 @@ footer a{ color:var(--brass); text-decoration:none; border-bottom:1px dotted var
           <cite>— the governing rule behind both channels</cite>
         </div>
         <p>Project Mogul strung disk microphones — nicknamed <strong>"flying disks"</strong> long before the phrase meant spacecraft — beneath balloon trains floating at that altitude, listening for the noise a rising nuclear fireball would push into the channel. It worked: on August 29, 1949, it caught the first Soviet test.</p>
+        <p>Decades later, a <strong>1997 Stanford panel</strong> (Sturrock, von Eshleman, Holzer) confirmed that while the Roswell case "deserves scientific study," they found <strong>"no evidence of involvement of an extraterrestrial intelligence"</strong> — a professional verdict that distinguishes <em>investigating</em> the event from <em>believing</em> in its myth.</p>
       </div>
       <aside>
         <div class="side-card">
@@ -763,6 +796,7 @@ footer a{ color:var(--brass); text-decoration:none; border-bottom:1px dotted var
         <p>On July 8, 1947, Roswell Army Air Field announced it had recovered a "flying disc." The next day, General Roger Ramey retracted it — a weather balloon, nothing more. That reversal is where nearly the entire myth is rooted.</p>
         <p>Colonel Thomas DuBose — the officer who personally carried the wreckage in a sealed pouch to Ramey's office — later confirmed there really was a cover story. What he was equally clear about is that the true object was not extraterrestrial. The real secret being protected was <span class="redact-word" tabindex="0">a nuclear-detection program</span>, classified <strong>Top Secret A-1</strong> — equal to the Manhattan Project.</p>
         <div class="redact-hint">tap / hover the redacted line above</div>
+        <p><strong>Irving Newton</strong>, the weather officer summoned to Ramey's office un-briefed, immediately identified the floor debris as a <strong>standard radar target</strong> — not a weather balloon, not exotic matter, but a familiar fixture of high-altitude tracking. His cold identification directly contradicts Marcel's swapped-debris claim and matches the Mogul hardware photographs.</p>
         <div class="pull">
           <p>"Oh Bull! That material was never switched!"</p>
           <cite>— Col. Thomas J. DuBose, on the debris-swap claim</cite>
@@ -834,10 +868,11 @@ footer a{ color:var(--brass); text-decoration:none; border-bottom:1px dotted var
   <!-- ========== EXHIBIT D (Debris) ========== -->
   <section class="exhibit" id="ex-d">
     <div class="exhibit-kicker"><span class="tag">EXHIBIT D</span><span class="cat">Materials</span></div>
-    <h2>Foil, balsa, rubber, tape</h2>
+    <h2>Foil, balsa, rubber, tape — and nitrocellulose</h2>
     <div class="exhibit-grid">
       <div>
         <p>Every early account of the debris agrees on its raw materials: light, tinfoil-like metal, balsa wood, rubber, tape — and an odd resistance to being permanently bent or burned. That's an unremarkable list of parts for a <strong>radar reflector</strong>, the kind hung beneath a balloon train so it could be tracked from the ground, and a strange list of parts for a spacecraft.</p>
+        <p>The material's resistance to bending and burning is often cited as proof of exotic origins; however, the Mogul balloons used <strong>nitrocellulose-laminated plastics and foil-coated Mylar</strong> — materials whose physical properties were unusual to a 1947 rancher but <strong>standard for Cold War high-altitude instrumentation</strong>.</p>
         <p>When researchers later compared photographs of surviving Mogul hardware to the images taken in Ramey's office, the foil pattern and balsa-frame construction matched directly. The one claim of a "swap" traces to a single source whose own paper trail doesn't hold up; the two other witnesses in the room confirmed the photographed material was authentic and unaltered.</p>
         <p>Other physical fragments that surfaced in later decades, when actually subjected to laboratory analysis, came back ordinary every time.</p>
       </div>
@@ -864,7 +899,7 @@ footer a{ color:var(--brass); text-decoration:none; border-bottom:1px dotted var
       <div class="tl-item">
         <div class="tl-year">1947</div>
         <div class="tl-title">Crash, announcement, retraction</div>
-        <div class="tl-desc">A Mogul balloon train crashes near Roswell. The base announces a "flying disc" on July 8; General Ramey retracts it as a weather balloon on July 9.</div>
+        <div class="tl-desc">A Mogul balloon train (<strong>Flight #5</strong>, launched June 4 from Alamogordo) crashes near Roswell. The base announces a "flying disc" on July 8; General Ramey retracts it as a weather balloon on July 9.</div>
       </div>
       <div class="tl-item">
         <div class="tl-year">1949</div>
@@ -957,6 +992,7 @@ footer a{ color:var(--brass); text-decoration:none; border-bottom:1px dotted var
       <div>
         <p>The 1978 revival landed at the exact moment it could do the most damage to the record: post-Watergate distrust of government at an all-time high, tabloid journalism ascendant, and thirty-one years of silence that made Marcel's claims impossible to quickly check.</p>
         <p>Charles Berlitz — already a bestselling author of <em>The Bermuda Triangle</em> — brought a built-in audience to <em>The Roswell Incident</em> in 1980. Television did the rest: <em>The X-Files</em> mainstreamed the cover-up narrative for a decade, Showtime's docudrama <em>Roswell</em> repeated the "hundreds of witnesses" claim to a national audience, and a teen drama later carried the myth to an entirely new generation.</p>
+        <p>The <strong>1995 "alien autopsy" footage</strong>, promoted by Ray Santilli and aired on Fox, represents the myth's final leap into pure entertainment. The "alien" was a <strong>latex prop</strong>; the film's own producers later admitted it was a re-creation. Its wide broadcast cemented the Roswell image for millions who never read a single witness account.</p>
         <div class="pull">
           <p>A lie can travel halfway around the world before the truth gets its boots on.</p>
           <cite>— commonly attributed to Mark Twain, paraphrased</cite>
@@ -984,6 +1020,48 @@ footer a{ color:var(--brass); text-decoration:none; border-bottom:1px dotted var
     </div>
   </section>
 
+  <!-- ========== NEW: EXHIBIT I (Counterarguments & Rebuttals) ========== -->
+  <section class="exhibit" id="ex-i">
+    <div class="exhibit-kicker"><span class="tag">EXHIBIT I</span><span class="cat">Rebuttals</span></div>
+    <h2>Objections &amp; responses</h2>
+    <div class="exhibit-grid">
+      <div>
+        <p>Here are the four most common objections raised by Roswell believers — and the documentary evidence that refutes each one.</p>
+        <div class="counter-grid">
+          <div class="counter-item">
+            <div class="obj">Objection: "The government lied about the weather balloon."</div>
+            <p class="rep"><strong>Response:</strong> Yes — because the <em>truth</em> (Project Mogul, a spy balloon) was classified. The government wasn't hiding aliens; it was hiding Cold War espionage.</p>
+          </div>
+          <div class="counter-item">
+            <div class="obj">Objection: "Marcel said the debris was swapped."</div>
+            <p class="rep"><strong>Response:</strong> DuBose and Newton — the only other men in Ramey's office — both stated the debris <em>was not</em> swapped. Marcel's own military file notes his "penchant for exaggerating."</p>
+          </div>
+          <div class="counter-item">
+            <div class="obj">Objection: "The debris was too strange to be earthly."</div>
+            <p class="rep"><strong>Response:</strong> Standard radar reflector components — balsa, foil, tape, rubber, and nitrocellulose-laminated plastics — match the photographs exactly. They were unusual to a 1947 rancher, but standard for high-altitude instrumentation.</p>
+          </div>
+          <div class="counter-item">
+            <div class="obj">Objection: "Hundreds of witnesses saw it."</div>
+            <p class="rep"><strong>Response:</strong> 90 claimed; 25 named in the book; 7 claimed to have seen debris; 5 claimed to have handled it — and one of those five insists it was <em>not</em> extraterrestrial. The rest are hearsay or changed their stories decades later.</p>
+          </div>
+        </div>
+        <p style="margin-top:20px;">The pattern is consistent: a secret project + a 30‑year silence + a single unreliable witness + a media machine that profits from mystery = an unkillable myth.</p>
+      </div>
+      <aside>
+        <div class="side-card">
+          <div class="label">The takeaway</div>
+          <div style="font-size:15px; font-weight:500; color:var(--ink); margin-bottom:6px;">Extraordinary claims require extraordinary evidence.</div>
+          <div class="desc">In the Roswell case, the evidence is not extraordinary — it's balsa wood, foil, rubber, tape, and the testimony of a self‑promoting officer who lied about his credentials. The truth is earthly, and it has been on the ground the whole time.</div>
+        </div>
+        <div class="side-card">
+          <div class="label">Occam's razor</div>
+          <div class="big-num" style="font-size:20px;">Spy balloon</div>
+          <div class="desc">vs. interstellar spacecraft. One requires atmospheric physics, Cold War history, and a classified espionage program. The other requires an entire alien civilisation to crash at exactly the same time and place.</div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
 </main>
 
 <section class="verdict" id="verdict">
@@ -997,7 +1075,7 @@ footer a{ color:var(--brass); text-decoration:none; border-bottom:1px dotted var
         <cite>— Kal K. Korff, investigator</cite>
       </div>
       <p>None of this requires bad faith from anyone involved — not the officer who misjudged a classified balloon train, not the witnesses whose memories reshaped themselves over five decades, not the audience that found a government cover-up story more urgent than an atmospheric acoustics program. It requires only the ordinary, well-documented fact that a good story with no one left to correct it will always outrun a quiet one.</p>
-      <div class="verdict-stamp">CAUSE: PROJECT MOGUL BALLOON TRAIN — RECOVERED JULY 7, 1947</div>
+      <div class="verdict-stamp">CAUSE: PROJECT MOGUL BALLOON TRAIN — FLIGHT #5 · RECOVERED JULY 7, 1947</div>
     </div>
   </div>
 </section>
