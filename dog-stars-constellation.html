@@ -1,976 +1,613 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>The Dog Stars — A Constellation</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300..600;1,14..32,300..600&family=Playfair+Display:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet" />
-<style>
-  :root {
-    --bg: #090b0f;
-    --surface: #12161e;
-    --surface2: #1a202c;
-    --text: #e6e9e4;
-    --text-dim: #8b93a3;
-    --gold: #c9a87c;
-    --gold-soft: rgba(201,168,124,0.35);
-    --accent: #6b8fa3;
-    --radius: 8px;
-    --ease: 0.55s cubic-bezier(0.22,1,0.36,1);
-  }
-  * { margin:0; padding:0; box-sizing:border-box; }
-  html { scroll-behavior:smooth; }
-  body {
-    font-family: 'Inter', system-ui, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.65;
-    overflow-x: hidden;
-  }
-  ::-webkit-scrollbar { width:5px; }
-  ::-webkit-scrollbar-track { background:var(--bg); }
-  ::-webkit-scrollbar-thumb { background:var(--gold); border-radius:3px; }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Dog Stars · Discussion Guide</title>
+    <style>
+        /* ─── reset & base ─── */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  #stars-canvas, #constellation-canvas {
-    position:fixed; inset:0; width:100vw; height:100vh; pointer-events:none;
-  }
-  #stars-canvas { z-index:0; }
-  #constellation-canvas { z-index:1; }
+        body {
+            background: #14100e;
+            color: #d6cec4;
+            font-family: 'Georgia', 'Times New Roman', serif;
+            line-height: 1.8;
+            padding: 2rem 1rem;
+        }
 
-  .app {
-    position:relative; z-index:2;
-    max-width:880px; margin:0 auto;
-    padding:0 28px 140px;
-  }
+        .container {
+            max-width: 920px;
+            margin: 0 auto;
+            background: #1f1a16;
+            padding: 2.5rem 2.2rem;
+            border-radius: 14px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
+            border: 1px solid #3d322b;
+        }
 
-  /* HERO */
-  .hero {
-    min-height:100vh;
-    display:flex; flex-direction:column; justify-content:center;
-    padding:80px 0 60px;
-  }
-  .hero-eyebrow {
-    font-size:0.7rem; letter-spacing:3.2px; text-transform:uppercase;
-    color:var(--gold); margin-bottom:28px; font-weight:500;
-  }
-  .hero-title {
-    font-family:'Playfair Display',serif;
-    font-size:clamp(3.4rem,12vw,7rem);
-    font-weight:700; line-height:0.96; letter-spacing:-0.03em;
-    background:linear-gradient(135deg,#f4efe6 0%,#c9a87c 55%,#9a7a55 100%);
-    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-    background-clip:text; margin-bottom:22px;
-  }
-  .hero-lead {
-    font-size:clamp(1.05rem,2.1vw,1.22rem);
-    color:var(--text-dim); max-width:460px; font-weight:300;
-    margin-bottom:48px;
-  }
-  .hero-lead em {
-    color:var(--gold); font-style:italic;
-    font-family:'Playfair Display',serif;
-  }
-  .hero-nav {
-    display:flex; flex-wrap:wrap; gap:12px 22px;
-  }
-  .hero-nav a {
-    font-size:0.8rem; color:var(--text-dim); text-decoration:none;
-    letter-spacing:0.3px; border-bottom:1px solid transparent;
-    padding-bottom:2px; transition:color var(--ease), border-color var(--ease);
-  }
-  .hero-nav a:hover { color:var(--gold); border-bottom-color:var(--gold-soft); }
-  .hero-scroll {
-    margin-top:80px; font-size:0.7rem; letter-spacing:2.4px;
-    text-transform:uppercase; color:var(--text-dim); opacity:0.55;
-    animation:pulse 2.8s ease-in-out infinite;
-  }
-  @keyframes pulse {
-    0%,100% { transform:translateY(0); opacity:0.45; }
-    50% { transform:translateY(6px); opacity:0.85; }
-  }
+        /* ─── typography ─── */
+        h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: #f2e4d4;
+            border-bottom: 3px solid #6a5b4b;
+            padding-bottom: 0.4rem;
+            margin-bottom: 0.2rem;
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+        }
 
-  /* SECTIONS */
-  section { padding:100px 0 48px; }
-  .label {
-    font-size:0.66rem; letter-spacing:3px; text-transform:uppercase;
-    color:var(--gold); margin-bottom:10px; font-weight:500;
-  }
-  .title {
-    font-family:'Playfair Display',serif;
-    font-size:clamp(1.9rem,4.2vw,2.7rem);
-    font-weight:600; line-height:1.18; margin-bottom:16px;
-  }
-  .title span { color:var(--gold); }
-  .desc {
-    color:var(--text-dim); font-size:1.02rem; font-weight:300;
-    max-width:520px; margin-bottom:40px;
-  }
+        .subhead {
+            font-size: 1.1rem;
+            color: #b09f8e;
+            margin-bottom: 1.6rem;
+            border-bottom: 1px solid #352b24;
+            padding-bottom: 0.8rem;
+            font-style: italic;
+        }
 
-  /* WORLD — numbered list */
-  .collapse { display:flex; flex-direction:column; }
-  .collapse-item {
-    display:grid; grid-template-columns:44px 1fr; gap:18px;
-    padding:26px 0; border-top:1px solid rgba(255,255,255,0.05);
-  }
-  .collapse-item:last-child { border-bottom:1px solid rgba(255,255,255,0.05); }
-  .num {
-    font-family:'Playfair Display',serif; font-size:1.5rem;
-    color:var(--gold); font-weight:600; line-height:1.2;
-  }
-  .c-title { font-family:'Playfair Display',serif; font-size:1.12rem; font-weight:600; margin-bottom:6px; }
-  .c-body { color:var(--text-dim); font-size:0.94rem; line-height:1.6; }
-  .c-body strong { color:var(--text); font-weight:500; }
+        h2 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #e8d6c2;
+            margin-top: 2.8rem;
+            margin-bottom: 0.6rem;
+            border-left: 6px solid #8a7562;
+            padding-left: 1rem;
+        }
 
-  /* CHARACTERS — vertical */
-  .stars { display:flex; flex-direction:column; }
-  .star {
-    display:grid; grid-template-columns:52px 1fr; gap:18px;
-    padding:30px 0; border-top:1px solid rgba(255,255,255,0.05);
-    transition:background var(--ease);
-  }
-  .star:last-child { border-bottom:1px solid rgba(255,255,255,0.05); }
-  .star:hover { background:rgba(201,168,124,0.03); }
-  .icon { font-size:1.5rem; line-height:1.4; opacity:0.85; }
-  .s-name { font-family:'Playfair Display',serif; font-size:1.22rem; font-weight:600; margin-bottom:2px; }
-  .s-role { font-size:0.7rem; letter-spacing:1.1px; text-transform:uppercase; color:var(--gold); margin-bottom:10px; }
-  .s-desc { color:var(--text-dim); font-size:0.92rem; line-height:1.55; margin-bottom:12px; }
-  .s-quote {
-    font-style:italic; font-size:0.88rem; color:var(--text); font-weight:300;
-    padding-left:14px; border-left:2px solid var(--gold-soft);
-  }
+        h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #dac8b4;
+            margin-top: 2rem;
+            margin-bottom: 0.4rem;
+        }
 
-  /* JOURNEY */
-  .path {
-    display:flex; flex-wrap:wrap; align-items:center; gap:6px 2px;
-    margin:32px 0 48px; padding:18px 0;
-    border-top:1px solid rgba(255,255,255,0.05);
-    border-bottom:1px solid rgba(255,255,255,0.05);
-  }
-  .wp {
-    display:inline-flex; align-items:center; gap:7px;
-    padding:6px 13px 6px 10px; border-radius:30px;
-    font-size:0.76rem; color:var(--text-dim);
-    background:var(--surface); border:1px solid transparent;
-    transition:all var(--ease); cursor:default;
-  }
-  .wp .dot {
-    width:6px; height:6px; border-radius:50%;
-    background:var(--gold); opacity:0.35; transition:all var(--ease);
-  }
-  .wp:hover, .wp.active {
-    border-color:var(--gold-soft); color:var(--text); background:var(--surface2);
-  }
-  .wp:hover .dot, .wp.active .dot { opacity:1; box-shadow:0 0 10px var(--gold-soft); }
-  .conn { color:var(--text-dim); opacity:0.25; font-size:0.6rem; letter-spacing:1px; }
+        h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #ccb9a5;
+            margin-top: 1.6rem;
+            margin-bottom: 0.2rem;
+        }
 
-  .books { display:flex; flex-direction:column; gap:32px; }
-  .book {
-    background:var(--surface); border-radius:var(--radius);
-    padding:26px 24px; border:1px solid rgba(255,255,255,0.04);
-  }
-  .book-label { font-size:0.66rem; letter-spacing:2px; text-transform:uppercase; color:var(--gold); margin-bottom:4px; }
-  .book-title { font-family:'Playfair Display',serif; font-size:1.25rem; font-weight:600; margin-bottom:14px; }
-  .book ul { list-style:none; display:flex; flex-direction:column; gap:11px; }
-  .book li {
-    position:relative; padding-left:16px;
-    font-size:0.91rem; color:var(--text-dim); line-height:1.55;
-  }
-  .book li::before {
-    content:''; position:absolute; left:0; top:9px;
-    width:5px; height:5px; border-radius:50%;
-    background:var(--gold); opacity:0.6;
-  }
-  .book li strong { color:var(--text); font-weight:500; }
+        p {
+            margin-bottom: 0.9rem;
+        }
 
-  /* THEMES */
-  .themes { display:flex; flex-direction:column; }
-  .theme {
-    padding:26px 0; border-top:1px solid rgba(255,255,255,0.05);
-  }
-  .theme:last-child { border-bottom:1px solid rgba(255,255,255,0.05); }
-  .t-name {
-    font-family:'Playfair Display',serif; font-size:1.15rem;
-    font-weight:600; color:var(--gold); margin-bottom:8px;
-  }
-  .t-body { color:var(--text-dim); font-size:0.94rem; line-height:1.6; }
-  .t-body strong { color:var(--text); font-weight:500; }
+        /* ─── blockquotes (book quotes) ─── */
+        .book-quote {
+            background: #2a221d;
+            border-left: 6px solid #a3856b;
+            padding: 1.2rem 1.8rem;
+            margin: 1.2rem 0;
+            border-radius: 0 8px 8px 0;
+            font-style: italic;
+            color: #eee0d0;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
 
-  /* SPECTRUM */
-  .spectrum {
-    margin-top:48px; background:var(--surface);
-    border-radius:var(--radius); padding:30px 26px 26px;
-    border:1px solid rgba(255,255,255,0.04);
-  }
-  .spec-labels {
-    display:flex; justify-content:space-between;
-    font-size:0.66rem; letter-spacing:1.4px; text-transform:uppercase;
-    color:var(--text-dim); margin-bottom:12px;
-  }
-  .spec-labels .left { color:var(--accent); }
-  .spec-labels .right { color:var(--gold); }
-  .spec-bar {
-    height:3px; border-radius:3px;
-    background:linear-gradient(90deg,var(--accent),var(--surface2) 50%,var(--gold));
-    margin-bottom:18px;
-  }
-  .spec-points { display:flex; flex-wrap:wrap; gap:10px 18px; }
-  .spec-point {
-    display:flex; align-items:center; gap:8px;
-    font-size:0.8rem; color:var(--text);
-  }
-  .spec-point .dot {
-    width:7px; height:7px; border-radius:50%;
-    background:var(--text); border:2px solid var(--bg); flex-shrink:0;
-  }
-  .spec-note {
-    margin-top:20px; padding-top:16px;
-    border-top:1px solid rgba(255,255,255,0.05);
-    font-size:0.86rem; color:var(--text-dim); font-style:italic;
-  }
+        .book-quote p {
+            margin-bottom: 0.2rem;
+        }
 
-  /* QUOTE */
-  .quote {
-    margin:64px 0; padding:32px 0 32px 22px;
-    border-left:3px solid var(--gold);
-  }
-  .q-text {
-    font-family:'Playfair Display',serif;
-    font-size:clamp(1.2rem,2.6vw,1.55rem);
-    font-weight:400; font-style:italic; line-height:1.45; color:var(--text);
-  }
-  .q-attr { margin-top:12px; font-size:0.8rem; color:var(--text-dim); }
-  .q-attr strong { color:var(--gold); font-weight:500; }
+        .book-quote cite {
+            display: block;
+            margin-top: 0.3rem;
+            font-style: normal;
+            font-size: 0.9rem;
+            color: #b09a86;
+            text-align: right;
+        }
 
-  /* CHAPTERS */
-  .chapters { display:flex; flex-direction:column; gap:8px; }
-  details.ch {
-    background:var(--surface); border-radius:var(--radius);
-    border:1px solid rgba(255,255,255,0.04); overflow:hidden;
-    transition:border-color var(--ease);
-  }
-  details.ch[open] { border-color:var(--gold-soft); }
-  summary.head {
-    list-style:none; cursor:pointer; padding:17px 20px;
-    display:flex; align-items:center; gap:14px;
-  }
-  summary.head::-webkit-details-marker { display:none; }
-  .ch-num {
-    font-family:'Playfair Display',serif; font-size:1.35rem;
-    color:var(--gold); font-weight:600; min-width:28px;
-  }
-  .ch-info { flex:1; min-width:0; }
-  .ch-title { font-family:'Playfair Display',serif; font-size:1.02rem; font-weight:600; }
-  .ch-meta { font-size:0.7rem; color:var(--text-dim); margin-top:2px; }
-  .chevron {
-    color:var(--gold); font-size:0.85rem;
-    transition:transform var(--ease); flex-shrink:0;
-  }
-  details.ch[open] .chevron { transform:rotate(90deg); }
-  .ch-body {
-    padding:0 20px 22px;
-    border-top:1px solid rgba(255,255,255,0.05);
-  }
-  .ch-sum {
-    color:var(--text-dim); font-size:0.91rem; line-height:1.6;
-    margin:16px 0 14px;
-  }
-  .ch-quotes { display:flex; flex-direction:column; gap:11px; margin-bottom:14px; }
-  .ch-q {
-    font-style:italic; font-size:0.86rem; color:var(--text); font-weight:300;
-    padding-left:12px; border-left:2px solid var(--gold-soft);
-  }
-  .ch-q span {
-    display:block; font-style:normal; font-size:0.68rem;
-    color:var(--text-dim); margin-top:3px;
-  }
-  .tags { display:flex; flex-wrap:wrap; gap:6px; }
-  .tag {
-    font-size:0.66rem; letter-spacing:0.4px; text-transform:uppercase;
-    color:var(--gold); border:1px solid var(--gold-soft);
-    padding:3px 10px; border-radius:20px;
-  }
+        /* ─── lists ─── */
+        ul,
+        ol {
+            margin: 0.4rem 0 1.2rem 1.8rem;
+        }
 
-  /* POEM */
-  .poem {
-    background:var(--surface); border-radius:var(--radius);
-    padding:44px 32px; text-align:center;
-    border:1px solid rgba(201,168,124,0.12); margin-top:28px;
-  }
-  .p-title {
-    font-family:'Playfair Display',serif; font-size:1.4rem;
-    font-weight:600; color:var(--gold); margin-bottom:4px;
-  }
-  .p-author {
-    font-size:0.78rem; color:var(--text-dim); letter-spacing:1px; margin-bottom:26px;
-  }
-  .p-lines {
-    font-family:'Playfair Display',serif;
-    font-size:clamp(0.98rem,1.9vw,1.2rem);
-    line-height:1.9; color:var(--text); max-width:440px;
-    margin:0 auto; font-weight:300; font-style:italic;
-  }
-  .p-lines .pause { display:block; height:12px; }
+        li {
+            margin-bottom: 0.3rem;
+        }
 
-  /* FOOTER */
-  footer {
-    margin-top:90px; padding-top:36px;
-    border-top:1px solid rgba(255,255,255,0.05);
-    text-align:center; color:var(--text-dim); font-size:0.76rem;
-  }
-  footer em { color:var(--gold); }
+        /* ─── tables ─── */
+        .table-wrap {
+            overflow-x: auto;
+            margin: 1.4rem 0 1.8rem 0;
+            border-radius: 8px;
+            border: 1px solid #3d322b;
+        }
 
-  /* FADE */
-  .fade {
-    opacity:0; transform:translateY(18px);
-    transition:opacity 0.85s var(--ease), transform 0.85s var(--ease);
-  }
-  .fade.visible { opacity:1; transform:translateY(0); }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #241e19;
+            font-size: 0.95rem;
+        }
 
-  @media (max-width:640px) {
-    .app { padding:0 18px 100px; }
-    .hero { min-height:92vh; padding:48px 0 40px; }
-    .collapse-item, .star { grid-template-columns:36px 1fr; gap:14px; }
-    .path { gap:4px 1px; }
-    .wp { font-size:0.68rem; padding:5px 10px 5px 8px; }
-    .poem { padding:32px 18px; }
-    section { padding:72px 0 36px; }
-  }
-</style>
+        th {
+            background: #322922;
+            color: #eedccb;
+            font-weight: 600;
+            padding: 0.7rem 1rem;
+            text-align: left;
+            border-bottom: 2px solid #4d3f35;
+        }
+
+        td {
+            padding: 0.7rem 1rem;
+            border-bottom: 1px solid #322922;
+            vertical-align: top;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .highlight {
+            background: #2b231e;
+        }
+
+        /* ─── divider ─── */
+        .divider {
+            border: none;
+            height: 2px;
+            background: linear-gradient(to right, transparent, #5f4f3f, transparent);
+            margin: 2.6rem 0;
+        }
+
+        hr {
+            border: none;
+            border-top: 2px dotted #3d322b;
+            margin: 2.2rem 0;
+        }
+
+        /* ─── question block ─── */
+        .question-block {
+            background: #241e19;
+            padding: 1.2rem 1.8rem;
+            margin: 1.8rem 0 0.8rem 0;
+            border-radius: 8px;
+            border-left: 4px solid #a3856b;
+        }
+
+        .question-block strong {
+            font-size: 1.1rem;
+            color: #f0dcc8;
+        }
+
+        .question-block .q-number {
+            display: inline-block;
+            background: #3d322b;
+            color: #f0dcc8;
+            font-weight: 700;
+            padding: 0.1rem 0.7rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-right: 0.6rem;
+        }
+
+        .answer {
+            margin-top: 0.6rem;
+            padding-left: 0.4rem;
+        }
+
+        .answer p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* ─── responsive ─── */
+        @media (max-width: 640px) {
+            .container {
+                padding: 1.5rem 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+                padding-left: 0.6rem;
+            }
+
+            h3 {
+                font-size: 1.2rem;
+            }
+
+            .book-quote {
+                padding: 0.8rem 1.2rem;
+            }
+
+            .question-block {
+                padding: 1rem 1.2rem;
+            }
+
+            ul,
+            ol {
+                margin-left: 1.2rem;
+            }
+        }
+
+        /* ─── extra touches ─── */
+        .theme-tag {
+            display: inline-block;
+            background: #2f2620;
+            color: #cbb8a5;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0.1rem 0.8rem;
+            border-radius: 20px;
+            margin-right: 0.4rem;
+            border: 1px solid #4d3f35;
+        }
+
+        .intro-prompt {
+            background: #2a221d;
+            border: 1px solid #4d3f35;
+            border-radius: 10px;
+            padding: 1.6rem 2rem;
+            margin: 1.8rem 0 2.2rem 0;
+            font-style: italic;
+            color: #dac8b4;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .intro-prompt strong {
+            color: #f0dcc8;
+        }
+    </style>
 </head>
 <body>
-<canvas id="stars-canvas"></canvas>
-<canvas id="constellation-canvas"></canvas>
 
-<div class="app">
+<div class="container">
 
-  <!-- HERO -->
-  <header class="hero" id="top">
-    <div class="hero-eyebrow">✦ a novel by peter heller</div>
-    <h1 class="hero-title">The Dog Stars</h1>
-    <p class="hero-lead">
-      <em>“What are we waiting for?”</em><br />
-      A meditation on grief, survival, and the constellations we refuse to let go.
-    </p>
-    <nav class="hero-nav">
-      <a href="#world">The ending</a>
-      <a href="#stars">Who remains</a>
-      <a href="#flight">The journey</a>
-      <a href="#themes">What burns</a>
-      <a href="#chapters">Close reading</a>
-      <a href="#poem">The last word</a>
-    </nav>
-    <div class="hero-scroll">↓ begin</div>
-  </header>
+    <!-- ─── HEADER ─── -->
+    <h1>The Dog Stars</h1>
+    <div class="subhead">Peter Heller · 2012 · Discussion Guide</div>
 
-  <!-- WORLD -->
-  <section id="world">
-    <div class="fade">
-      <div class="label">Nine years out</div>
-      <h2 class="title">How the world <span>ended</span></h2>
-      <p class="desc">
-        Not one collapse but three — a hyper-virulent flu, a second autoimmune sickness born from the first, and a climate already failing underneath both.
-      </p>
+    <!-- ─── PROMPT / IMMERSION ANGLE ─── -->
+    <div class="intro-prompt">
+        <p><strong>✦ An invitation to read between the stars ✦</strong></p>
+        <p>
+            This guide is not a set of answers to be checked off—it’s a map of questions that <em>The Dog Stars</em> insists we ask.
+            What does it mean to be human when civilization falls away? Is hope a luxury or a necessity? Can we love again after
+            we’ve lost everything?
+        </p>
+        <p>
+            The questions below are drawn from the novel’s deepest currents: grief, survival, memory, and the fragile bonds that
+            keep us tethered to life. Each answer is rooted in the text, but the real work is yours—to sit with Hig in his hangar,
+            to watch the stars with him, and to decide what you would carry forward into the dark.
+        </p>
+        <p style="margin-top:0.6rem; font-size:0.95rem; color:#b09a86;">
+            <span class="theme-tag">grief</span>
+            <span class="theme-tag">hope</span>
+            <span class="theme-tag">violence &amp; tenderness</span>
+            <span class="theme-tag">home</span>
+            <span class="theme-tag">nature</span>
+        </p>
     </div>
-    <div class="collapse fade">
-      <div class="collapse-item">
-        <div class="num">01</div>
-        <div>
-          <div class="c-title">The Flu</div>
-          <div class="c-body">
-            An airborne strain kills — by Hig's count — <strong>"ninety nine point whatever" percent</strong> in a matter of weeks. The press blamed New Delhi. Cima, the epidemiologist, has heard the other rumor: a genetic accident at the Livermore weapons lab, a courier's plane down in Brampton. No one ever confirmed either story.
-          </div>
-        </div>
-      </div>
-      <div class="collapse-item">
-        <div class="num">02</div>
-        <div>
-          <div class="c-title">The Blood Disease</div>
-          <div class="c-body">
-            Survivors develop a slow autoimmune condition, <strong>"something like AIDS"</strong> — bruising, hemorrhage, organ damage. Children born after the pandemic inherit it. There is no cure. Cima suspects vitamin D deficiency accelerates it.
-          </div>
-        </div>
-      </div>
-      <div class="collapse-item">
-        <div class="num">03</div>
-        <div>
-          <div class="c-title">The Land Itself</div>
-          <div class="c-body">
-            Underneath both plagues the climate was already failing. Warming streams killed the trout. Drought and beetles killed the forests. Snowpack thinned until whole canyons dried. <strong>Elk, geese, tigers, apes — gone.</strong> Only the adaptable remain: carp, coyotes, raptors, and the people still stubborn enough to farm.
-          </div>
-        </div>
-      </div>
-      <div class="collapse-item">
-        <div class="num">04</div>
-        <div>
-          <div class="c-title">Why survivors turned feral</div>
-          <div class="c-body">
-            No law, no courts, no hospitals — only scarcity and the people it makes of us. Bangley's doctrine, <strong>"New world now. New world new rules,"</strong> is the logic almost everyone left alive has adopted. Trust became a luxury no one could afford. The men at the Coke truck, the marauders on the plains, the couple at Grand Junction who rigged a radio beacon to lure pilots into a cable trap — all of them are the product of that logic.
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
 
-  <!-- CHARACTERS -->
-  <section id="stars">
-    <div class="fade">
-      <div class="label">Constellations</div>
-      <h2 class="title">Who <span>endures</span></h2>
-      <p class="desc">
-        Each a star in a broken sky, bound by grief, love, and the stubborn will to keep going.
-      </p>
-    </div>
-    <div class="stars fade">
-      <div class="star">
-        <div class="icon">✈︎</div>
-        <div>
-          <div class="s-name">Hig</div>
-          <div class="s-role">Pilot · Narrator</div>
-          <div class="s-desc">
-            A poet, carpenter, and reluctant killer. He flies the Beast, tends his garden, and carries the weight of a world he could not save. The End did not harden him into a survivalist; it hollowed him into someone still capable of killing while still carrying pre-apocalypse ethics that have nowhere left to go. That gap is the wound the whole book keeps returning to.
-          </div>
-          <div class="s-quote">I keep the Beast running, I keep the 100 low lead on tap, I foresee attacks. I am young enough, I am old enough.</div>
-        </div>
-      </div>
-      <div class="star">
-        <div class="icon">⚔</div>
-        <div>
-          <div class="s-name">Bangley</div>
-          <div class="s-role">Survivalist · Protector</div>
-          <div class="s-desc">
-            Ruthless, pragmatic, and utterly alone. He lives for the perimeter, kills without hesitation, and guards Hig like a difficult brother. His philosophy is pure: never negotiate, trust no one, protect the perimeter at all costs. He is effective. He is also nearly killed alone behind a tool chest, and the novel makes clear that his way keeps you alive but does not make life worth living.
-          </div>
-          <div class="s-quote">Never ever negotiate. You are negotiating your own death.</div>
-        </div>
-      </div>
-      <div class="star">
-        <div class="icon">🐾</div>
-        <div>
-          <div class="s-name">Jasper</div>
-          <div class="s-role">Copilot · Heart</div>
-          <div class="s-desc">
-            Hig's blue heeler, the last living witness to before. Copilot, bed-mate, the one creature who still needed and loved Hig the way things used to be loved. His death in the mountains is the turning point of the novel: with his last anchor removed, Hig is free to risk everything chasing a voice on the radio.
-          </div>
-          <div class="s-quote">Goodbye, bud. You are Jasper. My heart. We are never apart, not here, not there.</div>
-        </div>
-      </div>
-      <div class="star">
-        <div class="icon">🌿</div>
-        <div>
-          <div class="s-name">Cima</div>
-          <div class="s-role">Doctor · Healer</div>
-          <div class="s-desc">
-            A survivor who carries her own losses — a twin brother, a husband she had to kill. She meets Hig in their shared brokenness. Their relationship is not a replacement for Melissa; it is proof that a person who has lost everything can still make room for someone new. That is a smaller, more honest kind of hope than survival stories usually allow.
-          </div>
-          <div class="s-quote">If you want, you can just look at me. It's probably been a long time. I'm in no hurry.</div>
-        </div>
-      </div>
-      <div class="star">
-        <div class="icon">🕊</div>
-        <div>
-          <div class="s-name">Melissa</div>
-          <div class="s-role">Memory · Love</div>
-          <div class="s-desc">
-            Hig's wife, lost to the flu. He smothered her at her request — the act that haunts him more than any other. She is the love he lost, the pregnancy that never came, the home that can never be returned to. Everything Hig does afterward is shaped by that moment.
-          </div>
-          <div class="s-quote">I loved her. This is what I live with.</div>
-        </div>
-      </div>
-      <div class="star">
-        <div class="icon">🏔</div>
-        <div>
-          <div class="s-name">Pops</div>
-          <div class="s-role">Rancher · Father</div>
-          <div class="s-desc">
-            Cima's father, a former Navy SEAL who carries the old West in his bones. Dignified, weary, and quietly hopeful. He and Bangley, once potential enemies, become allies. The green patches, he says, are spreading year by year.
-          </div>
-          <div class="s-quote">The green patches are spreading year by year.</div>
-        </div>
-      </div>
-    </div>
-  </section>
+    <hr />
 
-  <!-- JOURNEY -->
-  <section id="flight">
-    <div class="fade">
-      <div class="label">The flight log</div>
-      <h2 class="title">Past the <span>point of no return</span></h2>
-      <p class="desc">
-        Hig's route across Colorado in three books — from the fortified perimeter at Erie, through grief and ambush, to a hidden canyon and back again. Jasper's death removes his last reason for caution. The radio voice offers something the base can never give him: the possibility that connection still exists.
-      </p>
+    <!-- ─── QUESTION 1 ─── -->
+    <div class="question-block">
+        <strong><span class="q-number">1</span> The prose style is clipped, terse, often fragmented. Why would Heller choose this way of writing this particular story? In what ways is it fitting?</strong>
     </div>
-    <div class="path fade">
-      <span class="wp active"><span class="dot"></span> Erie</span>
-      <span class="conn">—</span>
-      <span class="wp"><span class="dot"></span> Coke Truck</span>
-      <span class="conn">—</span>
-      <span class="wp"><span class="dot"></span> Mountains</span>
-      <span class="conn">—</span>
-      <span class="wp"><span class="dot"></span> Grand Junction</span>
-      <span class="conn">—</span>
-      <span class="wp"><span class="dot"></span> The Canyon</span>
-      <span class="conn">—</span>
-      <span class="wp"><span class="dot"></span> Home</span>
+    <div class="answer">
+        <p><strong>Reflects Hig’s psychological state:</strong> Hig explicitly tells us his brain was “cooked” by the 104–105°F fever during the flu, leaving his thoughts feeling “out of place, kinda sad, sometimes wondering if maybe they are supposed to be ten thousand miles from here.” The fragmented, jumpy prose mirrors a traumatized, grief-stricken mind that cannot hold a linear thought for long—flitting between the garden, a memory of Melissa, a tactical threat, and a poem.</p>
+        <p><strong>Mirrors the dying world:</strong> The landscape is sparse, barren, and stripped of excess (the trout are gone, the forests are skeletal). The prose is similarly stripped down. There is no time for ornamentation when survival is the priority.</p>
+        <p><strong>Mimics oral storytelling / a logbook:</strong> The novel feels like a survival log or a late-night inner monologue. Hig often says “I am not saying I did” or repeats phrases, capturing the rhythm of a man talking to himself, Jasper, or an imagined future reader in a silent world.</p>
+        <p><strong>Fitting the aviation theme:</strong> The staccato rhythm echoes cockpit checklists and radio calls (“10-4,” “Say it,” “Breathe”). It feels immediate, urgent, and sharply aware of the physical present.</p>
     </div>
-    <div class="books fade">
-      <div class="book">
-        <div class="book-label">Book One</div>
-        <div class="book-title">Life on the Perimeter</div>
+
+    <hr />
+
+    <!-- ─── QUESTION 2 ─── -->
+    <div class="question-block">
+        <strong><span class="q-number">2</span> At the beginning of Chapter III, the narrator wonders why he’s telling this story. What might be his motivations? Who does he imagine his audience will be?</strong>
+    </div>
+    <div class="answer">
+        <p><strong>To animate the deathly stillness:</strong> Hig explicitly asks, <em>“So I wonder what it is this need to tell. To animate somehow the deathly stillness of the profoundest beauty. Breathe life in the telling.”</em> For Hig, narrative is an act of defiance against Bangley's cynical, kill-or-be-killed ethos. By telling the story, he resurrects the things he loves (fishing, Jasper, Melissa) against the erasure of the apocalypse.</p>
+        <p><strong>To hold onto his humanity:</strong> He fears becoming a hollow killer. Recounting his moral struggles—the guilt over killing the girl, the boy, and smothering his wife—is his way of processing trauma and reaffirming that he is <em>not</em> Bangley.</p>
+        <p><strong>His audience:</strong> Primarily himself. It is a cathartic survival mechanism, a journal of the soul to stave off madness. However, the very act of writing implies a <em>future</em> reader—perhaps a survivor who comes after him, or an abstract “you” he hopes to connect with. He breaks the fourth wall often, addressing the reader directly (“Did you ever read the Bible?”), revealing a deep, desperate loneliness that aches for even a single sympathetic ear.</p>
+    </div>
+
+    <hr />
+
+    <!-- ─── QUESTION 3 ─── -->
+    <div class="question-block">
+        <strong><span class="q-number">3</span> Hig says that Bangley “had been waiting for the End all his life… He didn’t do anything that wasn’t aimed at surviving.” He also clearly enjoys killing people. In what ways is Hig different from Bangley? How did “the End” affect him? How does he feel about killing?</strong>
+    </div>
+    <div class="answer">
+        <p><strong>Fundamental philosophy:</strong> Bangley operates on “Never, ever negotiate”—guilty until proven dead. He sees the end of the world as his time to shine. Hig, conversely, believes in the possibility of connectedness (<em>“Believe in the possibility of connectedness and you get something else. A tattered union suit flying on a flagpole. Help asked and given.”</em>). Bangley kills for sport and security; Hig kills only when forced.</p>
+        <p><strong>How “the End” affected Hig:</strong> It hollowed him out but didn’t harden him. He retreats into memory and grief, often sobbing uncontrollably (over Jasper, over the little girl’s flowers). He uses flying to escape reality, feeling <em>“freed from the sticky details”</em> of his grim existence. He lives for the sensory beauty—the smell of ponderosa pines, the taste of milk, the sight of a nighthawk—which Bangley dismisses as “Recreating.”</p>
+        <p><strong>Feelings about killing:</strong> He absolutely despises it. He admits, <em>“Even as a boy, the killing part was my least favorite.”</em> He recounts the horror of shooting his first elk and the traumatizing aftermath. He feels sick after the firefight at the Coke truck and tries desperately to let the surviving men go. When he kills the man who mocked him with the “necklace,” he does it in a rage and regrets it. He explicitly says, <em>“Don't even like to kill a bug.”</em> He forces himself to kill deer for food, but he does it with solemn gratitude, thanking the carp he catches before eating them.</p>
+    </div>
+
+    <hr />
+
+    <!-- ─── QUESTION 4 ─── -->
+    <div class="question-block">
+        <strong><span class="q-number">4</span> How and why does Hig’s relationship with Bangley change over the course of the novel?</strong>
+    </div>
+    <div class="answer">
+        <p><strong>Initial phase (Transactional Alliance):</strong> It begins as a cold, utilitarian bargain. <em>“He kills. I fly.”</em> Hig finds Bangley cruel and creepy, often fearing he might kill him and Jasper in their sleep. They are like a “difficult marriage,” motivated only by mutual necessity—Hig provides the air recon, Bangley provides the overwhelming firepower.</p>
+        <p><strong>Middle phase (Grudging Respect & Family):</strong> Despite the bickering, they grow into a team. Bangley covers Hig’s back during the nine-man attack, uses the mortars, and calls him “partner.” Hig realizes Bangley genuinely worries about him. The turning point is before Hig leaves for Grand Junction: Bangley brings a basket of grenades and says, <em>“You been a good partner Hig... Like family.”</em> Hig is floored. He discovers Bangley isn’t just a heartless gun nut; he was a farmer, a husband, a father who had a tragic past.</p>
+        <p><strong>Final phase (Acknowledged Love & Vulnerability):</strong> When Hig returns to find Bangley’s house shot up and nearly dead behind Red Square, Hig is overwhelmed with desperate grief. He realizes <em>Bangley was his family</em>. Standing in Bangley’s hidden bedroom—a shrine to the son he lost, filled with posters, skis, and a surfboard—Hig finally understands that Bangley’s hyper-aggression was a shield for a broken man who had lost everything long before the flu. They form a new community, with Bangley and Pops becoming “like peas in a pod,” shifting from a survival pact to a genuine chosen family. Hig reflects that never knowing how you truly feel about someone until they “die and come back.”</p>
+    </div>
+
+    <hr />
+
+    <!-- ─── QUESTION 5 ─── -->
+    <div class="question-block">
+        <strong><span class="q-number">5</span> Jasper’s death is a turning point for Hig. How and why does it affect him so powerfully?</strong>
+    </div>
+    <div class="answer">
+        <p><strong>Jasper was his last living link to “before”:</strong> Jasper came from the old life with Melissa. He was the only being who remembered her, their lake walks, and the world before the flu. With Jasper gone, Hig loses the last daily, breathing connection to his former identity as a husband and a normal man. He says, <em>“I think the scent of children made him happy,”</em> linking Jasper to the child Hig never got to raise.</p>
+        <p><strong>The death shatters his last pretense of purpose:</strong> Hig’s entire survival routine was built around Jasper. Jasper was his copilot, his alarm system, his hiking companion, and his reason to come back from the mountains. The line <em>“We have traveled. Now you will be the path I will walk over you”</em> reveals that Hig feels he is literally walking on Jasper’s memory—the dog’s death becomes the ground beneath his feet, but also an unbearable weight.</p>
+        <p><strong>It unleashes a primal, uncontrollable grief:</strong> Hig sobs so violently he gags. He says, <em>“The love is the creek bed and the pain fills it. Fills it every day with tears.”</em> Jasper’s death forces Hig to confront every loss he has suppressed—Melissa, the baby, the trout, the entire world. It’s a “floodgate” moment.</p>
+        <p><strong>It precipitates his existential crisis:</strong> After burying Jasper, Hig wanders aimlessly into the mountains, nearly freezing, and starts making reckless decisions (like flying past the point of no return). Without Jasper, the careful survival routine feels hollow. He asks, <em>“Why do I keep going?”</em> Jasper’s absence strips away the last distraction from his grief, forcing him to either succumb or find a new reason to live.</p>
+    </div>
+
+    <hr />
+
+    <!-- ─── QUESTION 6 ─── -->
+    <div class="question-block">
+        <strong><span class="q-number">6</span> When Cima’s father asks Hig why he came to their canyon—why he flew beyond the point of no return—Hig can’t find an answer. What might have prompted Hig to take that risk? What was he looking for?</strong>
+    </div>
+    <div class="answer">
+        <p><strong>He was looking for proof that life is still worth living:</strong> Hig explicitly states his realization after the shotgun blast: <em>“Not what you think: you are thinking Woman but that wasn’t it. It was to be glad again to be alive.”</em> He wasn’t seeking a romantic partner; he was seeking <em>feeling</em>. He had become numb, and the thrill of surviving the near-death experience woke him up.</p>
+        <p><strong>He was chasing a voice—human connection:</strong> The radio transmission from Grand Junction represented the possibility of another “competent” survivor, someone who wasn’t Bangley or a dying Mennonite. He was desperate for a conversation, for shared news, for the simple affirmation that he wasn’t the last thinking person on earth. The voice on the radio was a “grandparent calling up a steep flight of stairs”—a beckoning toward home.</p>
+        <p><strong>He was testing whether he still “wanted it”:</strong> Hig admits, <em>“I had gotten kind of used to the idea of living on air, of blowing away. Some comfort in that.”</em> By flying past his point of no return, he was forcing a crisis: either he would die (ending his pain) or find something worth surviving for. The canyon, the cattle, the garden, and finally Cima represented a <em>living</em> ecosystem, not just a fortified bunker. He was looking for a place where life wasn’t just defended, but <em>grown</em>.</p>
+        <p><strong>He was following an intuition, not a plan:</strong> Hig says, <em>“I know, I know that I was addled somehow, but also that I was as clear as I had been in my adult life.”</em> He took the risk because his instincts—honed by years of flying and reading the land—told him there was something “unexpected” out there. He was looking for a “third way” between Bangley’s kill-everything ethos and the Mennonites’ passive decline.</p>
+    </div>
+
+    <hr />
+
+    <!-- ─── QUESTION 7 ─── -->
+    <div class="question-block">
+        <strong><span class="q-number">7</span> When they decide to take a ewe and a ram with them on the plane, Hig says, “Like the Ark. Here we go.” He says it jokingly, but does the novel offer a sense of hope that life on the planet might continue, postapocalypse? What other biblical references occur in the novel?</strong>
+    </div>
+    <div class="answer">
+        <p><strong>On Hope:</strong> The novel offers a <em>fragile</em> but genuine sense of hope—not in a triumphant, Hollywood sense, but in the quiet, stubborn persistence of life.</p>
         <ul>
-          <li>Hig and Bangley hold the Erie airport. Hig flies patrol in the Beast; Bangley mans the sniper tower. An uneasy alliance keeps them both alive.</li>
-          <li>Hig secretly runs supplies to a Mennonite community dying of the blood disease, against Bangley's warnings.</li>
-          <li>A mysterious radio transmission reaches him from Grand Junction — a voice he puts off chasing for years.</li>
-          <li>On a last hunting trip into the mountains, <strong>Jasper dies in his sleep.</strong> Hig is left with nothing but the stars.</li>
+            <li><strong>Ecological renewal:</strong> Hig notes that <em>“the green patches are spreading year by year”</em> in the beetle-killed forests. The spruce and aspen are coming back. He sees bison, grizzly bears, and wolves returning to their old ranges. The redtail hawks are thriving, and he hears nighthawks again. This suggests nature is resilient, even if specific species (like trout) are gone forever.</li>
+            <li><strong>Human renewal:</strong> Cima represents a new beginning. She is a doctor, a healer, and a potential mother figure. The fact that they take a <em>male and female</em> lamb is deeply symbolic—not just for meat, but for <em>reproduction</em>. Hig doesn’t explicitly say it, but the implication is that they are preserving the possibility of breeding, of a future beyond mere survival.</li>
+            <li><strong>Community forming:</strong> Hig ends the novel with a makeshift family: himself, Cima, Pops, and Bangley. They sleep outside together, play chess, and share meals. This is not the “End” but a <em>transition</em>—a small spark of civilization being rebuilt. Hig says, <em>“We sleep outside into October. Maybe we will all winter.”</em> It’s tentative, but it’s a commitment to <em>living together</em>.</li>
         </ul>
-      </div>
-      <div class="book">
-        <div class="book-label">Book Two</div>
-        <div class="book-title">The Journey West</div>
+        <p><strong>Other Biblical References:</strong></p>
         <ul>
-          <li>Grieving and unmoored, Hig is ambushed by nine marauders on the plains. Bangley saves him with mortars fired from the perimeter.</li>
-          <li>Hig finally flies past his "point of no return," discovering a hidden box canyon with a stone house, a garden, and cattle.</li>
-          <li>He meets <strong>Cima</strong>, a doctor, and her father <strong>Pops</strong> — hostile at first, then cautiously trusting.</li>
-          <li>Hig and Cima fall into a tender relationship. Pops reveals the canyon's creek is drying up; the three plan to leave together.</li>
+            <li><strong>Lamentations:</strong> Hig explicitly compares their world to the Book of Lamentations: <em>“That’s where we’re at, pretty much. Pretty much lamenting. Pretty much pouring our hearts out like water.”</em></li>
+            <li><strong>Eden / The Fall:</strong> Hig describes the canyon as <em>“Eden. Green and bounded, watered, remote from death.”</em> Cima’s father, like a vengeful Old Testament figure, guards it with a shotgun.</li>
+            <li><strong>Cain and Abel:</strong> Hig says, <em>“Melissa, my wife, was an old hippy... In this story she might have been Eve, but I’m not Adam. I am more like Cain.”</em> This frames the novel as a story of guilt, exile, and the mark of a killer.</li>
+            <li><strong>Jonah and the Whale:</strong> When crossing a culvert, Hig thinks, <em>“I think of Jonah and the belly of the whale.”</em></li>
+            <li><strong>Armageddon/Apocalypse:</strong> The entire setting is an implicit Revelation—fire, plague, and the four horsemen, but without a clear divine plan.</li>
+            <li><strong>The Flood / Noah’s Ark:</strong> The most direct reference, with the lambs. Hig says it <em>jokingly</em>, but he is literally preserving breeding pairs. It implies that humanity might get a “second chance,” but unlike Noah, they don’t have a covenant with God—just their own grit and hope.</li>
         </ul>
-      </div>
-      <div class="book">
-        <div class="book-label">Book Three</div>
-        <div class="book-title">Return and Reckoning</div>
+        <p>Ultimately, the novel suggests that hope is <em>not</em> a guarantee, but a <em>choice</em>. Hig chooses to plant seeds, to fly toward the unknown, to love Cima, and to forgive Bangley. As he says at the end, quoting the Li Shang-Yin poem, <em>“Someday we will be back together again.”</em> It’s a hope that is both realistic and achingly tender.</p>
+    </div>
+
+    <hr />
+
+    <!-- ─── QUESTION 8 ─── -->
+    <div class="question-block">
+        <strong><span class="q-number">8</span> The Dog Stars is a serious book about a devastating subject, but what are some of its more lighthearted moments? Why is it important that the book have this mixture of tenderness and violence, anxiety and peace?</strong>
+    </div>
+    <div class="answer">
+        <p><strong>Lighthearted Moments:</strong></p>
         <ul>
-          <li>The radio transmission from Grand Junction turns out to be a trap — an elderly couple luring pilots into a cable strung across the runway. Pops kills them.</li>
-          <li>Back at Erie they find Bangley's house destroyed. He's alive behind a tool chest, having fought off fourteen attackers alone. Cima nurses him back.</li>
-          <li>The four become a household — Hig, Bangley, Cima, and Pops — an apocalyptic version of a family.</li>
-          <li>Unidentified jets, crews speaking Arabic, pass overhead. The novel ends open — other survivors, other threats, the world still turning.</li>
+            <li><strong>The “Trippa Sands” joke:</strong> Hig tells the absurd joke about the shipwrecked model, Trippa Sands, and the survivor Jed, who asks her to wear his cowboy hat, draw on a mustache, and let him call her “Joe” so he can say, <em>“I’m fucking Trippa Sands!”</em> Hig admits it <em>“still makes me laugh,”</em> acknowledging the bizarre, primal comedy of loneliness and male ego.</li>
+            <li><strong>The “Pheasant” note exchange:</strong> When Hig is pinned on the cliff above the canyon, he writes notes on paper and hangs them over the edge: <em>“I,” “AM,” “NOT,” “A,” “PHEASANT.”</em> He describes the standoff as a philosophical dialectic, saying <em>“Hamlet had nothing on this.”</em> His childlike, playful approach to de-escalation is genuinely funny.</li>
+            <li><strong>The lambs on the plane:</strong> During the tense takeoff from the meadow, the stall horn blares, and Hig realizes <em>“the lambs are the same fucking key. The same key as the stall horn. Sounds like their mom.”</em> This absurd observation punctures the terror.</li>
+            <li><strong>Bangley’s dialogue:</strong> Bangley’s gruff, deadpan one-liners are often humorous. When Hig asks if he can have a Coke, Bangley replies about “effervescence.” When Hig returns alive, Bangley says, <em>“Well well. Prodigal Hig. Thought you’d croaked on me. I really did.”</em> His straight-faced, gravelly humor is a constant source of comic relief.</li>
+            <li><strong>The domestic chess games:</strong> The image of Bangley and Pops sitting on the porch playing chess like <em>“some apocalyptic parody of Norman Rockwell”</em> while the world burns around them is darkly humorous.</li>
         </ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- THEMES -->
-  <section id="themes">
-    <div class="fade">
-      <div class="label">The arc of the sky</div>
-      <h2 class="title">Themes that <span>burn</span></h2>
-      <p class="desc">
-        Loss, memory, violence, hope — the novel's constellations are carved from what remains when civilization falls away.
-      </p>
-    </div>
-    <div class="themes fade">
-      <div class="theme">
-        <div class="t-name">Grief as an element</div>
-        <div class="t-body">
-          <strong>"Grief is an element. It has its own cycle like the carbon cycle, the nitrogen. It never diminishes not ever."</strong><br /><br />
-          Hig carries grief the way the earth carries water — it cycles through him, never disappearing, only changing form. Jasper's death does not end it; it only makes the cycle more visible.
-        </div>
-      </div>
-      <div class="theme">
-        <div class="t-name">Survival vs. living</div>
-        <div class="t-body">
-          <strong>Bangley survives. Hig lives.</strong><br /><br />
-          The novel asks the question Hig cannot answer when Cima's father presses him: why fly past the point of no return? Jasper's death removed his last reason for caution. The radio voice offered something the base could never give him. He was looking for a reason to keep being human, not just alive.
-        </div>
-      </div>
-      <div class="theme">
-        <div class="t-name">The collapse of nature</div>
-        <div class="t-body">
-          <strong>"If I ever woke up crying in the middle of a dream… it's because the trout are gone every one."</strong><br /><br />
-          The warming streams, the dying forests, the vanishing elk — the apocalypse is ecological as much as human. Yet the green patches are spreading. Spruce and aspen return. Hawks and eagles flourish. Nature is not entirely dead; it is selective in what it keeps.
-        </div>
-      </div>
-      <div class="theme">
-        <div class="t-name">Memory as home</div>
-        <div class="t-body">
-          <strong>"I lift my head off the pillow / I see the frost the moon. / Lowering my head I think of home."</strong><br /><br />
-          Home is not a place. It is Melissa, Jasper, the life before. Hig carries them in every breath. The novel is bookended by Chinese poems about exile and reunion — Li Po at the opening, Li Shang-Yin at the close.
-        </div>
-      </div>
-      <div class="theme">
-        <div class="t-name">Violence &amp; compassion</div>
-        <div class="t-body">
-          <strong>"Try to do the right thing. Circumstance intervenes."</strong><br /><br />
-          Hig kills because he must, but never without cost. The novel refuses to resolve the tension — both cruelty and tenderness are real, and both are choices. Human nature is not fixed; it is a spectrum the circumstances reveal.
-        </div>
-      </div>
-      <div class="theme">
-        <div class="t-name">Found family</div>
-        <div class="t-body">
-          <strong>By the end, Hig has a family again.</strong><br /><br />
-          Cima, Pops, and even Bangley become something like a household — an apocalyptic parody of Norman Rockwell, but real. The transactional alliance between Hig and Bangley becomes mutual care. Community is the novel's final affirmation.
-        </div>
-      </div>
+        <p><strong>Why the mixture is essential:</strong></p>
+        <ul>
+            <li><strong>It prevents nihilism:</strong> Constant grimness would make the book unbearable and unrealistic. People in extreme situations <em>do</em> laugh—gallows humor is a genuine coping mechanism. It proves that the human spirit isn’t entirely broken.</li>
+            <li><strong>It deepens the characters:</strong> Hig’s humor shows he still has a soul, a playful intelligence, and a capacity for joy. It distinguishes him from a mindless survival drone. Bangley’s dry wit, however cynical, reveals a thinking, feeling man beneath the killer.</li>
+            <li><strong>It heightens the tragedy:</strong> The moments of peace and laughter make the violence and loss more painful by contrast. We care more about Hig because we’ve seen him laugh at a stupid joke or delight in feeding Jasper a fish.</li>
+            <li><strong>It mirrors real life:</strong> Life, even at its worst, is never one-note. Heller captures the <em>texture</em> of existence—the way grief and joy, anxiety and serenity, can coexist in the same hour. Hig’s <em>doubleness</em> is the novel’s central theme: he can grieve his wife while feeling the sun on his back in the garden.</li>
+        </ul>
     </div>
 
-    <div class="spectrum fade">
-      <div class="spec-labels">
-        <span class="left">◂ pure predator</span>
-        <span class="right">community &amp; faith ▸</span>
-      </div>
-      <div class="spec-bar"></div>
-      <div class="spec-points">
-        <div class="spec-point"><span class="dot"></span> Coke Truck men &amp; Grand Junction couple</div>
-        <div class="spec-point"><span class="dot"></span> Bangley</div>
-        <div class="spec-point"><span class="dot"></span> Hig</div>
-        <div class="spec-point"><span class="dot"></span> Cima</div>
-        <div class="spec-point"><span class="dot"></span> The Mennonites</div>
-      </div>
-      <div class="spec-note">
-        ✦ "New world now. New world new rules," Bangley says — and the novel doesn't disprove him. It just refuses to let that be the only rule anyone lives by.
-      </div>
-    </div>
-  </section>
+    <hr />
 
-  <!-- QUOTE -->
-  <div class="quote fade">
-    <div class="q-text">
-      "I wonder what it is this need to tell. To animate somehow the deathly stillness of the profoundest beauty. Breathe life in the telling."
+    <!-- ─── QUESTION 9 ─── -->
+    <div class="question-block">
+        <strong><span class="q-number">9</span> What has caused the end of human civilization in the novel? Why have the scattered survivors become so savage? Does the postapocalyptic world Heller presents seem accurate and likely, given the state of the world today?</strong>
     </div>
-    <div class="q-attr">— <strong>Hig</strong>, on why he tells the story at all</div>
-  </div>
-
-  <!-- CHAPTERS -->
-  <section id="chapters">
-    <div class="fade">
-      <div class="label">Book One, close reading</div>
-      <h2 class="title">Chapter by <span>chapter</span></h2>
-      <p class="desc">
-        The first six chapters, one at a time. Tap any to step inside.
-      </p>
+    <div class="answer">
+        <p><strong>Causes of the Collapse:</strong></p>
+        <ul>
+            <li><strong>The Flu Pandemic:</strong> A mutation of a superbug (possibly a weaponized strain) combined with a bird flu. Cima mentions rumors that it <em>“originated at Livermore”</em> (the national weapons lab) and was accidentally released. It had a mortality rate of 99.9%, killing nearly everyone.</li>
+            <li><strong>The Blood Disease:</strong> Survivors of the flu often developed a secondary autoimmune disease, similar to AIDS, that attacked their immune systems. The Mennonites suffer from this—it makes them weak, causes hemorrhaging, and is slowly fatal. It also made survivors terrified of contact, as it was transmitted through bodily fluids (blood, coughs).</li>
+            <li><strong>Climate Change:</strong> Warming streams killed the trout, droughts dried up creeks, and forests died from beetle infestations, further destabilizing the remaining ecosystems.</li>
+        </ul>
+        <p><strong>Why Survivors Became Savage:</strong></p>
+        <ul>
+            <li><strong>Scarcity:</strong> Resources (food, water, fuel, ammunition, medicine) are finite. People kill to protect their stockpiles.</li>
+            <li><strong>Loss of Law and Order:</strong> With no police, courts, or government, there are no consequences for murder. As Hig observes, <em>“Old rules are done. Went the way of the woodpecker.”</em> Bangley’s philosophy—shoot first, ask questions never—becomes the logical, though horrifying, default.</li>
+            <li><strong>Fear and Paranoia:</strong> Survivors are deeply traumatized. They assume every stranger is a threat. The girl who chased Hig with a kitchen knife was probably desperate for food, but Bangley sees her as a potential slit throat in the night.</li>
+            <li><strong>The “Arab” threat:</strong> The characters hear rumors of organized raiders (the “A-rabs”) coming to kill everyone, suggesting that some groups have militarized and are expanding, creating a cycle of preemptive violence.</li>
+        </ul>
+        <p><strong>Is it accurate/likely?</strong></p>
+        <ul>
+            <li><strong>Plausible:</strong> Given the COVID-19 pandemic, the rapid societal strain, supply chain disruptions, and erosion of trust in institutions feel very current. Heller’s depiction of people hoarding, shooting on sight, and forming paranoid militias is uncomfortably believable.</li>
+            <li><strong>Not Total Doom:</strong> Crucially, Heller argues that savagery is <em>not</em> inevitable. Hig, the Mennonites, and Cima’s family choose community, compassion, and healing. The novel suggests that while the postapocalyptic world might <em>trend</em> toward Bangley’s brutal logic, it also contains seeds of decency. Hig’s moral struggle—to remain kind in a world that punishes kindness—is the heart of the book. It asks: Is it <em>worth</em> staying human if it gets you killed? Hig ultimately answers yes, because survival without connection is just a slower form of death.</li>
+        </ul>
     </div>
-    <div class="chapters fade">
 
-      <details class="ch">
-        <summary class="head">
-          <span class="ch-num">I</span>
-          <span class="ch-info">
-            <div class="ch-title">The Beast, the Perimeter, and What's Gone</div>
-            <div class="ch-meta">pp. 8–24 · Book One</div>
-          </span>
-          <span class="chevron">▸</span>
-        </summary>
-        <div class="ch-body">
-          <p class="ch-sum">
-            Hig introduces his world: the Erie airport, the Beast, the perimeter he shares with Bangley, and Jasper beside him. A flashback carries us to Melissa, pregnant and dying of the flu, and the moment Hig smothered her at her own request. The chapter closes under the stars, with Hig still turning over a radio transmission from Grand Junction — and a fragment of Li Po about home.
-          </p>
-          <div class="ch-quotes">
-            <div class="ch-q">
-              I keep the Beast running, I keep the 100 low lead on tap, I foresee attacks. I am young enough, I am old enough.
-              <span>Hig, opening line</span>
-            </div>
-            <div class="ch-q">
-              I don't want to be confused: we are nine years out. The flu killed almost everybody, then the blood disease killed more. The ones who are left are mostly Not Nice.
-              <span>Hig</span>
-            </div>
-          </div>
-          <div class="tags">
-            <span class="tag">Grief</span>
-            <span class="tag">Survival vs. Meaning</span>
-            <span class="tag">Environmental Collapse</span>
-          </div>
+    <hr />
+
+    <!-- ─── QUESTION 10 ─── -->
+    <div class="question-block">
+        <strong><span class="q-number">10</span> Why is Hig’s relationship with Cima so important in the novel? What makes it particularly touching, given what each of them has suffered?</strong>
+    </div>
+    <div class="answer">
+        <p><strong>Importance of the Relationship:</strong></p>
+        <ul>
+            <li><strong>A reason to live:</strong> Before Cima, Hig is coasting on autopilot. He has no future. Cima gives him a focus beyond mere survival. She is a doctor, a healer, and a potential mother—she represents <em>renewal</em>. His happiness after meeting her is palpable: <em>“I thought of flying... I was beaming the way a small kid beams after surviving the magic mountain log flume.”</em></li>
+            <li><strong>The antidote to Bangley:</strong> Bangley represents death and protection; Cima represents life and vulnerability. Her presence forces Hig to soften, to hope, and to imagine a <em>home</em> again, not just a perimeter.</li>
+            <li><strong>Healing through intimacy:</strong> Their physical relationship is not just erotic; it’s a bridge back to the world. After years of isolation, Hig relearns how to be touched, how to share space, and how to be gentle.</li>
+        </ul>
+        <p><strong>What makes it touching (given their suffering):</strong></p>
+        <ul>
+            <li><strong>Shared loss, not competition:</strong> They both lost spouses in traumatic ways. Hig smothered Melissa; Cima’s husband Tomas died calling her name in a hospital ward while she was with her dying mother. She lives with guilt; he lives with the memory of the pillow. They don’t judge each other’s grief; they simply hold it. When Cima tells Hig about Tomas, Hig doesn’t offer platitudes—he listens, and she reciprocates by asking about his nightmares.</li>
+            <li><strong>Physical fragility and care:</strong> Cima bruises easily and is often in pain from her fibromyalgia. Hig must relearn how to touch her—gently, carefully, with constant attention to her limits. This makes their intimacy tender rather than brutal. He says, <em>“We made love as if the whole thing were new somehow. Maybe because we had to do it so gently, so slowly.”</em> This slowness is a profound act of respect and care in a world where everything is rushed, violent, and desperate.</li>
+            <li><strong>Vulnerability and honesty:</strong> When Hig fails to perform sexually due to his panic (triggered by her dream of Tomas), she doesn’t shame him. Instead, she asks for oral pleasure, breaking the tension with dark humor (referencing <em>Pulp Fiction</em>). They communicate through their brokenness, which is more authentic than any fairytale romance.</li>
+            <li><strong>The gift of presence:</strong> Cima says she’s <em>“happier here than she’d ever been”</em>—even with all the loss. This is devastating and beautiful. It means that what they found in each other, in that moment, is more real than the anxious “waiting for real life to begin” that plagued her before. Hig echoes this sentiment: he realizes that the endless grief over what’s lost must make room for what <em>is</em>. They are not replacing their dead spouses; they are choosing to let new love grow alongside the old wounds.</li>
+        </ul>
+        <p>Ultimately, Cima is Hig’s “point of return.” She gives him a future worth flying home to.</p>
+    </div>
+
+    <hr />
+
+    <!-- ─── QUESTION 11 ─── -->
+    <div class="question-block">
+        <strong><span class="q-number">11</span> The novel’s ending is ambiguous. Cima, Hig, Bangley, and Pops have formed a kind of family, the spruce and aspen are coming back, eagles and hawks are flourishing, but the trout and elk are gone, water is disappearing, and mysterious jets are flying overhead. What might happen next, or in the next ten years, for these characters and the world they live in?</strong>
+    </div>
+    <div class="answer">
+        <p><strong>Potential Scenarios:</strong></p>
+        <p><strong>Optimistic trajectory:</strong></p>
+        <ul>
+            <li><strong>Sustainable community:</strong> The four form a functional tribe. Cima’s medical knowledge, Pops’s tactical and ranching skills, Bangley’s firepower, and Hig’s flying and farming create a resilient unit. They could irrigate more efficiently, breed the lambs, and expand their garden. The presence of a doctor attracts more survivors, slowly rebuilding a small settlement.</li>
+            <li><strong>Ecological adaptation:</strong> While trout and elk are gone, other species are returning (bison, wolves, grizzly bears, osprey). Nature is finding a new equilibrium. The spruce and aspen regrowth suggests the forests are healing from the beetle kill. Humans might learn to live with what remains, perhaps farming carp or adapting to warmer-weather crops.</li>
+            <li><strong>A new “normal”:</strong> The jets overhead could be scouts for an organized society (possibly immune Arab tribes) that might eventually make contact. If they come in peace, they could share knowledge, medicine, and resources. The novel’s final image—Hig and Cima naming constellations, the children of the Mennonites receiving vitamin D infusions—suggests small, vital acts of renewal.</li>
+        </ul>
+        <p><strong>Pessimistic trajectory:</strong></p>
+        <ul>
+            <li><strong>Resource collapse:</strong> The disappearing water is the most urgent threat. If the drought worsens, the creek at Erie could dry up like the canyon creek. Without water, the garden fails, the cattle die, and the community must move—a perilous journey in a hostile world.</li>
+            <li><strong>The jet threat:</strong> The “mysterious jets” are a chilling omen. They could belong to a militarized, expansionist group (the “A-rabs” mentioned earlier) that will eventually locate and overwhelm Erie. Bangley’s weapons might not be enough against an organized air force.</li>
+            <li><strong>Gradual extinction:</strong> Without enough genetic diversity (only four adults, two lambs), inbreeding becomes a problem within a generation or two. Cima’s health is fragile—her bruises and pain suggest her body is slowly failing. If she dies, Hig loses his anchor. The Mennonites are dying off one by one. The human population may simply dwindle to zero.</li>
+        </ul>
+        <p><strong>The novel’s stance:</strong> Heller deliberately leaves it ambiguous because <em>uncertainty is the reality</em>. Hig doesn’t know what will happen—he just knows he wants to <em>try</em>. The final lines—<em>“Someday we will be back together again. We will sit in the candlelight by the West window. And I will tell you how I remembered you Tonight on the stormy mountain”</em>—suggest a faith in reunion and memory that transcends survival. The novel argues that hope is not about knowing the outcome; it’s about choosing to plant seeds, to love, and to tell stories, regardless.</p>
+    </div>
+
+    <hr />
+
+    <!-- ─── QUESTION 12 ─── -->
+    <div class="question-block">
+        <strong><span class="q-number">12</span> Why does Heller conclude The Dog Stars with Hig’s favorite poem “When Will I Be Home?” by Li Shang-Yin? Why is this a fitting way to end the story? In what ways is the novel about the longing for home?</strong>
+    </div>
+    <div class="answer">
+        <div class="book-quote">
+            <p><em>When will I be home? I don’t know.<br />
+            In the mountains, in the rainy night,<br />
+            The Autumn lake is flooded.<br />
+            Someday we will be back together again.<br />
+            We will sit in the candlelight by the West window.<br />
+            And I will tell you how I remembered you<br />
+            Tonight on the stormy mountain.</em></p>
         </div>
-      </details>
-
-      <details class="ch">
-        <summary class="head">
-          <span class="ch-num">II</span>
-          <span class="ch-info">
-            <div class="ch-title">Flying as Escape, Bangley's Silence</div>
-            <div class="ch-meta">pp. 44–46 · Book One</div>
-          </span>
-          <span class="chevron">▸</span>
-        </summary>
-        <div class="ch-body">
-          <p class="ch-sum">
-            Hig explains why he flies — not freedom, but the way the wrecked world resolves into pattern from above. A flashback to Bangley's first flight reveals he already shot two people from the Mennonite settlement, calling them "Druids." When children wave up at the plane, Bangley goes quiet for the rest of the trip — the first sign of a moral rift between the two men.
-          </p>
-          <div class="ch-quotes">
-            <div class="ch-q">
-              From up here there was no misery, no suffering, no strife, just pattern and perfection. The immortal stillness of a landscape painting.
-              <span>Hig</span>
-            </div>
-            <div class="ch-q">
-              He is as at home with his solitude as the note reverberating inside a bell. Prefers it. Will protect it to the death.
-              <span>Hig, on Bangley</span>
-            </div>
-          </div>
-          <div class="tags">
-            <span class="tag">Escape vs. Reality</span>
-            <span class="tag">Solitude</span>
-            <span class="tag">Moral Divergence</span>
-          </div>
-        </div>
-      </details>
-
-      <details class="ch">
-        <summary class="head">
-          <span class="ch-num">III</span>
-          <span class="ch-info">
-            <div class="ch-title">The Pillow</div>
-            <div class="ch-meta">pp. 47–53 · Book One</div>
-          </span>
-          <span class="chevron">▸</span>
-        </summary>
-        <div class="ch-body">
-          <p class="ch-sum">
-            The night after Bangley kills a nine-year-old boy in a firefight, Hig walks the blood-soaked ground and feels almost nothing. His mind drifts — to Melissa's birthdays, to his father's fishing rod, and finally to the hospital where Melissa asked him to end her suffering, and he did. He surfaces only when he realizes Jasper isn't beside him.
-          </p>
-          <div class="ch-quotes">
-            <div class="ch-q">
-              I wonder what it is this need to tell. To animate somehow the deathly stillness of the profoundest beauty. Breathe life in the telling.
-              <span>Hig</span>
-            </div>
-            <div class="ch-q">
-              I covered her face and used it. On my own wife… I loved her. This is what I live with.
-              <span>Hig</span>
-            </div>
-          </div>
-          <div class="tags">
-            <span class="tag">Storytelling as Survival</span>
-            <span class="tag">The Weight of Killing</span>
-            <span class="tag">Memory</span>
-          </div>
-        </div>
-      </details>
-
-      <details class="ch">
-        <summary class="head">
-          <span class="ch-num">IV</span>
-          <span class="ch-info">
-            <div class="ch-title">The Garden</div>
-            <div class="ch-meta">pp. 54–62 · Book One</div>
-          </span>
-          <span class="chevron">▸</span>
-        </summary>
-        <div class="ch-body">
-          <p class="ch-sum">
-            Spring planting brings Hig a rare, unnamed happiness. He and Bangley argue over a planned trip to the mountains — until Bangley, coughing, admits he doesn't sleep well when Hig is gone. That night, packing, Hig remembers Melissa's pregnancy, the names they picked, and the terrible, unresolved fight on their last fishing trip together.
-          </p>
-          <div class="ch-quotes">
-            <div class="ch-q">
-              There was something moving inside that resembled a kind of happiness. I would never have named it. Not then. For fear. But I name it now.
-              <span>Hig</span>
-            </div>
-            <div class="ch-q">
-              We were like a married couple unable anymore to speak the truth about the most important things.
-              <span>Hig, on Bangley</span>
-            </div>
-          </div>
-          <div class="tags">
-            <span class="tag">Ritual as Survival</span>
-            <span class="tag">Fragile Happiness</span>
-            <span class="tag">Unspoken Truths</span>
-          </div>
-        </div>
-      </details>
-
-      <details class="ch">
-        <summary class="head">
-          <span class="ch-num">V</span>
-          <span class="ch-info">
-            <div class="ch-title">The Coke Truck</div>
-            <div class="ch-meta">pp. 64–77 · Book One</div>
-          </span>
-          <span class="chevron">▸</span>
-        </summary>
-        <div class="ch-body">
-          <p class="ch-sum">
-            A supply run turns violent: Hig kills an archer, tries to spare two other men, then guns one of them down in disgust after hearing a rumor — "the A-rabs" are coming, heard over a ham radio in Pueblo. Back home, Bangley dissects every tactical mistake Hig made, but takes the intel dead seriously.
-          </p>
-          <div class="ch-quotes">
-            <div class="ch-q">
-              Try to do the right thing. Circumstance intervenes.
-              <span>Hig</span>
-            </div>
-            <div class="ch-q">
-              The A-rabs. We heard it. In Pueblo. Ham radio… They're here. Or coming. Kill us all.
-              <span>Ponytail</span>
-            </div>
-          </div>
-          <div class="tags">
-            <span class="tag">Mercy vs. Pragmatism</span>
-            <span class="tag">Moral Disgust</span>
-            <span class="tag">The Wider World</span>
-          </div>
-        </div>
-      </details>
-
-      <details class="ch">
-        <summary class="head">
-          <span class="ch-num">VI</span>
-          <span class="ch-info">
-            <div class="ch-title">Jasper</div>
-            <div class="ch-meta">pp. 83–93 · Book One</div>
-          </span>
-          <span class="chevron">▸</span>
-        </summary>
-        <div class="ch-body">
-          <p class="ch-sum">
-            A hunting trip into the mountains — carp instead of trout, a fire, a night under open sky — ends with Jasper dead in his sleep, peacefully, of old age. Hig doesn't move for a day. He buries Jasper under a stone mound and walks on, for the first time in the novel, entirely alone.
-          </p>
-          <div class="ch-quotes">
-            <div class="ch-q">
-              Grief is an element. It has its own cycle like the carbon cycle, the nitrogen. It never diminishes not ever.
-              <span>Hig</span>
-            </div>
-            <div class="ch-q">
-              Goodbye, bud. You are Jasper. My heart. We are never apart, not here, not there.
-              <span>Hig</span>
-            </div>
-          </div>
-          <div class="tags">
-            <span class="tag">Grief as Element</span>
-            <span class="tag">Ritual Mourning</span>
-            <span class="tag">Total Isolation</span>
-          </div>
-        </div>
-      </details>
-
+        <p><strong>Why it fits:</strong></p>
+        <ul>
+            <li><strong>The core question:</strong> The poem asks the central question of the novel: <em>“When will I be home?”</em> Hig is perpetually displaced—from his old life, from Melissa, from the world before. He lives in a hangar, sleeps outside, and flies away whenever he can. “Home” for Hig is not a physical place but a state of being: being with Melissa, being with Jasper, being at peace. The poem voices his deepest ache.</li>
+            <li><strong>Temporal dislocation:</strong> The poem is about a traveler who is separated from a loved one, promising to tell the story of his longing when they are <em>finally</em> reunited. This mirrors Hig’s relationship with Melissa—he carries her memory and imagines telling her about the “stormy mountain” of his grief. It also mirrors his hope for Cima: that they might build a shared future.</li>
+            <li><strong>Memory as home:</strong> The poem’s final lines suggest that <em>remembering</em> is a form of being together. Hig cannot physically return to Melissa, but he can “sit in the candlelight” of memory and tell her his story. The novel is, in many ways, Hig’s long, whispered telling to Melissa, Jasper, and the reader.</li>
+            <li><strong>The flooded autumn lake:</strong> The image of the flooded mountain lake echoes Hig’s drowned world—the trout streams, the drying creeks, the “Autumn lake” of his grief. Nature is both beautiful and threatening, a source of solace and sorrow.</li>
+        </ul>
+        <p><strong>The novel as a longing for home:</strong></p>
+        <ul>
+            <li><strong>Physical home:</strong> Hig loses his house, his city, his country. He is a refugee in his own land.</li>
+            <li><strong>Emotional home:</strong> He loses Melissa and Jasper—the beings that made him feel “at home” in his own skin. He says of Melissa, <em>“She held me”</em>—she was his anchor.</li>
+            <li><strong>Spiritual home:</strong> Hig finds moments of home in nature—fishing, flying, the smell of ponderosa pines. These are his “church.” The canyon with Cima is the closest he comes to a new home, a place where he can <em>belong</em> again.</li>
+            <li><strong>The act of storytelling:</strong> By telling his story, Hig is trying to <em>create</em> a home for his memories, to give them a place to live. The novel itself is his “candlelight by the West window.”</li>
+        </ul>
     </div>
-  </section>
 
-  <!-- POEM -->
-  <section id="poem">
-    <div class="fade">
-      <div class="label">The final word</div>
-      <h2 class="title">When will I be <span>home?</span></h2>
-      <p class="desc">
-        The novel closes with Li Shang-Yin's poem — a meditation on longing, reunion, and the hope that burns even in the darkest night. It answers the novel's opening question without resolving it.
-      </p>
-    </div>
-    <div class="poem fade">
-      <div class="p-title">When Will I Be Home?</div>
-      <div class="p-author">— Li Shang-Yin (Tang Dynasty)</div>
-      <div class="p-lines">
-        When will I be home? I don't know.<br />
-        In the mountains, in the rainy night,<br />
-        The Autumn lake is flooded.<br />
-        <span class="pause"></span>
-        Someday we will be back together again.<br />
-        We will sit in the candlelight by the West window.<br />
-        And I will tell you how I remembered you<br />
-        Tonight on the stormy mountain.
-      </div>
-    </div>
-    <div class="quote fade" style="margin-top:40px;">
-      <div class="q-text" style="font-size:clamp(1.05rem,2vw,1.28rem);">
-        "The love is the creek bed and the pain fills it. Fills it every day with tears."
-      </div>
-      <div class="q-attr">— <strong>Hig</strong>, on the nature of grief</div>
-    </div>
-  </section>
+    <hr />
 
-  <footer>
-    <p>
-      ✦ <em>The Dog Stars</em> by Peter Heller · a constellation of memory, grief, and hope ✦
-    </p>
-  </footer>
+    <!-- ─── QUESTION 13 ─── -->
+    <div class="question-block">
+        <strong><span class="q-number">13</span> What does the novel imply about human nature, after the constraints of civilization have been removed? What does it suggest about the possible consequences of the way we are living now?</strong>
+    </div>
+    <div class="answer">
+        <p><strong>Implications about human nature:</strong></p>
+        <ul>
+            <li><strong>Human nature is not fixed; it’s a choice:</strong> The novel presents two extremes—Bangley and Hig. Bangley believes in total self-preservation, killing anything that threatens his survival. Hig believes in connection, compassion, and moral risk. Both are <em>choices</em>, not inevitable outcomes. Heller suggests that human nature is malleable; we become what we practice.</li>
+            <li><strong>Fear amplifies cruelty:</strong> The survivors are savage largely because they are terrified. The girl with the kitchen knife, the attackers at the Coke truck, the old couple in the tower—they are all acting out of desperate fear. Civilization’s constraints (laws, norms, empathy) are fragile; without them, fear quickly curdles into violence.</li>
+            <li><strong>Kindness is costly but essential:</strong> Hig’s compassion often endangers him (the firefight at the Coke truck, his confrontation with the Mennonites, his mercy toward the old couple). Yet it is also what saves him—it leads him to Cima and Pops. The novel suggests that kindness is not a luxury; it’s the <em>only</em> thing that makes survival meaningful.</li>
+            <li><strong>The need for purpose:</strong> Bangley survives, but he is hollow. Hig survives <em>and</em> grieves, <em>and</em> tells stories, <em>and</em> plants a garden. Heller implies that human beings need more than food, water, and shelter—we need love, beauty, ritual, and narrative.</li>
+        </ul>
+        <p><strong>Consequences of the way we are living now:</strong></p>
+        <ul>
+            <li><strong>Climate change as the great eraser:</strong> The novel is explicit that climate change (warming streams, drought, beetle-killed forests) is as destructive as the pandemic. Heller is warning that our current path—environmental degradation, resource hoarding, political fragmentation—is leading toward a world where water is scarce, species are extinct, and conflict is constant.</li>
+            <li><strong>The fragility of civilization:</strong> The pandemic in the novel wipes out 99.9% of humanity in weeks. Heller suggests that our complex, interconnected society is more fragile than we imagine. A single biological event could unravel everything.</li>
+            <li><strong>The moral cost of survivalism:</strong> Bangley’s philosophy is an extreme version of contemporary “prepper” culture—the belief that the world is ending, and the only rational response is to stockpile weapons and shoot anyone who approaches. Heller critiques this worldview: it might keep you alive, but it hollows out your humanity.</li>
+            <li><strong>The importance of community:</strong> The novel’s hope lies in <em>cooperation</em>, not isolation. Hig survives because he works with Bangley, helps the Mennonites, and eventually joins Cima’s family. The novel suggests that our current obsession with individual self-reliance is misguided; we need each other.</li>
+        </ul>
+    </div>
+
+    <hr />
+
+    <!-- ─── QUESTION 14 ─── -->
+    <div class="question-block">
+        <strong><span class="q-number">14</span> What similarities does The Dog Stars share with other recent dystopian novels like The Hunger Games and The Road? In what important ways does it differ from them?</strong>
+    </div>
+    <div class="answer">
+        <p><strong>Similarities:</strong></p>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr><th>Element</th><th><em>The Hunger Games</em></th><th><em>The Road</em></th><th><em>The Dog Stars</em></th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Post-apocalyptic setting</strong></td><td>A destroyed North America, ruled by a totalitarian Capitol.</td><td>A burned, ash-covered America, utterly lifeless.</td><td>A flu-ravaged, climate-stressed America, still partially green.</td></tr>
+                    <tr><td><strong>Survival as primary goal</strong></td><td>Katniss fights to survive the Games and protect her family.</td><td>The father and son struggle daily for food, shelter, and safety.</td><td>Hig and Bangley survive through routine, hunting, and vigilance.</td></tr>
+                    <tr><td><strong>Moral complexity</strong></td><td>Katniss must kill to survive, questioning her own humanity.</td><td>The father struggles to maintain his son's innocence in a cannibalistic world.</td><td>Hig struggles to remain kind while being forced to kill.</td></tr>
+                    <tr><td><strong>Loss of innocence</strong></td><td>Children are forced to murder each other.</td><td>The boy sees horrific violence and death.</td><td>Hig kills a child, a girl, and a man—and is haunted by it.</td></tr>
+                    <tr><td><strong>A child as a symbol of hope</strong></td><td>Primrose, Rue, and the younger tributes represent what is worth saving.</td><td>The boy is the “fire” that keeps his father going.</td><td>The Mennonite children, the lambs, and the unborn child (Melissa's) represent the future.</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p><strong>Key Differences:</strong></p>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr><th>Aspect</th><th><em>The Hunger Games</em></th><th><em>The Road</em></th><th><em>The Dog Stars</em></th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Tone</strong></td><td>Action-driven, satirical, politically charged.</td><td>Bleak, desolate, almost nihilistic.</td><td>Lyrical, elegiac, but threaded with moments of beauty and humor.</td></tr>
+                    <tr><td><strong>Nature</strong></td><td>Nature is a weapon or a resource (forests, berries, traps).</td><td>Nature is dead—gray, cold, ash-covered. No animals, no plants.</td><td>Nature is wounded but <em>alive</em>. Trees are regenerating, birds are returning, fish (carp) survive.</td></tr>
+                    <tr><td><strong>Hope</strong></td><td>Hope is political—overthrow the Capitol.</td><td>Hope is existential—“carrying the fire” despite no evidence of a future.</td><td>Hope is ecological and personal—planting gardens, healing wounds, loving again.</td></tr>
+                    <tr><td><strong>Role of community</strong></td><td>Community exists (District 12, the rebels) but is oppressed.</td><td>Community is almost nonexistent—everyone is an enemy.</td><td>Community is central—the partnership with Bangley, the Mennonites, Cima's family.</td></tr>
+                    <tr><td><strong>Protagonist's motivation</strong></td><td>Katniss is motivated by love for her sister and revenge.</td><td>The father is motivated by protecting his son.</td><td>Hig is motivated by <em>meaning</em>—he wants to feel alive, to connect, to tell his story.</td></tr>
+                    <tr><td><strong>Ending</strong></td><td>Katniss survives and starts a family, but she is traumatized.</td><td>The father dies; the boy is taken in by a family, but the future is uncertain.</td><td>Hig finds love, community, and a fragile peace, but the future is ambiguous (jets, drought).</td></tr>
+                    <tr><td><strong>Role of the past</strong></td><td>The past is mostly forgotten or manipulated by the Capitol.</td><td>The past is a haunting memory of comfort and warmth.</td><td>The past is <em>central</em>—Hig lives in memory, telling stories, reciting poems, grieving.</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p><strong><em>The Dog Stars</em> as distinct:</strong></p>
+        <ul>
+            <li><strong>It is a love story to nature:</strong> Unlike <em>The Road</em>'s dead world, Heller's world still has redtail hawks, ponderosa pines, and bison. The novel mourns what is lost but celebrates what persists.</li>
+            <li><strong>It is about <em>remembering</em>:</strong> Hig is a poet. He tells stories, names constellations, and recites ancient Chinese poems. The novel argues that survival of the <em>soul</em> requires memory, not just the body.</li>
+            <li><strong>It offers a path beyond trauma:</strong> Katniss ends traumatized; the boy in <em>The Road</em> is left with a stranger. Hig ends with a family—flawed, fragile, but <em>together</em>. He is not healed, but he is <em>willing</em> to be happy.</li>
+            <li><strong>It questions masculinity:</strong> Hig is not a hyper-competent action hero. He is gentle, poetic, and often inept (he tries to spare the Coke truck attackers and nearly gets killed). The novel critiques Bangley's toxic survivalism and offers Hig's tender, grieving, hopeful masculinity as an alternative.</li>
+        </ul>
+        <p>Ultimately, <em>The Dog Stars</em> is less bleak than <em>The Road</em> and less political than <em>The Hunger Games</em>. It is a meditation on love, memory, and the stubborn persistence of beauty in a broken world. As Hig says, <em>“Life is tenacious if you give it one little bit of encouragement.”</em> That is the novel’s quiet, radical hope.</p>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- ─── CLOSING ─── -->
+    <div style="text-align:center; color:#b09a86; font-style:italic; padding:1rem 0 0.4rem 0; border-top:1px solid #3d322b; margin-top:2rem;">
+        <p style="font-size:0.95rem;">“Someday we will be back together again.”</p>
+        <p style="font-size:0.85rem; color:#8a7a6a;">— Li Shang-Yin, <em>When Will I Be Home?</em></p>
+    </div>
 
 </div>
+<!-- end container -->
 
-<script>
-(function(){
-  'use strict';
-  const starCanvas = document.getElementById('stars-canvas');
-  const starCtx = starCanvas.getContext('2d');
-  let stars = [];
-  function resizeStar(){ starCanvas.width = innerWidth; starCanvas.height = innerHeight; }
-  addEventListener('resize', resizeStar); resizeStar();
-  function initStars(n=340){
-    stars = [];
-    for(let i=0;i<n;i++){
-      stars.push({
-        x:Math.random()*starCanvas.width,
-        y:Math.random()*starCanvas.height,
-        r:Math.random()*1.5+0.3,
-        a:Math.random()*0.7+0.25,
-        speed:0.0015+Math.random()*0.005,
-        phase:Math.random()*Math.PI*2
-      });
-    }
-  }
-  initStars();
-  function drawStars(t){
-    starCtx.clearRect(0,0,starCanvas.width,starCanvas.height);
-    for(const s of stars){
-      const flicker = 0.55 + 0.45*Math.sin(t*s.speed + s.phase);
-      starCtx.beginPath();
-      starCtx.arc(s.x,s.y,s.r,0,Math.PI*2);
-      starCtx.fillStyle = `rgba(244,239,230,${s.a*flicker})`;
-      starCtx.fill();
-    }
-  }
-  const constCanvas = document.getElementById('constellation-canvas');
-  const constCtx = constCanvas.getContext('2d');
-  let points = [];
-  function resizeConst(){ constCanvas.width = innerWidth; constCanvas.height = innerHeight; }
-  addEventListener('resize',()=>{ resizeStar(); resizeConst(); points = generatePoints(); });
-  resizeConst();
-  function generatePoints(){
-    const pts = [];
-    for(let i=0;i<24;i++) pts.push({ x:0.08+Math.random()*0.84, y:0.08+Math.random()*0.84, r:1.8+Math.random()*2.4 });
-    return pts;
-  }
-  points = generatePoints();
-  function drawConst(t){
-    const w = constCanvas.width, h = constCanvas.height;
-    constCtx.clearRect(0,0,w,h);
-    if(points.length < 2) return;
-    const pts = points.map(p=>({x:p.x*w,y:p.y*h,r:p.r}));
-    const threshold = 0.2;
-    for(let i=0;i<pts.length;i++){
-      for(let j=i+1;j<pts.length;j++){
-        const dx = pts[i].x-pts[j].x, dy = pts[i].y-pts[j].y;
-        const dist = Math.sqrt(dx*dx+dy*dy);
-        const max = Math.min(w,h)*threshold;
-        if(dist < max){
-          const alpha = 0.06 + 0.1*(1-dist/max);
-          constCtx.beginPath();
-          constCtx.moveTo(pts[i].x,pts[i].y);
-          constCtx.lineTo(pts[j].x,pts[j].y);
-          constCtx.strokeStyle = `rgba(201,168,124,${alpha})`;
-          constCtx.lineWidth = 0.55;
-          constCtx.stroke();
-        }
-      }
-    }
-    for(const p of pts){
-      const glow = 0.25 + 0.18*Math.sin(t*0.0009 + p.x*0.008);
-      const grad = constCtx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*2.8);
-      grad.addColorStop(0,`rgba(201,168,124,${glow})`);
-      grad.addColorStop(1,'rgba(201,168,124,0)');
-      constCtx.beginPath();
-      constCtx.arc(p.x,p.y,p.r*2.8,0,Math.PI*2);
-      constCtx.fillStyle = grad;
-      constCtx.fill();
-      constCtx.beginPath();
-      constCtx.arc(p.x,p.y,p.r*0.7,0,Math.PI*2);
-      constCtx.fillStyle = `rgba(244,239,230,${0.25+0.3*Math.sin(t*0.0018+p.x)})`;
-      constCtx.fill();
-    }
-  }
-  function animate(t){ drawStars(t); drawConst(t); requestAnimationFrame(animate); }
-  animate(0);
-
-  const observer = new IntersectionObserver(entries=>{
-    entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
-  },{ threshold:0.12, rootMargin:'0px 0px -30px 0px' });
-  document.querySelectorAll('.fade').forEach(el=>observer.observe(el));
-
-  document.querySelectorAll('a[href^="#"]').forEach(a=>{
-    a.addEventListener('click',e=>{
-      e.preventDefault();
-      const t = document.querySelector(a.getAttribute('href'));
-      if(t) t.scrollIntoView({ behavior:'smooth', block:'start' });
-    });
-  });
-
-  const waypoints = document.querySelectorAll('.wp');
-  waypoints.forEach(wp=>{
-    wp.addEventListener('click',()=>{
-      waypoints.forEach(w=>w.classList.remove('active'));
-      wp.classList.add('active');
-    });
-  });
-})();
-</script>
 </body>
 </html>
