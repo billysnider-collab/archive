@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Ones Who Walk Away from Omelas — Ursula K. Le Guin</title>
+<meta name="description" content="The full text of Le Guin's 1973 story, followed by a close reading of its rhetoric, its bargain, and what the ending refuses to explain.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Source+Serif+4:ital,opsz,wght@8..60,0,400;8..60,0,500;8..60,0,600;8..60,1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#eae3d2;
+    --card:#f4efe2;
+    --ink:#2a2622;
+    --ink-soft:#5b5347;
+    --rule:#c9bd9e;
+    --oxblood:#7c2e2a;
+    --oxblood-dim:#a8564f;
+    --gold:#a3792f;
+
+    --cellar:#15110d;
+    --cellar-2:#1e1811;
+    --cellar-ink:#cfc6b0;
+    --cellar-ink-dim:#8c8272;
+    --cellar-rule:#3a2f24;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    background-image: radial-gradient(rgba(42,38,34,0.035) 1px, transparent 1px);
+    background-size: 3px 3px;
+    color:var(--ink);
+    font-family:'Source Serif 4', Georgia, serif;
+    line-height:1.7;
+  }
+  a{color:var(--oxblood); text-decoration-thickness:1px; text-underline-offset:3px;}
+  ::selection{background:var(--oxblood); color:var(--card);}
+  :focus-visible{outline:2px solid var(--oxblood-dim); outline-offset:2px;}
+
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    .reveal{ opacity:1 !important; transform:none !important; transition:none !important; }
+  }
+
+  /* ================= MASTHEAD ================= */
+  header.masthead{
+    max-width:900px;
+    margin:0 auto;
+    padding:40px 28px 30px;
+    border-bottom:2px solid var(--ink);
+  }
+  .back{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:var(--ink-soft);
+    text-decoration:none;
+    margin-bottom:22px;
+  }
+  .back:hover{ color:var(--oxblood); }
+  .kicker{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--oxblood);
+    margin:0 0 10px;
+  }
+  h1.title{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:clamp(32px, 5vw, 52px);
+    line-height:1.08;
+    letter-spacing:-.01em;
+    margin:0 0 14px;
+    max-width:14ch;
+  }
+  .byline{ font-style:italic; color:var(--ink-soft); font-size:16px; margin:0 0 4px; }
+  .meta{ font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--ink-soft); margin-top:14px; }
+
+  /* ================= TOC NAV ================= */
+  .nav-wrapper{
+    position:sticky;
+    top:0;
+    z-index:100;
+    background:rgba(234,227,210,0.92);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--rule);
+  }
+  nav.toc{
+    max-width:820px;
+    margin:0 auto;
+    padding:10px 20px;
+    display:flex;
+    gap:4px;
+    overflow-x:auto;
+    scrollbar-width:none;
+  }
+  nav.toc::-webkit-scrollbar{ display:none; }
+  nav.toc a{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:.03em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    text-decoration:none;
+    white-space:nowrap;
+    padding:6px 10px;
+    border-radius:20px;
+  }
+  nav.toc a:hover{ color:var(--oxblood); }
+  nav.toc a.active{ background:var(--oxblood); color:var(--card); }
+
+  /* ================= STORY: FESTIVAL ================= */
+  .festival{ max-width:660px; margin:0 auto; padding:56px 28px 20px; }
+  .festival p{ font-size:18px; margin:0 0 22px; color:var(--ink); }
+  .festival p.opening::first-letter{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:64px;
+    line-height:.8;
+    float:left;
+    padding:6px 8px 0 0;
+    color:var(--oxblood);
+  }
+
+  .hinge{
+    max-width:520px;
+    margin:44px auto;
+    padding:26px 0;
+    text-align:center;
+    border-top:1px solid var(--rule);
+    border-bottom:1px solid var(--rule);
+  }
+  .hinge p{
+    font-family:'Fraunces', serif;
+    font-style:italic;
+    font-weight:500;
+    font-size:22px;
+    color:var(--oxblood);
+    margin:0;
+    line-height:1.5;
+  }
+  .hinge.dark{ border-color:var(--cellar-rule); }
+  .hinge.dark p{ color:var(--oxblood-dim); }
+
+  .descend{ height:120px; background:linear-gradient(var(--paper), var(--cellar)); }
+  .rise{ height:90px; background:linear-gradient(var(--cellar), var(--paper)); }
+
+  /* ================= STORY: CELLAR ================= */
+  .story-cellar{ background:var(--cellar); color:var(--cellar-ink); padding:10px 28px 70px; }
+  .story-cellar .inner{ max-width:660px; margin:0 auto; }
+  .cellar-label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--oxblood-dim);
+    margin:0 0 26px;
+  }
+  .room{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:14.5px;
+    line-height:1.85;
+    color:var(--cellar-ink-dim);
+    background:var(--cellar-2);
+    border:1px solid var(--cellar-rule);
+    padding:26px 24px;
+    margin:0 0 30px;
+  }
+  .story-cellar p.prose{
+    font-family:'Source Serif 4', Georgia, serif;
+    font-size:17.5px;
+    line-height:1.75;
+    margin:0 0 22px;
+    color:var(--cellar-ink);
+  }
+  .story-cellar p.prose strong{ color:var(--oxblood-dim); font-weight:600; }
+
+  /* ================= STORY: WALKERS ================= */
+  .walkers{ background:var(--cellar); padding:10px 28px 100px; }
+  .walkers-inner{ max-width:660px; margin:0 auto; }
+  .walkers p{ font-family:'Source Serif 4', Georgia, serif; color:var(--cellar-ink); font-size:17.5px; line-height:1.8; margin:0 0 26px; }
+  .drift{ margin:60px 0 0; text-align:right; }
+  .drift p{ font-family:'Fraunces', serif; font-style:italic; font-weight:400; margin:0 0 18px; }
+  .drift p:nth-of-type(1){ font-size:19px; letter-spacing:.02em; opacity:.85; color:var(--cellar-ink); }
+  .drift p:nth-of-type(2){ font-size:18px; letter-spacing:.06em; opacity:.65; color:var(--cellar-ink); padding-right:2vw; }
+  .drift p:nth-of-type(3){ font-size:16px; letter-spacing:.12em; opacity:.5; color:var(--cellar-ink-dim); padding-right:5vw; }
+  .drift p:nth-of-type(4){ font-size:15px; letter-spacing:.22em; opacity:.36; color:var(--cellar-ink-dim); padding-right:9vw; }
+  .drift p:nth-of-type(5){
+    font-family:'IBM Plex Mono', monospace;
+    font-style:normal;
+    font-size:11px;
+    letter-spacing:.4em;
+    text-transform:uppercase;
+    opacity:.28;
+    color:var(--cellar-ink-dim);
+    padding-right:13vw;
+  }
+
+  /* ================= DIVIDER INTO NOTES ================= */
+  .notes-open{
+    max-width:660px;
+    margin:0 auto;
+    padding:50px 28px 0;
+    text-align:center;
+  }
+  .notes-open p{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--oxblood);
+  }
+
+  /* ================= ESSAY SECTIONS ================= */
+  main.essay{ max-width:680px; margin:0 auto; padding:0 28px; }
+  section.note{
+    padding:52px 0 8px;
+    opacity:0;
+    transform:translateY(18px);
+    transition:opacity .7s ease, transform .7s ease;
+  }
+  section.note.visible{ opacity:1; transform:none; }
+
+  .part{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--oxblood);
+    margin:0 0 8px;
+  }
+  section.note h2{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:clamp(24px, 3.2vw, 30px);
+    margin:0 0 22px;
+    letter-spacing:-.01em;
+  }
+  section.note h3{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:19px;
+    color:var(--oxblood);
+    margin:34px 0 12px;
+  }
+  section.note p{ font-size:16.5px; margin:0 0 18px; }
+  section.note .lede{ font-style:italic; color:var(--ink-soft); font-size:17px; }
+
+  section.note blockquote{
+    margin:26px 0;
+    padding:4px 0 4px 20px;
+    border-left:2px solid var(--oxblood);
+  }
+  section.note blockquote p{
+    font-family:'Fraunces', serif;
+    font-style:italic;
+    font-size:17.5px;
+    line-height:1.6;
+    color:var(--ink);
+    margin:0;
+  }
+
+  section.note ul{ margin:0 0 20px 20px; padding:0; }
+  section.note li{ margin-bottom:8px; font-size:16.5px; }
+  section.note li::marker{ color:var(--oxblood); }
+
+  .table-wrap{
+    overflow-x:auto;
+    margin:24px 0 28px;
+    border:1px solid var(--rule);
+    background:var(--card);
+  }
+  table{ width:100%; border-collapse:collapse; font-size:14.5px; }
+  th,td{ padding:11px 14px; text-align:left; border-bottom:1px solid var(--rule); vertical-align:top; }
+  th{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:var(--oxblood);
+    background:rgba(124,46,42,0.05);
+  }
+  td{ color:var(--ink-soft); }
+  tr:last-child td{ border-bottom:none; }
+
+  .callout{
+    background:var(--card);
+    border:1px solid var(--rule);
+    padding:20px 22px;
+    margin:26px 0;
+  }
+  .callout h4{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:15.5px;
+    color:var(--oxblood);
+    margin:0 0 8px;
+  }
+  .callout p{ font-size:15px; color:var(--ink-soft); margin:0; }
+  .callout p + p{ margin-top:10px; }
+
+  /* essay's own dark analysis block (the bargain) */
+  .essay-cellar{
+    background:var(--cellar);
+    color:var(--cellar-ink);
+    margin:0 -28px;
+    padding:56px 28px 8px;
+  }
+  .essay-cellar .inner2{ max-width:680px; margin:0 auto; }
+  .essay-cellar .part{ color:var(--oxblood-dim); }
+  .essay-cellar h2{ color:var(--cellar-ink); }
+  .essay-cellar h3{ color:var(--oxblood-dim); }
+  .essay-cellar p{ color:var(--cellar-ink); }
+  .essay-cellar blockquote{ border-left-color:var(--oxblood-dim); }
+  .essay-cellar blockquote p{ color:var(--cellar-ink); }
+  .essay-cellar .callout{ background:var(--cellar-2); border-color:var(--cellar-rule); }
+  .essay-cellar .callout p{ color:var(--cellar-ink-dim); }
+  .essay-cellar .callout h4{ color:var(--oxblood-dim); }
+  .essay-fade{ height:56px; background:linear-gradient(var(--cellar), var(--paper)); margin:0 -28px; }
+
+  /* deeper grid */
+  .grid{ display:grid; gap:16px; margin:24px 0 30px; }
+  @media (min-width:640px){ .grid{ grid-template-columns:1fr 1fr; } }
+  .card{ background:var(--card); border:1px solid var(--rule); padding:18px 20px; }
+  .card h4{ font-family:'Fraunces', serif; font-weight:600; font-size:15px; color:var(--oxblood); margin:0 0 8px; }
+  .card p{ font-size:14.5px; color:var(--ink-soft); margin:0; }
+
+  /* personal */
+  .personal{ border-left:3px solid var(--oxblood-dim); padding:2px 0 2px 20px; margin:26px 0; }
+  .personal .label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--oxblood-dim);
+    margin:0 0 10px;
+  }
+
+  /* questions */
+  .questions{ list-style:none; margin:0; padding:0; counter-reset:q; }
+  .questions li{ counter-increment:q; position:relative; padding-left:32px; margin-bottom:14px; font-size:16px; }
+  .questions li::before{
+    content:counter(q);
+    position:absolute; left:0; top:0;
+    font-family:'Fraunces', serif;
+    font-style:italic;
+    color:var(--oxblood);
+  }
+
+  /* ================= CLOSING ================= */
+  .closing{
+    background:var(--cellar);
+    color:var(--cellar-ink);
+    text-align:center;
+    padding:70px 28px 60px;
+    margin-top:20px;
+  }
+  .closing blockquote{ border:none; padding:0; max-width:44ch; margin:0 auto 26px; }
+  .closing blockquote p{ font-size:clamp(17px,2.6vw,20px); color:var(--cellar-ink); font-family:'Fraunces', serif; font-style:italic; line-height:1.6; }
+  .closing .q{ font-family:'Fraunces', serif; font-style:italic; font-size:18px; color:var(--oxblood-dim); margin-top:30px; }
+
+  footer{
+    max-width:900px;
+    margin:0 auto;
+    padding:24px 28px 60px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:var(--ink-soft);
+    text-align:center;
+  }
+  footer a{ color:var(--oxblood); }
+
+  @media (max-width:600px){
+    .festival p, .story-cellar p.prose, .walkers p{ font-size:16.5px; }
+    .room{ font-size:13.5px; padding:20px 16px; }
+    h1.title{ max-width:none; }
+    .essay-cellar, .essay-fade{ margin:0 -20px; padding-left:20px; padding-right:20px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <a class="back" href="index.html">&larr; The Archive</a>
+  <p class="kicker">Short story · with reading notes</p>
+  <h1 class="title">The Ones Who Walk Away from Omelas</h1>
+  <p class="byline">Ursula K. Le Guin</p>
+  <p class="meta">1973 · New Dimensions 3 · later collected in The Wind's Twelve Quarters</p>
+</header>
+
+<div class="nav-wrapper">
+  <nav class="toc" id="toc">
+    <a href="#top">Story</a>
+    <a href="#overview">Overview</a>
+    <a href="#festival-notes">The Festival</a>
+    <a href="#bargain">The Bargain</a>
+    <a href="#walkers-notes">The Walkers</a>
+    <a href="#themes">Themes</a>
+    <a href="#readings">Readings</a>
+    <a href="#deeper">Closer Look</a>
+    <a href="#personal">Resonance</a>
+    <a href="#questions">Questions</a>
+  </nav>
+</div>
+
+<!-- ============ STORY: FESTIVAL ============ -->
+<section class="festival" id="top">
+  <p class="opening">With a clamor of bells that set the swallows soaring, the Festival of Summer came to the city Omelas, bright-towered by the sea. The rigging of the boats in harbor sparkled with flags. In the streets between houses with red roofs and painted walls, between old moss-grown gardens and under avenues of trees, past great parks and public buildings, processions moved. Some were decorous: old people in long stiff robes of mauve and grey, grave master workmen, quiet, merry women carrying their babies and chatting as they walked. In other streets the music beat faster, a shimmering of gong and tambourine, and the people went dancing, the procession was a dance. Children dodged in and out, their high calls rising like the swallows' crossing flights, over the music and the singing. All the processions wound towards the north side of the city, where on the great water-meadow called the Green Fields boys and girls, naked in the bright air, with mud-stained feet and ankles and long, lithe arms, exercised their restive horses before the race. The horses wore no gear at all but a halter without bit. Their manes were braided with streamers of silver, gold, and green. They flared their nostrils and pranced and boasted to one another; they were vastly excited, the horse being the only animal who has adopted our ceremonies as his own.</p>
+
+  <p>Far off to the north and west the mountains stood up half encircling Omelas on her bay. The air of morning was so clear that the snow still crowning the Eighteen Peaks burned with white-gold fire across the miles of sunlit air, under the dark blue of the sky. There was just enough wind to make the banners that marked the racecourse snap and flutter now and then. In the silence of the broad green meadows one could hear the music winding through the city streets, farther and nearer and ever approaching, a cheerful faint sweetness of the air that from time to time trembled and gathered together and broke out into the great joyous clanging of the bells.</p>
+
+  <p>Joyous! How is one to tell about joy? How describe the citizens of Omelas?</p>
+
+  <p>They were not simple folk, you see, though they were happy. But we do not say the words of cheer much any more. All smiles have become archaic. Given a description such as this one tends to make certain assumptions. Given a description such as this one tends to look next for the King, mounted on a splendid stallion and surrounded by his noble knights, or perhaps in a golden litter borne by great-muscled slaves. But there was no king. They did not use swords, or keep slaves. They were not barbarians. I do not know the rules and laws of their society, but I suspect that they were singularly few. As they did without monarchy and slavery, so they also got on without the stock exchange, the advertisement, the secret police, and the bomb. Yet I repeat that these were not simple folk, not dulcet shepherds, noble savages, bland utopians. They were not less complex than us. The trouble is that we have a bad habit, encouraged by pedants and sophisticates, of considering happiness as something rather stupid. Only pain is intellectual, only evil interesting. This is the treason of the artist: a refusal to admit the banality of evil and the terrible boredom of pain. If you can't lick 'em, join 'em. If it hurts, repeat it. But to praise despair is to condemn delight, to embrace violence is to lose hold of everything else. We have almost lost hold; we can no longer describe a happy man, nor make any celebration of joy. How can I tell you about the people of Omelas? They were not naive and happy children — though their children were, in fact, happy. They were mature, intelligent, passionate adults whose lives were not wretched. O miracle! but I wish I could describe it better. I wish I could convince you. Omelas sounds in my words like a city in a fairy tale, long ago and far away, once upon a time. Perhaps it would be best if you imagined it as your own fancy bids, assuming it will rise to the occasion, for certainly I cannot suit you all.</p>
+
+  <p>For instance, how about technology? I think that there would be no cars or helicopters in and above the streets; this follows from the fact that the people of Omelas are happy people. Happiness is based on a just discrimination of what is necessary, what is neither necessary nor destructive, and what is destructive. In the middle category, however — that of the unnecessary but undestructive, that of comfort, luxury, exuberance, etc. — they could perfectly well have central heating, subway trains, washing machines, and all kinds of marvelous devices not yet invented here, floating light-sources, fuelless power, a cure for the common cold. Or they could have none of that: it doesn't matter. As you like it.</p>
+
+  <p>I incline to think that people from towns up and down the coast have been coming in to Omelas during the last days before the Festival on very fast little trains and double-decked trams, and that the train station of Omelas is actually the handsomest building in town, though plainer than the magnificent Farmers' Market.</p>
+
+  <p>But even granted trains, I fear that Omelas so far strikes some of you as goody-goody. Smiles, bells, parades, horses, bleh. If so, please add an orgy. If an orgy would help, don't hesitate. Let us not, however, have temples from which issue beautiful nude priests and priestesses already half in ecstasy and ready to copulate with any man or woman, lover or stranger who desires union with the deep godhead of the blood, although that was my first idea.</p>
+
+  <p>But really it would be better not to have any temples in Omelas — at least, not manned temples. Religion yes, clergy no. Surely the beautiful nudes can just wander about, offering themselves like divine souffles to the hunger of the needy and the rapture of the flesh. Let them join the processions. Let tambourines be struck above the copulations, and the glory of desire be proclaimed upon the gongs, and (a not unimportant point) let the offspring of these delightful rituals be beloved and looked after by all.</p>
+
+  <p>One thing I know there is none of in Omelas is guilt. But what else should there be? I thought at first there were no drugs, but that is puritanical. For those who like it, the faint insistent sweetness of drooz may perfume the ways of the city, drooz which first brings a great lightness and brilliance to the mind and limbs, and then after some hours a dreamy languor, and wonderful visions at last of the very arcana and inmost secrets of the Universe, as well as exciting the pleasure of sex beyond all belief; and it is not habit-forming. For more modest tastes I think there ought to be beer.</p>
+
+  <p>What else, what else belongs in the joyous city? The sense of victory, surely, the celebration of courage. But as we did without clergy, let us do without soldiers. The joy built upon successful slaughter is not the right kind of joy; it will not do; it is fearful and it is trivial. A boundless and generous contentment, a magnanimous triumph felt not against some outer enemy but in communion with the finest and fairest in the souls of all men everywhere and the splendor of the world's summer; this is what swells the hearts of the people of Omelas, and the victory they celebrate is that of life. I really don't think many of them need to take drooz.</p>
+
+  <p>Most of the processions have reached the Green Fields by now. A marvelous smell of cooking goes forth from the red and blue tents of the provisioners. The faces of small children are amiably sticky; in the benign grey beard of a man a couple of crumbs of rich pastry are entangled. The youths and girls have mounted their horses and are beginning to group around the starting line of the course. An old woman, small, fat, and laughing, is passing out flowers from a basket, and tall young men wear her flowers in their shining hair. A child of nine or ten sits at the edge of the crowd, alone, playing on a wooden flute. People pause to listen, and they smile, but they do not speak to him, for he never ceases playing and never sees them, his dark eyes wholly rapt in the sweet, thin magic of the tune.</p>
+
+  <p>He finishes, and slowly lowers his hands holding the wooden flute.</p>
+
+  <p>As if that little private silence were the signal, all at once a trumpet sounds from the pavilion near the starting line: imperious, melancholy, piercing. The horses rear on their slender legs, and some of them neigh in answer. Sober-faced, the young riders stroke the horses' necks and soothe them, whispering, "Quiet, quiet, there my beauty, my hope. . . ." They begin to form in rank along the starting line. The crowds along the racecourse are like a field of grass and flowers in the wind. The Festival of Summer has begun.</p>
+</section>
+
+<div class="hinge">
+  <p>Do you believe? Do you accept the festival, the city, the joy? No? Then let me describe one more thing.</p>
+</div>
+
+<div class="descend" aria-hidden="true"></div>
+
+<!-- ============ STORY: CELLAR ============ -->
+<section class="story-cellar">
+  <div class="inner">
+    <p class="cellar-label">Beneath the city</p>
+    <div class="room">
+      In a basement under one of the beautiful public buildings of Omelas, or perhaps in the cellar of one of its spacious private homes, there is a room. It has one locked door, and no window. A little light seeps in dustily between cracks in the boards, secondhand from a cobwebbed window somewhere across the cellar. In one corner of the little room a couple of mops, with stiff, clotted, foul-smelling heads, stand near a rusty bucket. The floor is dirt, a little damp to the touch, as cellar dirt usually is. The room is about three paces long and two wide: a mere broom closet or disused tool room. In the room a child is sitting. It could be a boy or a girl. It looks about six, but actually is nearly ten. It is feeble-minded. Perhaps it was born defective, or perhaps it has become imbecile through fear, malnutrition, and neglect. It picks its nose and occasionally fumbles vaguely with its toes or genitals, as it sits haunched in the corner farthest from the bucket and the two mops. It is afraid of the mops. It finds them horrible. It shuts its eyes, but it knows the mops are still standing there; and the door is locked; and nobody will come. The door is always locked; and nobody ever comes, except that sometimes — the child has no understanding of time or interval — sometimes the door rattles terribly and opens, and a person, or several people, are there. One of them may come and kick the child to make it stand up. The others never come close, but peer in at it with frightened, disgusted eyes. The food bowl and the water jug are hastily filled, the door is locked, the eyes disappear. The people at the door never say anything, but the child, who has not always lived in the tool room, and can remember sunlight and its mother's voice, sometimes speaks. "I will be good," it says. "Please let me out. I will be good!" They never answer. The child used to scream for help at night, and cry a good deal, but now it only makes a kind of whining, "eh-haa, eh-haa," and it speaks less and less often. It is so thin there are no calves to its legs; its belly protrudes; it lives on a half-bowl of corn meal and grease a day. It is naked. Its buttocks and thighs are a mass of festered sores, as it sits in its own excrement continually.
+    </div>
+
+    <p class="prose">They all know it is there, all the people of Omelas. Some of them have come to see it, others are content merely to know it is there. They all know that it has to be there. Some of them understand why, and some do not, but they all understand that their happiness, the beauty of their city, the tenderness of their friendships, the health of their children, the wisdom of their scholars, the skill of their makers, even the abundance of their harvest and the kindly weathers of their skies, depend wholly on this child's <strong>abominable misery</strong>.</p>
+
+    <p class="prose">This is usually explained to children when they are between eight and twelve, whenever they seem capable of understanding; and most of those who come to see the child are young people, though often enough an adult comes, or comes back, to see the child. No matter how well the matter has been explained to them, these young spectators are always shocked and sickened at the sight. They feel disgust, which they had thought themselves superior to. They feel anger, outrage, impotence, despite all the explanations. They would like to do something for the child. But there is nothing they can do. If the child were brought up into the sunlight out of that vile place, if it were cleaned and fed and comforted, that would be a good thing, indeed; but if it were done, in that day and hour all the prosperity and beauty and delight of Omelas would wither and be destroyed. Those are the terms. To exchange all the goodness and grace of every life in Omelas for that single, small improvement: to throw away the happiness of thousands for the chance of the happiness of one: that would be to let guilt within the walls indeed.</p>
+
+    <p class="prose">The terms are strict and absolute; there may not even be a kind word spoken to the child. Often the young people go home in tears, or in a tearless rage, when they have seen the child and faced this terrible paradox. They may brood over it for weeks or years. But as time goes on they begin to realize that even if the child could be released, it would not get much good of its freedom: a little vague pleasure of warmth and food, no doubt, but little more. It is too degraded and imbecile to know any real joy. It has been afraid too long ever to be free of fear. Its habits are too uncouth for it to respond to humane treatment. Indeed, after so long it would probably be wretched without walls about it to protect it, and darkness for its eyes, and its own excrement to sit in. Their tears at the bitter injustice dry when they begin to perceive the terrible justice of reality, and to accept it. Yet it is their tears and anger, the trying of their generosity and the acceptance of their helplessness, which are perhaps the true source of the splendor of their lives. Theirs is no vapid, irresponsible happiness. They know that they, like the child, are not free. They know compassion. It is the existence of the child, and their knowledge of its existence, that makes possible the nobility of their architecture, the poignancy of their music, the profundity of their science. It is because of the child that they are so gentle with children. They know that if the wretched one were not there snivelling in the dark, the other one, the flute-player, could make no joyful music as the young riders line up in their beauty for the race in the sunlight of the first morning of summer.</p>
+  </div>
+
+  <div class="hinge dark">
+    <p>Now do you believe in them? Are they not more credible? But there is one more thing to tell, and this is quite incredible.</p>
+  </div>
+</section>
+
+<!-- ============ STORY: WALKERS ============ -->
+<section class="walkers">
+  <div class="walkers-inner">
+    <p>At times one of the adolescent girls or boys who go to see the child does not go home to weep or rage, does not, in fact, go home at all. Sometimes also a man or woman much older falls silent for a day or two, and then leaves home. These people go out into the street, and walk down the street alone. They keep walking, and walk straight out of the city of Omelas, through the beautiful gates. They keep walking across the farmlands of Omelas. Each one goes alone, youth or girl, man or woman. Night falls; the traveler must pass down village streets, between the houses with yellow-lit windows, and on out into the darkness of the fields. Each alone, they go west or north, towards the mountains. They go on. They leave Omelas, they walk ahead into the darkness, and they do not come back.</p>
+
+    <div class="drift">
+      <p>The place they go towards</p>
+      <p>is a place even less imaginable to most of us</p>
+      <p>than the city of happiness.</p>
+      <p>I cannot describe it at all. It is possible that it does not exist.</p>
+      <p>but they seem to know where they are going —</p>
+    </div>
+  </div>
+</section>
+
+<div class="rise" aria-hidden="true"></div>
+
+<div class="notes-open"><p>Reading notes</p></div>
+
+<div class="nav-wrapper" style="position:static; background:transparent; backdrop-filter:none; border:none;"></div>
+
+<!-- ============ ESSAY / NOTES ============ -->
+<main class="essay">
+
+  <section class="note" id="overview">
+    <p class="part">Part 1</p>
+    <h2>Where the story comes from</h2>
+    <p class="lede">Le Guin traced the central image to William James, who in an 1891 essay asked whether a utopia purchased by the torture of one lost soul could ever be accepted. She turned that question into narrative and, notably, refused to answer it.</p>
+    <p>What makes the story unusual isn't the dilemma itself — one-for-many trade-offs are old philosophical furniture, close cousins of the trolley problem and Rawls's veil of ignorance. It's that Le Guin builds an entire aesthetic argument around it before the dilemma even appears. The first third of the story is a meditation on why we find happiness boring to write and suffering interesting — and then she makes you sit with both, back to back, so you can feel the difference in registers for yourself.</p>
+  </section>
+
+  <section class="note" id="festival-notes">
+    <p class="part">Part 2</p>
+    <h2>The festival's rhetoric</h2>
+    <p>The opening pages are constructed, not just described — the narrator keeps negotiating with the reader in real time: add trains if you like, add an orgy if the city seems too wholesome, keep the drugs or leave them out. This isn't whimsy. It's a demonstration that utopias are collaborative fictions. Whatever furniture you accept for Omelas, you supplied yourself.</p>
+    <blockquote><p>The trouble is that we have a bad habit, encouraged by pedants and sophisticates, of considering happiness as something rather stupid. Only pain is intellectual, only evil interesting.</p></blockquote>
+    <p>Le Guin names this directly as "the treason of the artist" — a refusal to admit the banality of evil and the boredom of pain. The joke is that she then has to work hard, almost visibly straining, to make happiness readable at all. That strain is the point: if joy is this difficult to narrate convincingly, maybe our instinct that suffering is more "real" says more about our habits of attention than about the world.</p>
+  </section>
+
+  <div class="essay-cellar">
+    <div class="inner2">
+      <section class="note" id="bargain">
+        <p class="part">Part 3</p>
+        <h2>The terms of the bargain</h2>
+        <p>The register change is the whole argument. Where the festival section runs long and self-interrupting, the child's description is flat and administrative: room dimensions, diet, the texture of the floor. Le Guin strips the suffering of any tragic shape on purpose — no noble sacrifice, no beautiful martyr, just neglect rendered like an inventory.</p>
+        <blockquote><p>They all understand that their happiness&nbsp;&hellip; depend[s] wholly on this child's abominable misery.</p></blockquote>
+        <p>The bargain is also, crucially, non-negotiable. Not "the child suffers unless someone intervenes" — the terms are absolute: no kind word, no blanket, no partial fix. That absoluteness is what turns this from a policy question into a binary one. There's no reform path inside the story, which is itself an argument: Le Guin is testing whether some systems can only be accepted or refused, never adjusted.</p>
+        <div class="callout">
+          <h4>Not a simple allegory</h4>
+          <p>Le Guin resisted flattening the child into a single one-to-one stand-in for capitalism or colonialism, though she didn't deny those readings. She was equally insistent that the citizens who stay and grieve aren't villains — their tears are, in the story's own words, "the true source of the splendor of their lives." The story withholds a clean verdict on staying just as firmly as it withholds one on leaving.</p>
+        </div>
+      </section>
+    </div>
+  </div>
+  <div class="essay-fade" aria-hidden="true"></div>
+
+  <section class="note" id="walkers-notes">
+    <p class="part">Part 4</p>
+    <h2>What the walkers refuse</h2>
+    <p>Asked in interviews where the walkers go, Le Guin generally said she didn't know and didn't want to invent a second utopia to answer it. That refusal is structural, not coy — describing a better place would turn the story into a conventional escape narrative and let the reader off the hook. Walking away is written as a pure negation: not a plan, not a destination, just a "no" that doesn't come with a blueprint attached.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Reading</th><th>What it emphasizes</th></tr></thead>
+        <tbody>
+          <tr><td>Moral refusal</td><td>Rejecting the trade entirely, choosing uncertainty over guilt-funded happiness</td></tr>
+          <tr><td>Existential choice</td><td>Authenticity over comfort — reality chosen over a managed illusion</td></tr>
+          <tr><td>Taoist withdrawal</td><td>Non-participation as the only honest response to a corrupted order</td></tr>
+          <tr><td>Open failure</td><td>No guarantee the walkers find anything at all — the risk is the point</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="note" id="themes">
+    <p class="part">Part 5</p>
+    <h2>What the story is actually arguing</h2>
+    <h3>Utilitarianism, taken literally</h3>
+    <p>Omelas is what strict aggregate-happiness reasoning looks like once you refuse to look away from its cost. The citizens don't reject the logic — they live inside it, grieving.</p>
+    <h3>Knowledge as a one-way door</h3>
+    <p>Once the citizens know about the child, they can't unknow it. The story quietly does the same thing to the reader: finishing it means you're now a citizen of Omelas too, deciding how to hold that knowledge.</p>
+    <h3>Freedom without comfort</h3>
+    <p>The walkers are arguably the only free people in the story, but their freedom buys them nothing — no safety, no answer, no return. Le Guin refuses to make moral clarity feel good.</p>
+  </section>
+
+  <section class="note" id="readings">
+    <p class="part">Part 6</p>
+    <h2>Ways people read it</h2>
+    <ul>
+      <li><strong>Political</strong> — hidden exploitation behind prosperity; the child as the unseen labor or land a comfortable society depends on.</li>
+      <li><strong>Psychological</strong> — a taxonomy of coping: denial, rationalization, grief, or departure, none of them clean.</li>
+      <li><strong>Religious</strong> — the child as a scapegoat figure whose suffering "saves" everyone else, without redemption for anyone.</li>
+      <li><strong>Feminist / ecological</strong> — the child's unspecified gender resists a familiar victim narrative; some read the child as the planet itself.</li>
+    </ul>
+    <div class="callout">
+      <h4>The direct reply: N.K. Jemisin</h4>
+      <p>Jemisin's 2018 story "The Ones Who Stay and Fight" keeps Le Guin's city of happiness but rejects the premise that suffering is required — her citizens fight off the forces that would impose a scapegoat. That a writer felt compelled to answer Le Guin's terms fifty years later says something about how unresolved this bargain still feels.</p>
+    </div>
+  </section>
+
+  <section class="note" id="deeper">
+    <p class="part">Part 7</p>
+    <h2>A closer look</h2>
+    <div class="grid">
+      <div class="card">
+        <h4>Suffering made boring</h4>
+        <p>The child picks its nose and whines. Le Guin strips the scene of tragic grandeur on purpose — real neglect is mundane, which is exactly why it's easy to look away from.</p>
+      </div>
+      <div class="card">
+        <h4>No middle path</h4>
+        <p>No blanket, no kind word, no partial fix is allowed. The story removes reform as an option so the choice stays binary: accept, or leave.</p>
+      </div>
+      <div class="card">
+        <h4>A rite of passage</h4>
+        <p>Children learn about the cellar between eight and twelve — the age most people learn how the world actually works. Most grow up and accept it.</p>
+      </div>
+      <div class="card">
+        <h4>Technology is beside the point</h4>
+        <p>Le Guin makes the city's tech optional and irrelevant. The problem was never what tools Omelas has — it's what the city has agreed to call necessary.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="note" id="personal">
+    <p class="part">Part 8</p>
+    <h2>Where this lands, concretely</h2>
+    <div class="personal">
+      <p class="label">A real version of the bargain</p>
+      <p>Living near the Fort Berthold Reservation, on top of the Bakken oil fields, the allegory stops being abstract. The extraction happening there — on land already reduced by broken treaties — runs directly through the fuel, plastics, and supply chains that make the rest of the country comfortable. It's not a metaphor standing in for something else; it's the same structure with the names filled in.</p>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Omelas</th><th>Here</th></tr></thead>
+        <tbody>
+          <tr><td>The child in the cellar</td><td>Ongoing dispossession — broken treaties, extraction on reservation land</td></tr>
+          <tr><td>The happiness of the city</td><td>National comfort running on that extracted fuel</td></tr>
+          <tr><td>"Those are the terms"</td><td>The story that this cost is simply the unchangeable price of modern life</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>"Walking slower"</h3>
+    <p>One response: choosing work that redirects labor away from what gets taxed into the systems you'd rather not fund. It's a real, material choice — and it's not walking away. You're still in the city, still fed, still protected by the same infrastructure, just paying a little less rent for the spot in the festival.</p>
+    <div class="callout">
+      <h4>The discomfort is doing something</h4>
+      <p>"Slower" can turn into a coping story — a way to feel you're doing enough while the terms stay exactly the same. But the gap between "this is what I do" and "this isn't enough" is arguably the thing that keeps a person from fully becoming a citizen of Omelas. The ones who accept the terms eventually feel fine about it. Staying uncomfortable is the whole thread worth holding onto.</p>
+    </div>
+  </section>
+
+  <section class="note" id="questions">
+    <p class="part">Part 9</p>
+    <h2>Worth sitting with</h2>
+    <ol class="questions">
+      <li>If the bargain were offered to you directly, stay or leave — and would you trust your own answer?</li>
+      <li>Is the story's "no reform possible" premise realistic, or is that Le Guin stacking the deck?</li>
+      <li>Where's the closest real-world equivalent of the locked door — something you benefit from that depends on terms you don't get to negotiate?</li>
+      <li>Is "walking slower" a real position, or a story we tell ourselves to avoid the binary?</li>
+      <li>Does the ending need a destination to mean something, or is the refusal itself the whole point?</li>
+    </ol>
+  </section>
+
+</main>
+
+<section class="closing">
+  <blockquote><p>"The place they go towards is a place even less imaginable to most of us than the city of happiness. I cannot describe it at all. It is possible that it does not exist."</p></blockquote>
+  <p class="q">The festival is happening upstairs. The door is still locked.<br>What do you do with knowing both at once?</p>
+</section>
+
+<footer>
+  Ursula K. Le Guin, 1973 · first published in <em>New Dimensions 3</em>, collected in <em>The Wind's Twelve Quarters</em> (1975)
+  <br>text via <a href="https://theanarchistlibrary.org" target="_blank" rel="noopener">theanarchistlibrary.org</a> (anti-copyright edition)
+  <br><a href="index.html">back to the Archive</a>
+</footer>
+
+<script>
+  const noteSections = document.querySelectorAll('section.note');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { rootMargin: '0px 0px -10% 0px', threshold: 0.06 });
+  noteSections.forEach(s => io.observe(s));
+
+  const links = document.querySelectorAll('#toc a');
+  const targets = Array.from(links).map(l => document.querySelector(l.getAttribute('href'))).filter(Boolean);
+  const spy = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting){
+        links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + e.target.id));
+      }
+    });
+  }, { rootMargin: '-35% 0px -55% 0px' });
+  targets.forEach(t => spy.observe(t));
+</script>
+
+</body>
+</html>
