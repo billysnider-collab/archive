@@ -1,1793 +1,976 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>The Dog Stars — A Constellation</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet" />
-    <style>
-        /* ----- reset & base ----- */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --bg: #0b0d12;
-            --surface: #141821;
-            --surface2: #1e2633;
-            --text: #e6e9ee;
-            --text-dim: #8b94a8;
-            --gold: #d4b68a;
-            --gold-glow: #d4b68a55;
-            --accent: #7a9bb5;
-            --accent-dim: #4a6a85;
-            --star: #f5f0e8;
-            --star-dim: #8b94a8;
-            --radius: 12px;
-            --transition: 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        /* ----- scrollbar ----- */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: var(--bg);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--gold);
-            border-radius: 4px;
-        }
-
-        /* ----- starfield canvas ----- */
-        #stars-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 0;
-            pointer-events: none;
-        }
-
-        /* ----- constellation canvas (overlay) ----- */
-        #constellation-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 1;
-            pointer-events: none;
-        }
-
-        /* ----- main wrapper ----- */
-        .app {
-            position: relative;
-            z-index: 2;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 24px 80px;
-        }
-
-        /* ----- hero ----- */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 40px 0;
-            position: relative;
-        }
-
-        .hero__badge {
-            font-size: 0.75rem;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            color: var(--gold);
-            border: 1px solid var(--gold);
-            padding: 6px 18px;
-            border-radius: 40px;
-            margin-bottom: 32px;
-            background: var(--gold-glow);
-            backdrop-filter: blur(4px);
-            font-weight: 500;
-        }
-
-        .hero__title {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(3rem, 10vw, 6.5rem);
-            font-weight: 700;
-            line-height: 1.05;
-            letter-spacing: -0.02em;
-            background: linear-gradient(135deg, #f5f0e8 0%, #d4b68a 60%, #a88b6a 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 16px;
-        }
-
-        .hero__sub {
-            font-size: clamp(1rem, 2vw, 1.3rem);
-            color: var(--text-dim);
-            max-width: 580px;
-            margin: 0 auto 40px;
-            font-weight: 300;
-            letter-spacing: 0.3px;
-        }
-
-        .hero__sub em {
-            color: var(--gold);
-            font-style: italic;
-            font-family: 'Playfair Display', serif;
-        }
-
-        .hero__cta {
-            display: flex;
-            gap: 16px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 12px 32px;
-            border-radius: 40px;
-            font-weight: 500;
-            font-size: 0.9rem;
-            letter-spacing: 0.5px;
-            text-decoration: none;
-            transition: var(--transition);
-            border: 1px solid transparent;
-            cursor: pointer;
-            background: transparent;
-            color: var(--text);
-        }
-
-        .btn--primary {
-            background: var(--gold);
-            color: var(--bg);
-            border-color: var(--gold);
-        }
-        .btn--primary:hover {
-            background: #c4a074;
-            border-color: #c4a074;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px var(--gold-glow);
-        }
-
-        .btn--outline {
-            border-color: var(--text-dim);
-            color: var(--text-dim);
-        }
-        .btn--outline:hover {
-            border-color: var(--text);
-            color: var(--text);
-            background: var(--surface2);
-        }
-
-        .hero__scroll {
-            margin-top: 60px;
-            color: var(--text-dim);
-            font-size: 0.8rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            animation: pulse-down 2.4s ease-in-out infinite;
-        }
-
-        @keyframes pulse-down {
-            0%,
-            100% {
-                transform: translateY(0);
-                opacity: 0.6;
-            }
-            50% {
-                transform: translateY(8px);
-                opacity: 1;
-            }
-        }
-
-        /* ----- section common ----- */
-        section {
-            padding: 80px 0 60px;
-            border-top: 1px solid rgba(255, 255, 255, 0.04);
-        }
-
-        .section__label {
-            font-size: 0.7rem;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: var(--gold);
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-
-        .section__title {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(2rem, 4vw, 3.2rem);
-            font-weight: 600;
-            line-height: 1.2;
-            margin-bottom: 12px;
-        }
-
-        .section__title .highlight {
-            color: var(--gold);
-        }
-
-        .section__desc {
-            color: var(--text-dim);
-            max-width: 640px;
-            font-size: 1.05rem;
-            font-weight: 300;
-        }
-
-        /* ----- constellation grid (characters & themes) ----- */
-        .constellation-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 24px;
-            margin-top: 40px;
-        }
-
-        .constellation-card {
-            background: var(--surface);
-            border-radius: var(--radius);
-            padding: 28px 22px 24px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: var(--transition);
-            cursor: default;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .constellation-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--gold), transparent);
-            opacity: 0;
-            transition: var(--transition);
-        }
-
-        .constellation-card:hover {
-            border-color: var(--gold-glow);
-            transform: translateY(-4px);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
-        }
-
-        .constellation-card:hover::before {
-            opacity: 1;
-        }
-
-        .constellation-card__icon {
-            font-size: 2rem;
-            margin-bottom: 12px;
-            display: block;
-        }
-
-        .constellation-card__name {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .constellation-card__role {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--gold);
-            margin-bottom: 12px;
-        }
-
-        .constellation-card__desc {
-            font-size: 0.9rem;
-            color: var(--text-dim);
-            line-height: 1.5;
-        }
-
-        .constellation-card__quote {
-            margin-top: 14px;
-            padding-top: 14px;
-            border-top: 1px solid rgba(255, 255, 255, 0.06);
-            font-style: italic;
-            font-size: 0.85rem;
-            color: var(--text);
-            font-weight: 300;
-        }
-
-        .constellation-card__quote::before {
-            content: '“';
-            color: var(--gold);
-            font-size: 1.2rem;
-        }
-        .constellation-card__quote::after {
-            content: '”';
-            color: var(--gold);
-            font-size: 1.2rem;
-        }
-
-        /* ----- theme cards (larger) ----- */
-        .theme-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 28px;
-            margin-top: 40px;
-        }
-
-        .theme-card {
-            background: var(--surface);
-            border-radius: var(--radius);
-            padding: 32px 26px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: var(--transition);
-        }
-
-        .theme-card:hover {
-            border-color: var(--accent-dim);
-            transform: translateY(-3px);
-        }
-
-        .theme-card__title {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.3rem;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: var(--gold);
-        }
-
-        .theme-card__body {
-            color: var(--text-dim);
-            font-size: 0.95rem;
-            line-height: 1.6;
-        }
-
-        .theme-card__body strong {
-            color: var(--text);
-            font-weight: 500;
-        }
-
-        /* ----- quote feature ----- */
-        .quote-block {
-            background: var(--surface);
-            border-radius: var(--radius);
-            padding: 48px 40px;
-            margin: 40px 0 20px;
-            border-left: 4px solid var(--gold);
-            position: relative;
-        }
-
-        .quote-block__text {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(1.2rem, 2.5vw, 1.8rem);
-            font-weight: 400;
-            line-height: 1.5;
-            font-style: italic;
-            color: var(--text);
-        }
-
-        .quote-block__attribution {
-            margin-top: 16px;
-            font-size: 0.85rem;
-            color: var(--text-dim);
-            letter-spacing: 0.5px;
-        }
-
-        .quote-block__attribution strong {
-            color: var(--gold);
-            font-weight: 500;
-        }
-
-        /* ----- poem section ----- */
-        .poem-section {
-            background: var(--surface);
-            border-radius: var(--radius);
-            padding: 60px 40px;
-            margin-top: 40px;
-            text-align: center;
-            border: 1px solid rgba(212, 182, 138, 0.15);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .poem-section::before {
-            content: '✦';
-            position: absolute;
-            top: 20px;
-            right: 30px;
-            font-size: 2rem;
-            color: var(--gold-glow);
-            opacity: 0.3;
-        }
-
-        .poem-section__title {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.6rem;
-            font-weight: 600;
-            color: var(--gold);
-            margin-bottom: 4px;
-        }
-
-        .poem-section__author {
-            font-size: 0.85rem;
-            color: var(--text-dim);
-            letter-spacing: 1px;
-            margin-bottom: 28px;
-        }
-
-        .poem-section__lines {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(1rem, 1.8vw, 1.3rem);
-            line-height: 2;
-            color: var(--text);
-            max-width: 600px;
-            margin: 0 auto;
-            font-weight: 300;
-            font-style: italic;
-        }
-
-        .poem-section__lines .pause {
-            display: block;
-            height: 8px;
-        }
-
-        /* ----- flight map (simple interactive) ----- */
-        .flight-map {
-            background: var(--surface);
-            border-radius: var(--radius);
-            padding: 32px 28px;
-            margin-top: 40px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .flight-map__title {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.3rem;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .flight-map__title span {
-            color: var(--gold);
-        }
-
-        .flight-path {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 8px 4px;
-            padding: 12px 0 8px;
-        }
-
-        .flight-path__waypoint {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: var(--surface2);
-            padding: 6px 16px 6px 12px;
-            border-radius: 30px;
-            font-size: 0.8rem;
-            color: var(--text-dim);
-            transition: var(--transition);
-            cursor: default;
-            border: 1px solid transparent;
-        }
-
-        .flight-path__waypoint .dot {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--gold);
-            opacity: 0.4;
-            transition: var(--transition);
-        }
-
-        .flight-path__waypoint:hover {
-            border-color: var(--gold-glow);
-            color: var(--text);
-            background: var(--surface);
-        }
-
-        .flight-path__waypoint:hover .dot {
-            opacity: 1;
-            box-shadow: 0 0 12px var(--gold-glow);
-        }
-
-        .flight-path__waypoint.active {
-            border-color: var(--gold);
-            color: var(--text);
-            background: var(--surface);
-        }
-        .flight-path__waypoint.active .dot {
-            opacity: 1;
-            box-shadow: 0 0 12px var(--gold-glow);
-        }
-
-        .flight-path__connector {
-            color: var(--text-dim);
-            font-size: 0.7rem;
-            opacity: 0.3;
-            letter-spacing: 2px;
-        }
-
-        .flight-path__note {
-            margin-top: 16px;
-            font-size: 0.85rem;
-            color: var(--text-dim);
-            font-style: italic;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            padding-top: 16px;
-        }
-
-        /* ----- story timeline ----- */
-        .timeline {
-            margin-top: 32px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 24px;
-        }
-
-        .timeline__book {
-            background: var(--surface);
-            border-radius: var(--radius);
-            padding: 26px 24px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-top: 2px solid var(--gold);
-        }
-
-        .timeline__book-label {
-            font-size: 0.7rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: var(--gold);
-            font-weight: 500;
-        }
-
-        .timeline__book-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin: 4px 0 16px;
-        }
-
-        .timeline__events {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .timeline__events li {
-            position: relative;
-            padding-left: 18px;
-            font-size: 0.9rem;
-            color: var(--text-dim);
-            line-height: 1.55;
-        }
-
-        .timeline__events li::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 8px;
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--gold);
-            opacity: 0.7;
-        }
-
-        .timeline__events li strong {
-            color: var(--text);
-            font-weight: 500;
-        }
-
-        /* ----- human nature spectrum ----- */
-        .spectrum {
-            margin-top: 40px;
-            background: var(--surface);
-            border-radius: var(--radius);
-            padding: 36px 30px 30px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .spectrum__labels {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.7rem;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            color: var(--text-dim);
-            margin-bottom: 14px;
-        }
-
-        .spectrum__labels .left {
-            color: var(--accent);
-        }
-        .spectrum__labels .right {
-            color: var(--gold);
-        }
-
-        .spectrum__bar {
-            position: relative;
-            height: 4px;
-            border-radius: 4px;
-            background: linear-gradient(90deg, var(--accent-dim), var(--surface2) 50%, var(--gold));
-            margin-bottom: 8px;
-        }
-
-        .spectrum__points {
-            position: relative;
-            height: 70px;
-        }
-
-        .spectrum__point {
-            position: absolute;
-            top: 0;
-            transform: translateX(-50%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-            width: 90px;
-        }
-
-        .spectrum__point .dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: var(--star);
-            border: 2px solid var(--bg);
-            box-shadow: 0 0 0 1px rgba(255,255,255,0.15);
-        }
-
-        .spectrum__point .label {
-            font-size: 0.78rem;
-            text-align: center;
-            color: var(--text);
-            line-height: 1.3;
-        }
-
-        .spectrum__note {
-            margin-top: 10px;
-            font-size: 0.85rem;
-            color: var(--text-dim);
-            font-style: italic;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            padding-top: 16px;
-        }
-
-        @media (max-width: 640px) {
-            .spectrum__points { height: auto; }
-            .spectrum__point {
-                position: static;
-                transform: none;
-                display: inline-flex;
-                flex-direction: row;
-                width: auto;
-                margin: 6px 10px 6px 0;
-            }
-        }
-
-        /* ----- chapter cards ----- */
-        .chapter-grid {
-            display: grid;
-            gap: 14px;
-            margin-top: 40px;
-        }
-
-        .chapter-card {
-            background: var(--surface);
-            border-radius: var(--radius);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            overflow: hidden;
-            transition: var(--transition);
-        }
-
-        .chapter-card[open] {
-            border-color: var(--gold-glow);
-        }
-
-        .chapter-card__summary {
-            list-style: none;
-            cursor: pointer;
-            padding: 20px 24px;
-            display: flex;
-            align-items: center;
-            gap: 18px;
-        }
-
-        .chapter-card__summary::-webkit-details-marker {
-            display: none;
-        }
-
-        .chapter-card__num {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.6rem;
-            color: var(--gold);
-            font-weight: 600;
-            min-width: 40px;
-        }
-
-        .chapter-card__heading {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .chapter-card__title {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.1rem;
-            font-weight: 600;
-        }
-
-        .chapter-card__meta {
-            font-size: 0.75rem;
-            color: var(--text-dim);
-            letter-spacing: 0.5px;
-            margin-top: 2px;
-        }
-
-        .chapter-card__chevron {
-            color: var(--gold);
-            font-size: 1rem;
-            transition: var(--transition);
-            flex-shrink: 0;
-        }
-
-        .chapter-card[open] .chapter-card__chevron {
-            transform: rotate(90deg);
-        }
-
-        .chapter-card__body {
-            padding: 0 24px 26px;
-            border-top: 1px solid rgba(255, 255, 255, 0.06);
-        }
-
-        .chapter-card__summary-text {
-            color: var(--text-dim);
-            font-size: 0.92rem;
-            line-height: 1.6;
-            margin: 18px 0 16px;
-        }
-
-        .chapter-card__quotes {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-bottom: 16px;
-        }
-
-        .chapter-card__quote {
-            font-style: italic;
-            font-size: 0.88rem;
-            color: var(--text);
-            font-weight: 300;
-            padding-left: 14px;
-            border-left: 2px solid var(--gold);
-        }
-
-        .chapter-card__quote span {
-            display: block;
-            font-style: normal;
-            font-size: 0.72rem;
-            color: var(--text-dim);
-            margin-top: 4px;
-        }
-
-        .chapter-card__tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .chapter-card__tag {
-            font-size: 0.7rem;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            color: var(--gold);
-            border: 1px solid var(--gold-glow);
-            padding: 4px 12px;
-            border-radius: 30px;
-        }
-
-        /* ----- footer ----- */
-        .footer {
-            margin-top: 60px;
-            padding-top: 40px;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            text-align: center;
-            color: var(--text-dim);
-            font-size: 0.8rem;
-        }
-
-        .footer a {
-            color: var(--gold);
-            text-decoration: none;
-        }
-        .footer a:hover {
-            text-decoration: underline;
-        }
-
-        /* ----- responsive tweaks ----- */
-        @media (max-width: 768px) {
-            .app {
-                padding: 0 16px 60px;
-            }
-            .hero {
-                min-height: 90vh;
-                padding: 20px 0;
-            }
-            .constellation-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 16px;
-            }
-            .theme-grid {
-                grid-template-columns: 1fr;
-            }
-            .quote-block {
-                padding: 32px 20px;
-            }
-            .poem-section {
-                padding: 40px 20px;
-            }
-            .flight-path {
-                gap: 4px 2px;
-            }
-            .flight-path__waypoint {
-                font-size: 0.7rem;
-                padding: 4px 12px 4px 8px;
-            }
-            .flight-path__connector {
-                font-size: 0.5rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .constellation-grid {
-                grid-template-columns: 1fr;
-            }
-            .hero__cta {
-                flex-direction: column;
-                align-items: center;
-            }
-            .btn {
-                width: 100%;
-                max-width: 280px;
-                text-align: center;
-            }
-        }
-
-        /* ----- utility ----- */
-        .text-gold {
-            color: var(--gold);
-        }
-        .mt-8 {
-            margin-top: 8px;
-        }
-        .mt-16 {
-            margin-top: 16px;
-        }
-        .mt-24 {
-            margin-top: 24px;
-        }
-        .mb-8 {
-            margin-bottom: 8px;
-        }
-        .gap-8 {
-            gap: 8px;
-        }
-
-        /* fade-in on scroll (simple) */
-        .fade-in {
-            opacity: 0;
-            transform: translateY(24px);
-            transition: opacity 0.8s ease, transform 0.8s ease;
-        }
-
-        .fade-in.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* small star twinkle overlay */
-        .twinkle {
-            animation: twinkle 3s ease-in-out infinite alternate;
-        }
-        @keyframes twinkle {
-            0% {
-                opacity: 0.3;
-            }
-            100% {
-                opacity: 1;
-            }
-        }
-    </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Dog Stars — A Constellation</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300..600;1,14..32,300..600&family=Playfair+Display:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #090b0f;
+    --surface: #12161e;
+    --surface2: #1a202c;
+    --text: #e6e9e4;
+    --text-dim: #8b93a3;
+    --gold: #c9a87c;
+    --gold-soft: rgba(201,168,124,0.35);
+    --accent: #6b8fa3;
+    --radius: 8px;
+    --ease: 0.55s cubic-bezier(0.22,1,0.36,1);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    overflow-x: hidden;
+  }
+  ::-webkit-scrollbar { width:5px; }
+  ::-webkit-scrollbar-track { background:var(--bg); }
+  ::-webkit-scrollbar-thumb { background:var(--gold); border-radius:3px; }
+
+  #stars-canvas, #constellation-canvas {
+    position:fixed; inset:0; width:100vw; height:100vh; pointer-events:none;
+  }
+  #stars-canvas { z-index:0; }
+  #constellation-canvas { z-index:1; }
+
+  .app {
+    position:relative; z-index:2;
+    max-width:880px; margin:0 auto;
+    padding:0 28px 140px;
+  }
+
+  /* HERO */
+  .hero {
+    min-height:100vh;
+    display:flex; flex-direction:column; justify-content:center;
+    padding:80px 0 60px;
+  }
+  .hero-eyebrow {
+    font-size:0.7rem; letter-spacing:3.2px; text-transform:uppercase;
+    color:var(--gold); margin-bottom:28px; font-weight:500;
+  }
+  .hero-title {
+    font-family:'Playfair Display',serif;
+    font-size:clamp(3.4rem,12vw,7rem);
+    font-weight:700; line-height:0.96; letter-spacing:-0.03em;
+    background:linear-gradient(135deg,#f4efe6 0%,#c9a87c 55%,#9a7a55 100%);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    background-clip:text; margin-bottom:22px;
+  }
+  .hero-lead {
+    font-size:clamp(1.05rem,2.1vw,1.22rem);
+    color:var(--text-dim); max-width:460px; font-weight:300;
+    margin-bottom:48px;
+  }
+  .hero-lead em {
+    color:var(--gold); font-style:italic;
+    font-family:'Playfair Display',serif;
+  }
+  .hero-nav {
+    display:flex; flex-wrap:wrap; gap:12px 22px;
+  }
+  .hero-nav a {
+    font-size:0.8rem; color:var(--text-dim); text-decoration:none;
+    letter-spacing:0.3px; border-bottom:1px solid transparent;
+    padding-bottom:2px; transition:color var(--ease), border-color var(--ease);
+  }
+  .hero-nav a:hover { color:var(--gold); border-bottom-color:var(--gold-soft); }
+  .hero-scroll {
+    margin-top:80px; font-size:0.7rem; letter-spacing:2.4px;
+    text-transform:uppercase; color:var(--text-dim); opacity:0.55;
+    animation:pulse 2.8s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%,100% { transform:translateY(0); opacity:0.45; }
+    50% { transform:translateY(6px); opacity:0.85; }
+  }
+
+  /* SECTIONS */
+  section { padding:100px 0 48px; }
+  .label {
+    font-size:0.66rem; letter-spacing:3px; text-transform:uppercase;
+    color:var(--gold); margin-bottom:10px; font-weight:500;
+  }
+  .title {
+    font-family:'Playfair Display',serif;
+    font-size:clamp(1.9rem,4.2vw,2.7rem);
+    font-weight:600; line-height:1.18; margin-bottom:16px;
+  }
+  .title span { color:var(--gold); }
+  .desc {
+    color:var(--text-dim); font-size:1.02rem; font-weight:300;
+    max-width:520px; margin-bottom:40px;
+  }
+
+  /* WORLD — numbered list */
+  .collapse { display:flex; flex-direction:column; }
+  .collapse-item {
+    display:grid; grid-template-columns:44px 1fr; gap:18px;
+    padding:26px 0; border-top:1px solid rgba(255,255,255,0.05);
+  }
+  .collapse-item:last-child { border-bottom:1px solid rgba(255,255,255,0.05); }
+  .num {
+    font-family:'Playfair Display',serif; font-size:1.5rem;
+    color:var(--gold); font-weight:600; line-height:1.2;
+  }
+  .c-title { font-family:'Playfair Display',serif; font-size:1.12rem; font-weight:600; margin-bottom:6px; }
+  .c-body { color:var(--text-dim); font-size:0.94rem; line-height:1.6; }
+  .c-body strong { color:var(--text); font-weight:500; }
+
+  /* CHARACTERS — vertical */
+  .stars { display:flex; flex-direction:column; }
+  .star {
+    display:grid; grid-template-columns:52px 1fr; gap:18px;
+    padding:30px 0; border-top:1px solid rgba(255,255,255,0.05);
+    transition:background var(--ease);
+  }
+  .star:last-child { border-bottom:1px solid rgba(255,255,255,0.05); }
+  .star:hover { background:rgba(201,168,124,0.03); }
+  .icon { font-size:1.5rem; line-height:1.4; opacity:0.85; }
+  .s-name { font-family:'Playfair Display',serif; font-size:1.22rem; font-weight:600; margin-bottom:2px; }
+  .s-role { font-size:0.7rem; letter-spacing:1.1px; text-transform:uppercase; color:var(--gold); margin-bottom:10px; }
+  .s-desc { color:var(--text-dim); font-size:0.92rem; line-height:1.55; margin-bottom:12px; }
+  .s-quote {
+    font-style:italic; font-size:0.88rem; color:var(--text); font-weight:300;
+    padding-left:14px; border-left:2px solid var(--gold-soft);
+  }
+
+  /* JOURNEY */
+  .path {
+    display:flex; flex-wrap:wrap; align-items:center; gap:6px 2px;
+    margin:32px 0 48px; padding:18px 0;
+    border-top:1px solid rgba(255,255,255,0.05);
+    border-bottom:1px solid rgba(255,255,255,0.05);
+  }
+  .wp {
+    display:inline-flex; align-items:center; gap:7px;
+    padding:6px 13px 6px 10px; border-radius:30px;
+    font-size:0.76rem; color:var(--text-dim);
+    background:var(--surface); border:1px solid transparent;
+    transition:all var(--ease); cursor:default;
+  }
+  .wp .dot {
+    width:6px; height:6px; border-radius:50%;
+    background:var(--gold); opacity:0.35; transition:all var(--ease);
+  }
+  .wp:hover, .wp.active {
+    border-color:var(--gold-soft); color:var(--text); background:var(--surface2);
+  }
+  .wp:hover .dot, .wp.active .dot { opacity:1; box-shadow:0 0 10px var(--gold-soft); }
+  .conn { color:var(--text-dim); opacity:0.25; font-size:0.6rem; letter-spacing:1px; }
+
+  .books { display:flex; flex-direction:column; gap:32px; }
+  .book {
+    background:var(--surface); border-radius:var(--radius);
+    padding:26px 24px; border:1px solid rgba(255,255,255,0.04);
+  }
+  .book-label { font-size:0.66rem; letter-spacing:2px; text-transform:uppercase; color:var(--gold); margin-bottom:4px; }
+  .book-title { font-family:'Playfair Display',serif; font-size:1.25rem; font-weight:600; margin-bottom:14px; }
+  .book ul { list-style:none; display:flex; flex-direction:column; gap:11px; }
+  .book li {
+    position:relative; padding-left:16px;
+    font-size:0.91rem; color:var(--text-dim); line-height:1.55;
+  }
+  .book li::before {
+    content:''; position:absolute; left:0; top:9px;
+    width:5px; height:5px; border-radius:50%;
+    background:var(--gold); opacity:0.6;
+  }
+  .book li strong { color:var(--text); font-weight:500; }
+
+  /* THEMES */
+  .themes { display:flex; flex-direction:column; }
+  .theme {
+    padding:26px 0; border-top:1px solid rgba(255,255,255,0.05);
+  }
+  .theme:last-child { border-bottom:1px solid rgba(255,255,255,0.05); }
+  .t-name {
+    font-family:'Playfair Display',serif; font-size:1.15rem;
+    font-weight:600; color:var(--gold); margin-bottom:8px;
+  }
+  .t-body { color:var(--text-dim); font-size:0.94rem; line-height:1.6; }
+  .t-body strong { color:var(--text); font-weight:500; }
+
+  /* SPECTRUM */
+  .spectrum {
+    margin-top:48px; background:var(--surface);
+    border-radius:var(--radius); padding:30px 26px 26px;
+    border:1px solid rgba(255,255,255,0.04);
+  }
+  .spec-labels {
+    display:flex; justify-content:space-between;
+    font-size:0.66rem; letter-spacing:1.4px; text-transform:uppercase;
+    color:var(--text-dim); margin-bottom:12px;
+  }
+  .spec-labels .left { color:var(--accent); }
+  .spec-labels .right { color:var(--gold); }
+  .spec-bar {
+    height:3px; border-radius:3px;
+    background:linear-gradient(90deg,var(--accent),var(--surface2) 50%,var(--gold));
+    margin-bottom:18px;
+  }
+  .spec-points { display:flex; flex-wrap:wrap; gap:10px 18px; }
+  .spec-point {
+    display:flex; align-items:center; gap:8px;
+    font-size:0.8rem; color:var(--text);
+  }
+  .spec-point .dot {
+    width:7px; height:7px; border-radius:50%;
+    background:var(--text); border:2px solid var(--bg); flex-shrink:0;
+  }
+  .spec-note {
+    margin-top:20px; padding-top:16px;
+    border-top:1px solid rgba(255,255,255,0.05);
+    font-size:0.86rem; color:var(--text-dim); font-style:italic;
+  }
+
+  /* QUOTE */
+  .quote {
+    margin:64px 0; padding:32px 0 32px 22px;
+    border-left:3px solid var(--gold);
+  }
+  .q-text {
+    font-family:'Playfair Display',serif;
+    font-size:clamp(1.2rem,2.6vw,1.55rem);
+    font-weight:400; font-style:italic; line-height:1.45; color:var(--text);
+  }
+  .q-attr { margin-top:12px; font-size:0.8rem; color:var(--text-dim); }
+  .q-attr strong { color:var(--gold); font-weight:500; }
+
+  /* CHAPTERS */
+  .chapters { display:flex; flex-direction:column; gap:8px; }
+  details.ch {
+    background:var(--surface); border-radius:var(--radius);
+    border:1px solid rgba(255,255,255,0.04); overflow:hidden;
+    transition:border-color var(--ease);
+  }
+  details.ch[open] { border-color:var(--gold-soft); }
+  summary.head {
+    list-style:none; cursor:pointer; padding:17px 20px;
+    display:flex; align-items:center; gap:14px;
+  }
+  summary.head::-webkit-details-marker { display:none; }
+  .ch-num {
+    font-family:'Playfair Display',serif; font-size:1.35rem;
+    color:var(--gold); font-weight:600; min-width:28px;
+  }
+  .ch-info { flex:1; min-width:0; }
+  .ch-title { font-family:'Playfair Display',serif; font-size:1.02rem; font-weight:600; }
+  .ch-meta { font-size:0.7rem; color:var(--text-dim); margin-top:2px; }
+  .chevron {
+    color:var(--gold); font-size:0.85rem;
+    transition:transform var(--ease); flex-shrink:0;
+  }
+  details.ch[open] .chevron { transform:rotate(90deg); }
+  .ch-body {
+    padding:0 20px 22px;
+    border-top:1px solid rgba(255,255,255,0.05);
+  }
+  .ch-sum {
+    color:var(--text-dim); font-size:0.91rem; line-height:1.6;
+    margin:16px 0 14px;
+  }
+  .ch-quotes { display:flex; flex-direction:column; gap:11px; margin-bottom:14px; }
+  .ch-q {
+    font-style:italic; font-size:0.86rem; color:var(--text); font-weight:300;
+    padding-left:12px; border-left:2px solid var(--gold-soft);
+  }
+  .ch-q span {
+    display:block; font-style:normal; font-size:0.68rem;
+    color:var(--text-dim); margin-top:3px;
+  }
+  .tags { display:flex; flex-wrap:wrap; gap:6px; }
+  .tag {
+    font-size:0.66rem; letter-spacing:0.4px; text-transform:uppercase;
+    color:var(--gold); border:1px solid var(--gold-soft);
+    padding:3px 10px; border-radius:20px;
+  }
+
+  /* POEM */
+  .poem {
+    background:var(--surface); border-radius:var(--radius);
+    padding:44px 32px; text-align:center;
+    border:1px solid rgba(201,168,124,0.12); margin-top:28px;
+  }
+  .p-title {
+    font-family:'Playfair Display',serif; font-size:1.4rem;
+    font-weight:600; color:var(--gold); margin-bottom:4px;
+  }
+  .p-author {
+    font-size:0.78rem; color:var(--text-dim); letter-spacing:1px; margin-bottom:26px;
+  }
+  .p-lines {
+    font-family:'Playfair Display',serif;
+    font-size:clamp(0.98rem,1.9vw,1.2rem);
+    line-height:1.9; color:var(--text); max-width:440px;
+    margin:0 auto; font-weight:300; font-style:italic;
+  }
+  .p-lines .pause { display:block; height:12px; }
+
+  /* FOOTER */
+  footer {
+    margin-top:90px; padding-top:36px;
+    border-top:1px solid rgba(255,255,255,0.05);
+    text-align:center; color:var(--text-dim); font-size:0.76rem;
+  }
+  footer em { color:var(--gold); }
+
+  /* FADE */
+  .fade {
+    opacity:0; transform:translateY(18px);
+    transition:opacity 0.85s var(--ease), transform 0.85s var(--ease);
+  }
+  .fade.visible { opacity:1; transform:translateY(0); }
+
+  @media (max-width:640px) {
+    .app { padding:0 18px 100px; }
+    .hero { min-height:92vh; padding:48px 0 40px; }
+    .collapse-item, .star { grid-template-columns:36px 1fr; gap:14px; }
+    .path { gap:4px 1px; }
+    .wp { font-size:0.68rem; padding:5px 10px 5px 8px; }
+    .poem { padding:32px 18px; }
+    section { padding:72px 0 36px; }
+  }
+</style>
 </head>
 <body>
+<canvas id="stars-canvas"></canvas>
+<canvas id="constellation-canvas"></canvas>
 
-    <!-- ----- starfield canvas (bg) ----- -->
-    <canvas id="stars-canvas"></canvas>
+<div class="app">
 
-    <!-- ----- constellation canvas (lines) ----- -->
-    <canvas id="constellation-canvas"></canvas>
+  <!-- HERO -->
+  <header class="hero" id="top">
+    <div class="hero-eyebrow">✦ a novel by peter heller</div>
+    <h1 class="hero-title">The Dog Stars</h1>
+    <p class="hero-lead">
+      <em>“What are we waiting for?”</em><br />
+      A meditation on grief, survival, and the constellations we refuse to let go.
+    </p>
+    <nav class="hero-nav">
+      <a href="#world">The ending</a>
+      <a href="#stars">Who remains</a>
+      <a href="#flight">The journey</a>
+      <a href="#themes">What burns</a>
+      <a href="#chapters">Close reading</a>
+      <a href="#poem">The last word</a>
+    </nav>
+    <div class="hero-scroll">↓ begin</div>
+  </header>
 
-    <!-- ----- main app ----- -->
-    <div class="app">
-
-        <!-- HERO -->
-        <header class="hero" id="home">
-            <div class="hero__badge">✦ a novel by peter heller</div>
-            <h1 class="hero__title">The Dog Stars</h1>
-            <p class="hero__sub">
-                <em>“What are we waiting for?”</em><br />
-                A journey through grief, survival, and the constellations we keep.
-            </p>
-            <div class="hero__cta">
-                <a href="#world" class="btn btn--primary">How the World Ended</a>
-                <a href="#characters" class="btn btn--outline">Characters</a>
-                <a href="#story" class="btn btn--outline">The Story</a>
-                <a href="#chapters" class="btn btn--outline">Chapter by Chapter</a>
-                <a href="#poem" class="btn btn--outline">The Poem</a>
-            </div>
-            <div class="hero__scroll">↓ scroll to begin</div>
-        </header>
-
-        <!-- THE WORLD -->
-        <section id="world">
-            <div class="fade-in">
-                <div class="section__label">Nine Years Out</div>
-                <h2 class="section__title">How the World <span class="highlight">Ended</span></h2>
-                <p class="section__desc">
-                    Not one collapse but three, stacked on top of each other — a virus, a second
-                    sickness born from the first, and a planet that was already dying underneath it all.
-                </p>
-            </div>
-
-            <div class="theme-grid">
-                <div class="theme-card fade-in">
-                    <div class="theme-card__title">Stage One — The Flu</div>
-                    <div class="theme-card__body">
-                        A hyper-virulent, airborne influenza strain kills — by Hig's count —
-                        <strong>"ninety nine point whatever" percent</strong> of the population in a
-                        matter of weeks. The press blamed New Delhi; Cima, the epidemiologist, has
-                        heard the other rumor — a genetic accident at the Livermore weapons lab, a
-                        courier's plane down in Brampton. No one ever confirmed either story.
-                    </div>
-                </div>
-
-                <div class="theme-card fade-in">
-                    <div class="theme-card__title">Stage Two — The Blood Disease</div>
-                    <div class="theme-card__body">
-                        Survivors of the flu develop a slow autoimmune condition, <strong>"something
-                        like AIDS"</strong> — bruising, hemorrhage, organ damage, a body turning on
-                        itself. Children born after the pandemic inherit it. There is no cure, only
-                        Cima's guess that vitamin D deficiency speeds it along.
-                    </div>
-                </div>
-
-                <div class="theme-card fade-in">
-                    <div class="theme-card__title">Stage Three — The Land Itself</div>
-                    <div class="theme-card__body">
-                        Underneath both plagues, the climate was already failing: warming streams
-                        killed the trout, drought and beetles killed the forests, snowpack thinned
-                        until whole canyons dried up. <strong>Elk, geese, tigers, apes — gone.</strong>
-                        Only the adaptable survive: carp, coyotes, raptors, and the people still
-                        stubborn enough to farm.
-                    </div>
-                </div>
-
-                <div class="theme-card fade-in">
-                    <div class="theme-card__title">Why Survivors Turned Feral</div>
-                    <div class="theme-card__body">
-                        No law, no courts, no hospitals — just scarcity and the people it makes of us.
-                        Bangley's doctrine, <strong>"New world now. New world new rules,"</strong>
-                        is the logic almost everyone left alive has adopted: the men at the Coke
-                        truck, the marauders on the plains, the couple at Grand Junction who rigged
-                        a radio beacon to lure pilots into a cable trap. Trust became a luxury
-                        no one could afford.
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- CHARACTERS -->
-        <section id="characters">
-            <div class="fade-in">
-                <div class="section__label">Constellations</div>
-                <h2 class="section__title">Who <span class="highlight">Endures</span></h2>
-                <p class="section__desc">
-                    The survivors — each a star in a broken sky, bound by grief, love, and the
-                    stubborn will to keep going.
-                </p>
-            </div>
-
-            <div class="constellation-grid">
-                <!-- Hig -->
-                <div class="constellation-card fade-in">
-                    <span class="constellation-card__icon">✈︎</span>
-                    <div class="constellation-card__name">Hig</div>
-                    <div class="constellation-card__role">Pilot · Narrator</div>
-                    <div class="constellation-card__desc">
-                        A poet, carpenter, and reluctant killer. He flies the Beast, tends his garden,
-                        and carries the weight of a world he couldn't save.
-                    </div>
-                    <div class="constellation-card__quote">
-                        I keep the Beast running, I keep the 100 low lead on tap, I foresee attacks.
-                        I am young enough, I am old enough.
-                    </div>
-                </div>
-
-                <!-- Bangley -->
-                <div class="constellation-card fade-in">
-                    <span class="constellation-card__icon">⚔</span>
-                    <div class="constellation-card__name">Bangley</div>
-                    <div class="constellation-card__role">Survivalist · Protector</div>
-                    <div class="constellation-card__desc">
-                        Ruthless, pragmatic, and utterly alone. He lives for the perimeter,
-                        kills without hesitation, and guards Hig like a difficult brother.
-                    </div>
-                    <div class="constellation-card__quote">
-                        Never ever negotiate. You are negotiating your own death.
-                    </div>
-                </div>
-
-                <!-- Jasper -->
-                <div class="constellation-card fade-in">
-                    <span class="constellation-card__icon">🐾</span>
-                    <div class="constellation-card__name">Jasper</div>
-                    <div class="constellation-card__role">Copilot · Heart</div>
-                    <div class="constellation-card__desc">
-                        Hig's blue heeler, his last tether to tenderness. He dies in the mountains,
-                        leaving Hig with nothing but the stars.
-                    </div>
-                    <div class="constellation-card__quote">
-                        Goodbye, bud. You are Jasper. My heart. We are never apart, not here, not there.
-                    </div>
-                </div>
-
-                <!-- Cima -->
-                <div class="constellation-card fade-in">
-                    <span class="constellation-card__icon">🌿</span>
-                    <div class="constellation-card__name">Cima</div>
-                    <div class="constellation-card__role">Doctor · Healer</div>
-                    <div class="constellation-card__desc">
-                        A survivor who carries her own losses — a twin brother, a husband she had
-                        to kill. She meets Hig in their shared brokenness.
-                    </div>
-                    <div class="constellation-card__quote">
-                        If you want, you can just look at me. It's probably been a long time. I'm in no hurry.
-                    </div>
-                </div>
-
-                <!-- Melissa -->
-                <div class="constellation-card fade-in">
-                    <span class="constellation-card__icon">🕊</span>
-                    <div class="constellation-card__name">Melissa</div>
-                    <div class="constellation-card__role">Memory · Love</div>
-                    <div class="constellation-card__desc">
-                        Hig's wife, lost to the flu. He smothered her at her request — the act
-                        that haunts him more than any other.
-                    </div>
-                    <div class="constellation-card__quote">
-                        I loved her. This is what I live with.
-                    </div>
-                </div>
-
-                <!-- Pops -->
-                <div class="constellation-card fade-in">
-                    <span class="constellation-card__icon">🏔</span>
-                    <div class="constellation-card__name">Pops</div>
-                    <div class="constellation-card__role">Rancher · Father</div>
-                    <div class="constellation-card__desc">
-                        Cima's father, a former Navy SEAL who carries the old West in his bones.
-                        Dignified, weary, and quietly hopeful.
-                    </div>
-                    <div class="constellation-card__quote">
-                        The green patches are spreading year by year.
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- THEMES -->
-        <section id="themes">
-            <div class="fade-in">
-                <div class="section__label">The Arc of the Sky</div>
-                <h2 class="section__title">Themes that <span class="highlight">Burn</span></h2>
-                <p class="section__desc">
-                    Loss, memory, violence, hope — the novel's constellations are carved from
-                    what remains when civilization falls away.
-                </p>
-            </div>
-
-            <div class="theme-grid">
-                <div class="theme-card fade-in">
-                    <div class="theme-card__title">Grief as an Element</div>
-                    <div class="theme-card__body">
-                        <strong>“Grief is an element. It has its own cycle like the carbon cycle, the nitrogen.
-                            It never diminishes not ever.”</strong>
-                        <br /><br />
-                        Hig carries grief the way the earth carries water — it cycles through him,
-                        never disappearing, only changing form.
-                    </div>
-                </div>
-
-                <div class="theme-card fade-in">
-                    <div class="theme-card__title">Survival vs. Living</div>
-                    <div class="theme-card__body">
-                        <strong>Bangley survives. Hig lives.</strong>
-                        <br /><br />
-                        The novel asks: what are we waiting for? Mere survival is not enough —
-                        we need love, beauty, connection. The risk is everything.
-                    </div>
-                </div>
-
-                <div class="theme-card fade-in">
-                    <div class="theme-card__title">The Collapse of Nature</div>
-                    <div class="theme-card__body">
-                        <strong>“If I ever woke up crying in the middle of a dream… it's because the trout
-                            are gone every one.”</strong>
-                        <br /><br />
-                        The warming streams, the dying forests, the vanishing elk — the apocalypse
-                        is ecological as much as human.
-                    </div>
-                </div>
-
-                <div class="theme-card fade-in">
-                    <div class="theme-card__title">Memory as Home</div>
-                    <div class="theme-card__body">
-                        <strong>“I lift my head off the pillow / I see the frost the moon. /
-                            Lowering my head I think of home.”</strong>
-                        <br /><br />
-                        Home is not a place — it's a person, a memory, a promise. Hig carries
-                        Melissa, Jasper, and the life before in every breath.
-                    </div>
-                </div>
-
-                <div class="theme-card fade-in">
-                    <div class="theme-card__title">Violence &amp; Compassion</div>
-                    <div class="theme-card__body">
-                        <strong>“Try to do the right thing. Circumstance intervenes.”</strong>
-                        <br /><br />
-                        Hig kills because he must, but never without cost. The novel refuses
-                        to resolve the tension — both cruelty and tenderness are real.
-                    </div>
-                </div>
-
-                <div class="theme-card fade-in">
-                    <div class="theme-card__title">Found Family</div>
-                    <div class="theme-card__body">
-                        <strong>By the end, Hig has a family again.</strong>
-                        <br /><br />
-                        Cima, Pops, and even Bangley become something like a household —
-                        an apocalyptic parody of Norman Rockwell, but real.
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- HUMAN NATURE SPECTRUM -->
-        <section id="human-nature">
-            <div class="fade-in">
-                <div class="section__label">Who We Become</div>
-                <h2 class="section__title">A <span class="highlight">Spectrum</span>, Not a Verdict</h2>
-                <p class="section__desc">
-                    The novel refuses to say humans are fundamentally good or fundamentally cruel.
-                    Instead it lines its characters up along a spectrum and asks what circumstance —
-                    and choice — does to each of them.
-                </p>
-            </div>
-
-            <div class="spectrum fade-in">
-                <div class="spectrum__labels">
-                    <span class="left">◂ pure predator</span>
-                    <span class="right">community &amp; faith ▸</span>
-                </div>
-                <div class="spectrum__bar"></div>
-                <div class="spectrum__points">
-                    <div class="spectrum__point" style="left: 6%;">
-                        <span class="dot"></span>
-                        <span class="label">Coke Truck Men &amp; the Grand Junction couple</span>
-                    </div>
-                    <div class="spectrum__point" style="left: 32%;">
-                        <span class="dot"></span>
-                        <span class="label">Bangley — pragmatic survivor</span>
-                    </div>
-                    <div class="spectrum__point" style="left: 55%;">
-                        <span class="dot"></span>
-                        <span class="label">Hig — moral survivor</span>
-                    </div>
-                    <div class="spectrum__point" style="left: 75%;">
-                        <span class="dot"></span>
-                        <span class="label">Cima — healer</span>
-                    </div>
-                    <div class="spectrum__point" style="left: 94%;">
-                        <span class="dot"></span>
-                        <span class="label">The Mennonites</span>
-                    </div>
-                </div>
-                <div class="spectrum__note">
-                    <span class="text-gold">✦</span> “New world now. New world new rules,” Bangley says —
-                    and the novel doesn't disprove him. It just refuses to let that be the only rule
-                    anyone lives by.
-                </div>
-            </div>
-        </section>
-
-        <!-- QUOTE BLOCK -->
-        <div class="quote-block fade-in">
-            <div class="quote-block__text">
-                “I wonder what it is this need to tell. To animate somehow the deathly stillness
-                of the profoundest beauty. Breathe life in the telling.”
-            </div>
-            <div class="quote-block__attribution">— <strong>Hig</strong>, on why he tells the story at all</div>
+  <!-- WORLD -->
+  <section id="world">
+    <div class="fade">
+      <div class="label">Nine years out</div>
+      <h2 class="title">How the world <span>ended</span></h2>
+      <p class="desc">
+        Not one collapse but three — a hyper-virulent flu, a second autoimmune sickness born from the first, and a climate already failing underneath both.
+      </p>
+    </div>
+    <div class="collapse fade">
+      <div class="collapse-item">
+        <div class="num">01</div>
+        <div>
+          <div class="c-title">The Flu</div>
+          <div class="c-body">
+            An airborne strain kills — by Hig's count — <strong>"ninety nine point whatever" percent</strong> in a matter of weeks. The press blamed New Delhi. Cima, the epidemiologist, has heard the other rumor: a genetic accident at the Livermore weapons lab, a courier's plane down in Brampton. No one ever confirmed either story.
+          </div>
         </div>
+      </div>
+      <div class="collapse-item">
+        <div class="num">02</div>
+        <div>
+          <div class="c-title">The Blood Disease</div>
+          <div class="c-body">
+            Survivors develop a slow autoimmune condition, <strong>"something like AIDS"</strong> — bruising, hemorrhage, organ damage. Children born after the pandemic inherit it. There is no cure. Cima suspects vitamin D deficiency accelerates it.
+          </div>
+        </div>
+      </div>
+      <div class="collapse-item">
+        <div class="num">03</div>
+        <div>
+          <div class="c-title">The Land Itself</div>
+          <div class="c-body">
+            Underneath both plagues the climate was already failing. Warming streams killed the trout. Drought and beetles killed the forests. Snowpack thinned until whole canyons dried. <strong>Elk, geese, tigers, apes — gone.</strong> Only the adaptable remain: carp, coyotes, raptors, and the people still stubborn enough to farm.
+          </div>
+        </div>
+      </div>
+      <div class="collapse-item">
+        <div class="num">04</div>
+        <div>
+          <div class="c-title">Why survivors turned feral</div>
+          <div class="c-body">
+            No law, no courts, no hospitals — only scarcity and the people it makes of us. Bangley's doctrine, <strong>"New world now. New world new rules,"</strong> is the logic almost everyone left alive has adopted. Trust became a luxury no one could afford. The men at the Coke truck, the marauders on the plains, the couple at Grand Junction who rigged a radio beacon to lure pilots into a cable trap — all of them are the product of that logic.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-        <!-- STORY TIMELINE -->
-        <section id="story">
-            <div class="fade-in">
-                <div class="section__label">The Flight Log</div>
-                <h2 class="section__title">Past the <span class="highlight">Point of No Return</span></h2>
-                <p class="section__desc">
-                    Hig's route across Colorado in three books — from the fortified perimeter at
-                    Erie, through grief and ambush, to a hidden canyon and back again.
-                </p>
-            </div>
+  <!-- CHARACTERS -->
+  <section id="stars">
+    <div class="fade">
+      <div class="label">Constellations</div>
+      <h2 class="title">Who <span>endures</span></h2>
+      <p class="desc">
+        Each a star in a broken sky, bound by grief, love, and the stubborn will to keep going.
+      </p>
+    </div>
+    <div class="stars fade">
+      <div class="star">
+        <div class="icon">✈︎</div>
+        <div>
+          <div class="s-name">Hig</div>
+          <div class="s-role">Pilot · Narrator</div>
+          <div class="s-desc">
+            A poet, carpenter, and reluctant killer. He flies the Beast, tends his garden, and carries the weight of a world he could not save. The End did not harden him into a survivalist; it hollowed him into someone still capable of killing while still carrying pre-apocalypse ethics that have nowhere left to go. That gap is the wound the whole book keeps returning to.
+          </div>
+          <div class="s-quote">I keep the Beast running, I keep the 100 low lead on tap, I foresee attacks. I am young enough, I am old enough.</div>
+        </div>
+      </div>
+      <div class="star">
+        <div class="icon">⚔</div>
+        <div>
+          <div class="s-name">Bangley</div>
+          <div class="s-role">Survivalist · Protector</div>
+          <div class="s-desc">
+            Ruthless, pragmatic, and utterly alone. He lives for the perimeter, kills without hesitation, and guards Hig like a difficult brother. His philosophy is pure: never negotiate, trust no one, protect the perimeter at all costs. He is effective. He is also nearly killed alone behind a tool chest, and the novel makes clear that his way keeps you alive but does not make life worth living.
+          </div>
+          <div class="s-quote">Never ever negotiate. You are negotiating your own death.</div>
+        </div>
+      </div>
+      <div class="star">
+        <div class="icon">🐾</div>
+        <div>
+          <div class="s-name">Jasper</div>
+          <div class="s-role">Copilot · Heart</div>
+          <div class="s-desc">
+            Hig's blue heeler, the last living witness to before. Copilot, bed-mate, the one creature who still needed and loved Hig the way things used to be loved. His death in the mountains is the turning point of the novel: with his last anchor removed, Hig is free to risk everything chasing a voice on the radio.
+          </div>
+          <div class="s-quote">Goodbye, bud. You are Jasper. My heart. We are never apart, not here, not there.</div>
+        </div>
+      </div>
+      <div class="star">
+        <div class="icon">🌿</div>
+        <div>
+          <div class="s-name">Cima</div>
+          <div class="s-role">Doctor · Healer</div>
+          <div class="s-desc">
+            A survivor who carries her own losses — a twin brother, a husband she had to kill. She meets Hig in their shared brokenness. Their relationship is not a replacement for Melissa; it is proof that a person who has lost everything can still make room for someone new. That is a smaller, more honest kind of hope than survival stories usually allow.
+          </div>
+          <div class="s-quote">If you want, you can just look at me. It's probably been a long time. I'm in no hurry.</div>
+        </div>
+      </div>
+      <div class="star">
+        <div class="icon">🕊</div>
+        <div>
+          <div class="s-name">Melissa</div>
+          <div class="s-role">Memory · Love</div>
+          <div class="s-desc">
+            Hig's wife, lost to the flu. He smothered her at her request — the act that haunts him more than any other. She is the love he lost, the pregnancy that never came, the home that can never be returned to. Everything Hig does afterward is shaped by that moment.
+          </div>
+          <div class="s-quote">I loved her. This is what I live with.</div>
+        </div>
+      </div>
+      <div class="star">
+        <div class="icon">🏔</div>
+        <div>
+          <div class="s-name">Pops</div>
+          <div class="s-role">Rancher · Father</div>
+          <div class="s-desc">
+            Cima's father, a former Navy SEAL who carries the old West in his bones. Dignified, weary, and quietly hopeful. He and Bangley, once potential enemies, become allies. The green patches, he says, are spreading year by year.
+          </div>
+          <div class="s-quote">The green patches are spreading year by year.</div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-            <div class="flight-map fade-in">
-                <div class="flight-map__title">
-                    <span>✦</span> The Beast's Route
-                </div>
-                <div class="flight-path">
-                    <span class="flight-path__waypoint active"><span class="dot"></span> Erie</span>
-                    <span class="flight-path__connector">—</span>
-                    <span class="flight-path__waypoint"><span class="dot"></span> The Coke Truck</span>
-                    <span class="flight-path__connector">—</span>
-                    <span class="flight-path__waypoint"><span class="dot"></span> The Mountains</span>
-                    <span class="flight-path__connector">—</span>
-                    <span class="flight-path__waypoint"><span class="dot"></span> Grand Junction</span>
-                    <span class="flight-path__connector">—</span>
-                    <span class="flight-path__waypoint"><span class="dot"></span> The Canyon</span>
-                    <span class="flight-path__connector">—</span>
-                    <span class="flight-path__waypoint"><span class="dot"></span> Home</span>
-                </div>
-            </div>
+  <!-- JOURNEY -->
+  <section id="flight">
+    <div class="fade">
+      <div class="label">The flight log</div>
+      <h2 class="title">Past the <span>point of no return</span></h2>
+      <p class="desc">
+        Hig's route across Colorado in three books — from the fortified perimeter at Erie, through grief and ambush, to a hidden canyon and back again. Jasper's death removes his last reason for caution. The radio voice offers something the base can never give him: the possibility that connection still exists.
+      </p>
+    </div>
+    <div class="path fade">
+      <span class="wp active"><span class="dot"></span> Erie</span>
+      <span class="conn">—</span>
+      <span class="wp"><span class="dot"></span> Coke Truck</span>
+      <span class="conn">—</span>
+      <span class="wp"><span class="dot"></span> Mountains</span>
+      <span class="conn">—</span>
+      <span class="wp"><span class="dot"></span> Grand Junction</span>
+      <span class="conn">—</span>
+      <span class="wp"><span class="dot"></span> The Canyon</span>
+      <span class="conn">—</span>
+      <span class="wp"><span class="dot"></span> Home</span>
+    </div>
+    <div class="books fade">
+      <div class="book">
+        <div class="book-label">Book One</div>
+        <div class="book-title">Life on the Perimeter</div>
+        <ul>
+          <li>Hig and Bangley hold the Erie airport. Hig flies patrol in the Beast; Bangley mans the sniper tower. An uneasy alliance keeps them both alive.</li>
+          <li>Hig secretly runs supplies to a Mennonite community dying of the blood disease, against Bangley's warnings.</li>
+          <li>A mysterious radio transmission reaches him from Grand Junction — a voice he puts off chasing for years.</li>
+          <li>On a last hunting trip into the mountains, <strong>Jasper dies in his sleep.</strong> Hig is left with nothing but the stars.</li>
+        </ul>
+      </div>
+      <div class="book">
+        <div class="book-label">Book Two</div>
+        <div class="book-title">The Journey West</div>
+        <ul>
+          <li>Grieving and unmoored, Hig is ambushed by nine marauders on the plains. Bangley saves him with mortars fired from the perimeter.</li>
+          <li>Hig finally flies past his "point of no return," discovering a hidden box canyon with a stone house, a garden, and cattle.</li>
+          <li>He meets <strong>Cima</strong>, a doctor, and her father <strong>Pops</strong> — hostile at first, then cautiously trusting.</li>
+          <li>Hig and Cima fall into a tender relationship. Pops reveals the canyon's creek is drying up; the three plan to leave together.</li>
+        </ul>
+      </div>
+      <div class="book">
+        <div class="book-label">Book Three</div>
+        <div class="book-title">Return and Reckoning</div>
+        <ul>
+          <li>The radio transmission from Grand Junction turns out to be a trap — an elderly couple luring pilots into a cable strung across the runway. Pops kills them.</li>
+          <li>Back at Erie they find Bangley's house destroyed. He's alive behind a tool chest, having fought off fourteen attackers alone. Cima nurses him back.</li>
+          <li>The four become a household — Hig, Bangley, Cima, and Pops — an apocalyptic version of a family.</li>
+          <li>Unidentified jets, crews speaking Arabic, pass overhead. The novel ends open — other survivors, other threats, the world still turning.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
 
-            <div class="timeline fade-in">
-                <div class="timeline__book">
-                    <div class="timeline__book-label">Book One</div>
-                    <div class="timeline__book-title">Life on the Perimeter</div>
-                    <ul class="timeline__events">
-                        <li>Hig and Bangley hold the Erie airport — Hig flies patrol in the Beast, Bangley mans the sniper tower, and an uneasy alliance keeps them both alive.</li>
-                        <li>Hig secretly runs supplies to a Mennonite community dying of the blood disease, against Bangley's warnings.</li>
-                        <li>A mysterious radio transmission reaches him from Grand Junction — a voice he puts off chasing for years.</li>
-                        <li>On a last hunting trip into the mountains, <strong>Jasper dies in his sleep.</strong> Hig is left with nothing but the stars.</li>
-                    </ul>
-                </div>
-                <div class="timeline__book">
-                    <div class="timeline__book-label">Book Two</div>
-                    <div class="timeline__book-title">The Journey West</div>
-                    <ul class="timeline__events">
-                        <li>Grieving and unmoored, Hig is ambushed by nine marauders on the plains — Bangley saves him with mortars fired from the perimeter.</li>
-                        <li>Hig finally flies past his "point of no return," discovering a hidden box canyon with a stone house, a garden, and cattle.</li>
-                        <li>He meets <strong>Cima</strong>, a doctor, and her father <strong>Pops</strong>, a former Navy SEAL — hostile at first, then cautiously trusting.</li>
-                        <li>Hig and Cima fall into a tender relationship. Pops reveals the canyon's creek is drying up; the three plan to leave together.</li>
-                    </ul>
-                </div>
-                <div class="timeline__book">
-                    <div class="timeline__book-label">Book Three</div>
-                    <div class="timeline__book-title">Return and Reckoning</div>
-                    <ul class="timeline__events">
-                        <li>The radio transmission from Grand Junction turns out to be a trap — an elderly couple luring pilots into a cable strung across the runway. Pops kills them.</li>
-                        <li>Back at Erie, they find Bangley's house destroyed — he's alive behind a tool chest, having fought off fourteen attackers alone. Cima nurses him back.</li>
-                        <li>The four become a household — Hig, Bangley, Cima, and Pops — an apocalyptic version of a family.</li>
-                        <li>Unidentified jets, crews speaking Arabic, pass overhead. The novel ends open — other survivors, other threats, the world still turning.</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-
-        <!-- CHAPTER BY CHAPTER -->
-        <section id="chapters">
-            <div class="fade-in">
-                <div class="section__label">Book One, Close Reading</div>
-                <h2 class="section__title">Chapter by <span class="highlight">Chapter</span></h2>
-                <p class="section__desc">
-                    The first six chapters, one at a time — tap any chapter to open it up.
-                </p>
-            </div>
-
-            <div class="chapter-grid fade-in">
-                <details class="chapter-card">
-                    <summary class="chapter-card__summary">
-                        <span class="chapter-card__num">I</span>
-                        <span class="chapter-card__heading">
-                            <div class="chapter-card__title">The Beast, the Perimeter, and What's Gone</div>
-                            <div class="chapter-card__meta">pp. 8–24 · Book One</div>
-                        </span>
-                        <span class="chapter-card__chevron">▸</span>
-                    </summary>
-                    <div class="chapter-card__body">
-                        <p class="chapter-card__summary-text">
-                            Hig introduces his world: the Erie airport, the Beast, the perimeter he
-                            shares with Bangley, and Jasper beside him. A flashback carries us to
-                            Melissa, pregnant and dying of the flu, and the moment Hig smothered her
-                            at her own request. The chapter closes under the stars, with Hig still
-                            turning over a radio transmission from Grand Junction — and a fragment
-                            of Li Po about home.
-                        </p>
-                        <div class="chapter-card__quotes">
-                            <div class="chapter-card__quote">
-                                I keep the Beast running, I keep the 100 low lead on tap, I foresee attacks.
-                                I am young enough, I am old enough.
-                                <span>Hig, opening line</span>
-                            </div>
-                            <div class="chapter-card__quote">
-                                I don't want to be confused: we are nine years out. The flu killed almost
-                                everybody, then the blood disease killed more. The ones who are left are mostly Not Nice.
-                                <span>Hig</span>
-                            </div>
-                        </div>
-                        <div class="chapter-card__tags">
-                            <span class="chapter-card__tag">Grief</span>
-                            <span class="chapter-card__tag">Survival vs. Meaning</span>
-                            <span class="chapter-card__tag">Environmental Collapse</span>
-                        </div>
-                    </div>
-                </details>
-
-                <details class="chapter-card">
-                    <summary class="chapter-card__summary">
-                        <span class="chapter-card__num">II</span>
-                        <span class="chapter-card__heading">
-                            <div class="chapter-card__title">Flying as Escape, Bangley's Silence</div>
-                            <div class="chapter-card__meta">pp. 44–46 · Book One</div>
-                        </span>
-                        <span class="chapter-card__chevron">▸</span>
-                    </summary>
-                    <div class="chapter-card__body">
-                        <p class="chapter-card__summary-text">
-                            Hig explains why he flies — not freedom, but the way the wrecked world
-                            resolves into pattern from above. A flashback to Bangley's first flight
-                            reveals he already shot two people from the Mennonite settlement, calling
-                            them "Druids." When children wave up at the plane, Bangley goes quiet for
-                            the rest of the trip — the first sign of a moral rift between the two men.
-                        </p>
-                        <div class="chapter-card__quotes">
-                            <div class="chapter-card__quote">
-                                From up here there was no misery, no suffering, no strife, just pattern
-                                and perfection. The immortal stillness of a landscape painting.
-                                <span>Hig</span>
-                            </div>
-                            <div class="chapter-card__quote">
-                                He is as at home with his solitude as the note reverberating inside a
-                                bell. Prefers it. Will protect it to the death.
-                                <span>Hig, on Bangley</span>
-                            </div>
-                        </div>
-                        <div class="chapter-card__tags">
-                            <span class="chapter-card__tag">Escape vs. Reality</span>
-                            <span class="chapter-card__tag">Solitude</span>
-                            <span class="chapter-card__tag">Moral Divergence</span>
-                        </div>
-                    </div>
-                </details>
-
-                <details class="chapter-card">
-                    <summary class="chapter-card__summary">
-                        <span class="chapter-card__num">III</span>
-                        <span class="chapter-card__heading">
-                            <div class="chapter-card__title">The Pillow</div>
-                            <div class="chapter-card__meta">pp. 47–53 · Book One</div>
-                        </span>
-                        <span class="chapter-card__chevron">▸</span>
-                    </summary>
-                    <div class="chapter-card__body">
-                        <p class="chapter-card__summary-text">
-                            The night after Bangley kills a nine-year-old boy in a firefight, Hig
-                            walks the blood-soaked ground and feels almost nothing. His mind drifts —
-                            to Melissa's birthdays, to his father's fishing rod, and finally to the
-                            hospital where Melissa asked him to end her suffering, and he did. He
-                            surfaces only when he realizes Jasper isn't beside him.
-                        </p>
-                        <div class="chapter-card__quotes">
-                            <div class="chapter-card__quote">
-                                I wonder what it is this need to tell. To animate somehow the deathly
-                                stillness of the profoundest beauty. Breathe life in the telling.
-                                <span>Hig</span>
-                            </div>
-                            <div class="chapter-card__quote">
-                                I covered her face and used it. On my own wife... I loved her. This is
-                                what I live with.
-                                <span>Hig</span>
-                            </div>
-                        </div>
-                        <div class="chapter-card__tags">
-                            <span class="chapter-card__tag">Storytelling as Survival</span>
-                            <span class="chapter-card__tag">The Weight of Killing</span>
-                            <span class="chapter-card__tag">Memory</span>
-                        </div>
-                    </div>
-                </details>
-
-                <details class="chapter-card">
-                    <summary class="chapter-card__summary">
-                        <span class="chapter-card__num">IV</span>
-                        <span class="chapter-card__heading">
-                            <div class="chapter-card__title">The Garden</div>
-                            <div class="chapter-card__meta">pp. 54–62 · Book One</div>
-                        </span>
-                        <span class="chapter-card__chevron">▸</span>
-                    </summary>
-                    <div class="chapter-card__body">
-                        <p class="chapter-card__summary-text">
-                            Spring planting brings Hig a rare, unnamed happiness. He and Bangley argue
-                            over a planned trip to the mountains — until Bangley, coughing, admits he
-                            doesn't sleep well when Hig is gone. That night, packing, Hig remembers
-                            Melissa's pregnancy, the names they picked, and the terrible, unresolved
-                            fight on their last fishing trip together.
-                        </p>
-                        <div class="chapter-card__quotes">
-                            <div class="chapter-card__quote">
-                                There was something moving inside that resembled a kind of happiness.
-                                I would never have named it. Not then. For fear. But I name it now.
-                                <span>Hig</span>
-                            </div>
-                            <div class="chapter-card__quote">
-                                We were like a married couple unable anymore to speak the truth about
-                                the most important things.
-                                <span>Hig, on Bangley</span>
-                            </div>
-                        </div>
-                        <div class="chapter-card__tags">
-                            <span class="chapter-card__tag">Ritual as Survival</span>
-                            <span class="chapter-card__tag">Fragile Happiness</span>
-                            <span class="chapter-card__tag">Unspoken Truths</span>
-                        </div>
-                    </div>
-                </details>
-
-                <details class="chapter-card">
-                    <summary class="chapter-card__summary">
-                        <span class="chapter-card__num">V</span>
-                        <span class="chapter-card__heading">
-                            <div class="chapter-card__title">The Coke Truck</div>
-                            <div class="chapter-card__meta">pp. 64–77 · Book One</div>
-                        </span>
-                        <span class="chapter-card__chevron">▸</span>
-                    </summary>
-                    <div class="chapter-card__body">
-                        <p class="chapter-card__summary-text">
-                            A supply run turns violent: Hig kills an archer, tries to spare two other
-                            men, then guns one of them down in disgust after hearing a rumor — "the
-                            A-rabs" are coming, heard over a ham radio in Pueblo. Back home, Bangley
-                            dissects every tactical mistake Hig made, but takes the intel dead
-                            seriously.
-                        </p>
-                        <div class="chapter-card__quotes">
-                            <div class="chapter-card__quote">
-                                Try to do the right thing. Circumstance intervenes.
-                                <span>Hig</span>
-                            </div>
-                            <div class="chapter-card__quote">
-                                The A-rabs. We heard it. In Pueblo. Ham radio... They're here. Or coming. Kill us all.
-                                <span>Ponytail</span>
-                            </div>
-                        </div>
-                        <div class="chapter-card__tags">
-                            <span class="chapter-card__tag">Mercy vs. Pragmatism</span>
-                            <span class="chapter-card__tag">Moral Disgust</span>
-                            <span class="chapter-card__tag">The Wider World</span>
-                        </div>
-                    </div>
-                </details>
-
-                <details class="chapter-card">
-                    <summary class="chapter-card__summary">
-                        <span class="chapter-card__num">VI</span>
-                        <span class="chapter-card__heading">
-                            <div class="chapter-card__title">Jasper</div>
-                            <div class="chapter-card__meta">pp. 83–93 · Book One</div>
-                        </span>
-                        <span class="chapter-card__chevron">▸</span>
-                    </summary>
-                    <div class="chapter-card__body">
-                        <p class="chapter-card__summary-text">
-                            A hunting trip into the mountains — carp instead of trout, a fire, a night
-                            under open sky — ends with Jasper dead in his sleep, peacefully, of old
-                            age. Hig doesn't move for a day. He buries Jasper under a stone mound and
-                            walks on, for the first time in the novel, entirely alone.
-                        </p>
-                        <div class="chapter-card__quotes">
-                            <div class="chapter-card__quote">
-                                Grief is an element. It has its own cycle like the carbon cycle, the
-                                nitrogen. It never diminishes not ever.
-                                <span>Hig</span>
-                            </div>
-                            <div class="chapter-card__quote">
-                                Goodbye, bud. You are Jasper. My heart. We are never apart, not here, not there.
-                                <span>Hig</span>
-                            </div>
-                        </div>
-                        <div class="chapter-card__tags">
-                            <span class="chapter-card__tag">Grief as Element</span>
-                            <span class="chapter-card__tag">Ritual Mourning</span>
-                            <span class="chapter-card__tag">Total Isolation</span>
-                        </div>
-                    </div>
-                </details>
-            </div>
-        </section>
-
-        <!-- POEM -->
-        <section id="poem">
-            <div class="fade-in">
-                <div class="section__label">The Final Word</div>
-                <h2 class="section__title">When Will I Be <span class="highlight">Home?</span></h2>
-                <p class="section__desc">
-                    The novel closes with Li Shang-Yin's poem — a meditation on longing,
-                    reunion, and the hope that burns even in the darkest night.
-                </p>
-            </div>
-
-            <div class="poem-section fade-in">
-                <div class="poem-section__title">When Will I Be Home?</div>
-                <div class="poem-section__author">— Li Shang-Yin (Tang Dynasty)</div>
-                <div class="poem-section__lines">
-                    When will I be home? I don't know.<br />
-                    In the mountains, in the rainy night,<br />
-                    The Autumn lake is flooded.<br />
-                    <span class="pause"></span>
-                    Someday we will be back together again.<br />
-                    We will sit in the candlelight by the West window.<br />
-                    And I will tell you how I remembered you<br />
-                    Tonight on the stormy mountain.
-                </div>
-            </div>
-
-            <div class="quote-block fade-in" style="margin-top: 24px;">
-                <div class="quote-block__text" style="font-size: clamp(1rem, 1.6vw, 1.3rem);">
-                    “The love is the creek bed and the pain fills it. Fills it every day with tears.”
-                </div>
-                <div class="quote-block__attribution">— <strong>Hig</strong>, on the nature of grief</div>
-            </div>
-        </section>
-
-        <!-- FOOTER -->
-        <footer class="footer">
-            <p>
-                ✦ <em>The Dog Stars</em> by Peter Heller · A constellation of memory, grief, and hope ✦
-                <br />
-                <span style="font-size:0.75rem; opacity:0.5; margin-top: 8px; display: inline-block;">
-                    Built with care for a novel that refuses to let the stars go out.
-                </span>
-            </p>
-        </footer>
-
+  <!-- THEMES -->
+  <section id="themes">
+    <div class="fade">
+      <div class="label">The arc of the sky</div>
+      <h2 class="title">Themes that <span>burn</span></h2>
+      <p class="desc">
+        Loss, memory, violence, hope — the novel's constellations are carved from what remains when civilization falls away.
+      </p>
+    </div>
+    <div class="themes fade">
+      <div class="theme">
+        <div class="t-name">Grief as an element</div>
+        <div class="t-body">
+          <strong>"Grief is an element. It has its own cycle like the carbon cycle, the nitrogen. It never diminishes not ever."</strong><br /><br />
+          Hig carries grief the way the earth carries water — it cycles through him, never disappearing, only changing form. Jasper's death does not end it; it only makes the cycle more visible.
+        </div>
+      </div>
+      <div class="theme">
+        <div class="t-name">Survival vs. living</div>
+        <div class="t-body">
+          <strong>Bangley survives. Hig lives.</strong><br /><br />
+          The novel asks the question Hig cannot answer when Cima's father presses him: why fly past the point of no return? Jasper's death removed his last reason for caution. The radio voice offered something the base could never give him. He was looking for a reason to keep being human, not just alive.
+        </div>
+      </div>
+      <div class="theme">
+        <div class="t-name">The collapse of nature</div>
+        <div class="t-body">
+          <strong>"If I ever woke up crying in the middle of a dream… it's because the trout are gone every one."</strong><br /><br />
+          The warming streams, the dying forests, the vanishing elk — the apocalypse is ecological as much as human. Yet the green patches are spreading. Spruce and aspen return. Hawks and eagles flourish. Nature is not entirely dead; it is selective in what it keeps.
+        </div>
+      </div>
+      <div class="theme">
+        <div class="t-name">Memory as home</div>
+        <div class="t-body">
+          <strong>"I lift my head off the pillow / I see the frost the moon. / Lowering my head I think of home."</strong><br /><br />
+          Home is not a place. It is Melissa, Jasper, the life before. Hig carries them in every breath. The novel is bookended by Chinese poems about exile and reunion — Li Po at the opening, Li Shang-Yin at the close.
+        </div>
+      </div>
+      <div class="theme">
+        <div class="t-name">Violence &amp; compassion</div>
+        <div class="t-body">
+          <strong>"Try to do the right thing. Circumstance intervenes."</strong><br /><br />
+          Hig kills because he must, but never without cost. The novel refuses to resolve the tension — both cruelty and tenderness are real, and both are choices. Human nature is not fixed; it is a spectrum the circumstances reveal.
+        </div>
+      </div>
+      <div class="theme">
+        <div class="t-name">Found family</div>
+        <div class="t-body">
+          <strong>By the end, Hig has a family again.</strong><br /><br />
+          Cima, Pops, and even Bangley become something like a household — an apocalyptic parody of Norman Rockwell, but real. The transactional alliance between Hig and Bangley becomes mutual care. Community is the novel's final affirmation.
+        </div>
+      </div>
     </div>
 
-    <!-- ----- JavaScript ----- -->
-    <script>
-        (function() {
-            'use strict';
+    <div class="spectrum fade">
+      <div class="spec-labels">
+        <span class="left">◂ pure predator</span>
+        <span class="right">community &amp; faith ▸</span>
+      </div>
+      <div class="spec-bar"></div>
+      <div class="spec-points">
+        <div class="spec-point"><span class="dot"></span> Coke Truck men &amp; Grand Junction couple</div>
+        <div class="spec-point"><span class="dot"></span> Bangley</div>
+        <div class="spec-point"><span class="dot"></span> Hig</div>
+        <div class="spec-point"><span class="dot"></span> Cima</div>
+        <div class="spec-point"><span class="dot"></span> The Mennonites</div>
+      </div>
+      <div class="spec-note">
+        ✦ "New world now. New world new rules," Bangley says — and the novel doesn't disprove him. It just refuses to let that be the only rule anyone lives by.
+      </div>
+    </div>
+  </section>
 
-            // ---------- STARFIELD ----------
-            const starCanvas = document.getElementById('stars-canvas');
-            const starCtx = starCanvas.getContext('2d');
-            let stars = [];
+  <!-- QUOTE -->
+  <div class="quote fade">
+    <div class="q-text">
+      "I wonder what it is this need to tell. To animate somehow the deathly stillness of the profoundest beauty. Breathe life in the telling."
+    </div>
+    <div class="q-attr">— <strong>Hig</strong>, on why he tells the story at all</div>
+  </div>
 
-            function resizeStarCanvas() {
-                starCanvas.width = window.innerWidth;
-                starCanvas.height = window.innerHeight;
-            }
-            window.addEventListener('resize', resizeStarCanvas);
-            resizeStarCanvas();
+  <!-- CHAPTERS -->
+  <section id="chapters">
+    <div class="fade">
+      <div class="label">Book One, close reading</div>
+      <h2 class="title">Chapter by <span>chapter</span></h2>
+      <p class="desc">
+        The first six chapters, one at a time. Tap any to step inside.
+      </p>
+    </div>
+    <div class="chapters fade">
 
-            function initStars(count = 320) {
-                stars = [];
-                for (let i = 0; i < count; i++) {
-                    stars.push({
-                        x: Math.random() * starCanvas.width,
-                        y: Math.random() * starCanvas.height,
-                        r: Math.random() * 1.6 + 0.4,
-                        a: Math.random() * 0.8 + 0.2,
-                        speed: 0.002 + Math.random() * 0.006,
-                        phase: Math.random() * Math.PI * 2,
-                    });
-                }
-            }
-            initStars(360);
+      <details class="ch">
+        <summary class="head">
+          <span class="ch-num">I</span>
+          <span class="ch-info">
+            <div class="ch-title">The Beast, the Perimeter, and What's Gone</div>
+            <div class="ch-meta">pp. 8–24 · Book One</div>
+          </span>
+          <span class="chevron">▸</span>
+        </summary>
+        <div class="ch-body">
+          <p class="ch-sum">
+            Hig introduces his world: the Erie airport, the Beast, the perimeter he shares with Bangley, and Jasper beside him. A flashback carries us to Melissa, pregnant and dying of the flu, and the moment Hig smothered her at her own request. The chapter closes under the stars, with Hig still turning over a radio transmission from Grand Junction — and a fragment of Li Po about home.
+          </p>
+          <div class="ch-quotes">
+            <div class="ch-q">
+              I keep the Beast running, I keep the 100 low lead on tap, I foresee attacks. I am young enough, I am old enough.
+              <span>Hig, opening line</span>
+            </div>
+            <div class="ch-q">
+              I don't want to be confused: we are nine years out. The flu killed almost everybody, then the blood disease killed more. The ones who are left are mostly Not Nice.
+              <span>Hig</span>
+            </div>
+          </div>
+          <div class="tags">
+            <span class="tag">Grief</span>
+            <span class="tag">Survival vs. Meaning</span>
+            <span class="tag">Environmental Collapse</span>
+          </div>
+        </div>
+      </details>
 
-            function drawStars(time) {
-                starCtx.clearRect(0, 0, starCanvas.width, starCanvas.height);
-                for (const s of stars) {
-                    const flicker = 0.6 + 0.4 * Math.sin(time * s.speed + s.phase);
-                    const alpha = s.a * flicker;
-                    starCtx.beginPath();
-                    starCtx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-                    starCtx.fillStyle = `rgba(245, 240, 232, ${alpha})`;
-                    starCtx.fill();
-                }
-            }
+      <details class="ch">
+        <summary class="head">
+          <span class="ch-num">II</span>
+          <span class="ch-info">
+            <div class="ch-title">Flying as Escape, Bangley's Silence</div>
+            <div class="ch-meta">pp. 44–46 · Book One</div>
+          </span>
+          <span class="chevron">▸</span>
+        </summary>
+        <div class="ch-body">
+          <p class="ch-sum">
+            Hig explains why he flies — not freedom, but the way the wrecked world resolves into pattern from above. A flashback to Bangley's first flight reveals he already shot two people from the Mennonite settlement, calling them "Druids." When children wave up at the plane, Bangley goes quiet for the rest of the trip — the first sign of a moral rift between the two men.
+          </p>
+          <div class="ch-quotes">
+            <div class="ch-q">
+              From up here there was no misery, no suffering, no strife, just pattern and perfection. The immortal stillness of a landscape painting.
+              <span>Hig</span>
+            </div>
+            <div class="ch-q">
+              He is as at home with his solitude as the note reverberating inside a bell. Prefers it. Will protect it to the death.
+              <span>Hig, on Bangley</span>
+            </div>
+          </div>
+          <div class="tags">
+            <span class="tag">Escape vs. Reality</span>
+            <span class="tag">Solitude</span>
+            <span class="tag">Moral Divergence</span>
+          </div>
+        </div>
+      </details>
 
-            // ---------- CONSTELLATION LINES (decorative) ----------
-            const constCanvas = document.getElementById('constellation-canvas');
-            const constCtx = constCanvas.getContext('2d');
+      <details class="ch">
+        <summary class="head">
+          <span class="ch-num">III</span>
+          <span class="ch-info">
+            <div class="ch-title">The Pillow</div>
+            <div class="ch-meta">pp. 47–53 · Book One</div>
+          </span>
+          <span class="chevron">▸</span>
+        </summary>
+        <div class="ch-body">
+          <p class="ch-sum">
+            The night after Bangley kills a nine-year-old boy in a firefight, Hig walks the blood-soaked ground and feels almost nothing. His mind drifts — to Melissa's birthdays, to his father's fishing rod, and finally to the hospital where Melissa asked him to end her suffering, and he did. He surfaces only when he realizes Jasper isn't beside him.
+          </p>
+          <div class="ch-quotes">
+            <div class="ch-q">
+              I wonder what it is this need to tell. To animate somehow the deathly stillness of the profoundest beauty. Breathe life in the telling.
+              <span>Hig</span>
+            </div>
+            <div class="ch-q">
+              I covered her face and used it. On my own wife… I loved her. This is what I live with.
+              <span>Hig</span>
+            </div>
+          </div>
+          <div class="tags">
+            <span class="tag">Storytelling as Survival</span>
+            <span class="tag">The Weight of Killing</span>
+            <span class="tag">Memory</span>
+          </div>
+        </div>
+      </details>
 
-            function resizeConstCanvas() {
-                constCanvas.width = window.innerWidth;
-                constCanvas.height = window.innerHeight;
-            }
-            window.addEventListener('resize', resizeConstCanvas);
-            resizeConstCanvas();
+      <details class="ch">
+        <summary class="head">
+          <span class="ch-num">IV</span>
+          <span class="ch-info">
+            <div class="ch-title">The Garden</div>
+            <div class="ch-meta">pp. 54–62 · Book One</div>
+          </span>
+          <span class="chevron">▸</span>
+        </summary>
+        <div class="ch-body">
+          <p class="ch-sum">
+            Spring planting brings Hig a rare, unnamed happiness. He and Bangley argue over a planned trip to the mountains — until Bangley, coughing, admits he doesn't sleep well when Hig is gone. That night, packing, Hig remembers Melissa's pregnancy, the names they picked, and the terrible, unresolved fight on their last fishing trip together.
+          </p>
+          <div class="ch-quotes">
+            <div class="ch-q">
+              There was something moving inside that resembled a kind of happiness. I would never have named it. Not then. For fear. But I name it now.
+              <span>Hig</span>
+            </div>
+            <div class="ch-q">
+              We were like a married couple unable anymore to speak the truth about the most important things.
+              <span>Hig, on Bangley</span>
+            </div>
+          </div>
+          <div class="tags">
+            <span class="tag">Ritual as Survival</span>
+            <span class="tag">Fragile Happiness</span>
+            <span class="tag">Unspoken Truths</span>
+          </div>
+        </div>
+      </details>
 
-            // generate some fixed points for constellation lines
-            let constellationPoints = [];
+      <details class="ch">
+        <summary class="head">
+          <span class="ch-num">V</span>
+          <span class="ch-info">
+            <div class="ch-title">The Coke Truck</div>
+            <div class="ch-meta">pp. 64–77 · Book One</div>
+          </span>
+          <span class="chevron">▸</span>
+        </summary>
+        <div class="ch-body">
+          <p class="ch-sum">
+            A supply run turns violent: Hig kills an archer, tries to spare two other men, then guns one of them down in disgust after hearing a rumor — "the A-rabs" are coming, heard over a ham radio in Pueblo. Back home, Bangley dissects every tactical mistake Hig made, but takes the intel dead seriously.
+          </p>
+          <div class="ch-quotes">
+            <div class="ch-q">
+              Try to do the right thing. Circumstance intervenes.
+              <span>Hig</span>
+            </div>
+            <div class="ch-q">
+              The A-rabs. We heard it. In Pueblo. Ham radio… They're here. Or coming. Kill us all.
+              <span>Ponytail</span>
+            </div>
+          </div>
+          <div class="tags">
+            <span class="tag">Mercy vs. Pragmatism</span>
+            <span class="tag">Moral Disgust</span>
+            <span class="tag">The Wider World</span>
+          </div>
+        </div>
+      </details>
 
-            function generateConstellationPoints() {
-                const w = constCanvas.width;
-                const h = constCanvas.height;
-                const points = [];
-                const count = 28;
-                for (let i = 0; i < count; i++) {
-                    points.push({
-                        x: 0.1 + Math.random() * 0.8,
-                        y: 0.1 + Math.random() * 0.8,
-                        r: 2 + Math.random() * 3,
-                    });
-                }
-                return points;
-            }
-            constellationPoints = generateConstellationPoints();
+      <details class="ch">
+        <summary class="head">
+          <span class="ch-num">VI</span>
+          <span class="ch-info">
+            <div class="ch-title">Jasper</div>
+            <div class="ch-meta">pp. 83–93 · Book One</div>
+          </span>
+          <span class="chevron">▸</span>
+        </summary>
+        <div class="ch-body">
+          <p class="ch-sum">
+            A hunting trip into the mountains — carp instead of trout, a fire, a night under open sky — ends with Jasper dead in his sleep, peacefully, of old age. Hig doesn't move for a day. He buries Jasper under a stone mound and walks on, for the first time in the novel, entirely alone.
+          </p>
+          <div class="ch-quotes">
+            <div class="ch-q">
+              Grief is an element. It has its own cycle like the carbon cycle, the nitrogen. It never diminishes not ever.
+              <span>Hig</span>
+            </div>
+            <div class="ch-q">
+              Goodbye, bud. You are Jasper. My heart. We are never apart, not here, not there.
+              <span>Hig</span>
+            </div>
+          </div>
+          <div class="tags">
+            <span class="tag">Grief as Element</span>
+            <span class="tag">Ritual Mourning</span>
+            <span class="tag">Total Isolation</span>
+          </div>
+        </div>
+      </details>
 
-            function drawConstellationLines(time) {
-                const w = constCanvas.width;
-                const h = constCanvas.height;
-                constCtx.clearRect(0, 0, w, h);
+    </div>
+  </section>
 
-                // only draw if we have points
-                if (constellationPoints.length < 2) return;
+  <!-- POEM -->
+  <section id="poem">
+    <div class="fade">
+      <div class="label">The final word</div>
+      <h2 class="title">When will I be <span>home?</span></h2>
+      <p class="desc">
+        The novel closes with Li Shang-Yin's poem — a meditation on longing, reunion, and the hope that burns even in the darkest night. It answers the novel's opening question without resolving it.
+      </p>
+    </div>
+    <div class="poem fade">
+      <div class="p-title">When Will I Be Home?</div>
+      <div class="p-author">— Li Shang-Yin (Tang Dynasty)</div>
+      <div class="p-lines">
+        When will I be home? I don't know.<br />
+        In the mountains, in the rainy night,<br />
+        The Autumn lake is flooded.<br />
+        <span class="pause"></span>
+        Someday we will be back together again.<br />
+        We will sit in the candlelight by the West window.<br />
+        And I will tell you how I remembered you<br />
+        Tonight on the stormy mountain.
+      </div>
+    </div>
+    <div class="quote fade" style="margin-top:40px;">
+      <div class="q-text" style="font-size:clamp(1.05rem,2vw,1.28rem);">
+        "The love is the creek bed and the pain fills it. Fills it every day with tears."
+      </div>
+      <div class="q-attr">— <strong>Hig</strong>, on the nature of grief</div>
+    </div>
+  </section>
 
-                // draw lines between nearby points
-                const threshold = 0.22;
-                const pts = constellationPoints.map(p => ({
-                    x: p.x * w,
-                    y: p.y * h,
-                    r: p.r,
-                }));
+  <footer>
+    <p>
+      ✦ <em>The Dog Stars</em> by Peter Heller · a constellation of memory, grief, and hope ✦
+    </p>
+  </footer>
 
-                for (let i = 0; i < pts.length; i++) {
-                    for (let j = i + 1; j < pts.length; j++) {
-                        const dx = pts[i].x - pts[j].x;
-                        const dy = pts[i].y - pts[j].y;
-                        const dist = Math.sqrt(dx * dx + dy * dy);
-                        const maxDist = Math.min(w, h) * threshold;
-                        if (dist < maxDist) {
-                            const alpha = 0.08 + 0.12 * (1 - dist / maxDist);
-                            constCtx.beginPath();
-                            constCtx.moveTo(pts[i].x, pts[i].y);
-                            constCtx.lineTo(pts[j].x, pts[j].y);
-                            constCtx.strokeStyle = `rgba(212, 182, 138, ${alpha})`;
-                            constCtx.lineWidth = 0.6;
-                            constCtx.stroke();
-                        }
-                    }
-                }
+</div>
 
-                // draw small glowing dots at points
-                for (const p of pts) {
-                    const glow = 0.3 + 0.2 * Math.sin(time * 0.001 + p.x * 0.01);
-                    const grad = constCtx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 3);
-                    grad.addColorStop(0, `rgba(212, 182, 138, ${glow})`);
-                    grad.addColorStop(1, `rgba(212, 182, 138, 0)`);
-                    constCtx.beginPath();
-                    constCtx.arc(p.x, p.y, p.r * 3, 0, Math.PI * 2);
-                    constCtx.fillStyle = grad;
-                    constCtx.fill();
+<script>
+(function(){
+  'use strict';
+  const starCanvas = document.getElementById('stars-canvas');
+  const starCtx = starCanvas.getContext('2d');
+  let stars = [];
+  function resizeStar(){ starCanvas.width = innerWidth; starCanvas.height = innerHeight; }
+  addEventListener('resize', resizeStar); resizeStar();
+  function initStars(n=340){
+    stars = [];
+    for(let i=0;i<n;i++){
+      stars.push({
+        x:Math.random()*starCanvas.width,
+        y:Math.random()*starCanvas.height,
+        r:Math.random()*1.5+0.3,
+        a:Math.random()*0.7+0.25,
+        speed:0.0015+Math.random()*0.005,
+        phase:Math.random()*Math.PI*2
+      });
+    }
+  }
+  initStars();
+  function drawStars(t){
+    starCtx.clearRect(0,0,starCanvas.width,starCanvas.height);
+    for(const s of stars){
+      const flicker = 0.55 + 0.45*Math.sin(t*s.speed + s.phase);
+      starCtx.beginPath();
+      starCtx.arc(s.x,s.y,s.r,0,Math.PI*2);
+      starCtx.fillStyle = `rgba(244,239,230,${s.a*flicker})`;
+      starCtx.fill();
+    }
+  }
+  const constCanvas = document.getElementById('constellation-canvas');
+  const constCtx = constCanvas.getContext('2d');
+  let points = [];
+  function resizeConst(){ constCanvas.width = innerWidth; constCanvas.height = innerHeight; }
+  addEventListener('resize',()=>{ resizeStar(); resizeConst(); points = generatePoints(); });
+  resizeConst();
+  function generatePoints(){
+    const pts = [];
+    for(let i=0;i<24;i++) pts.push({ x:0.08+Math.random()*0.84, y:0.08+Math.random()*0.84, r:1.8+Math.random()*2.4 });
+    return pts;
+  }
+  points = generatePoints();
+  function drawConst(t){
+    const w = constCanvas.width, h = constCanvas.height;
+    constCtx.clearRect(0,0,w,h);
+    if(points.length < 2) return;
+    const pts = points.map(p=>({x:p.x*w,y:p.y*h,r:p.r}));
+    const threshold = 0.2;
+    for(let i=0;i<pts.length;i++){
+      for(let j=i+1;j<pts.length;j++){
+        const dx = pts[i].x-pts[j].x, dy = pts[i].y-pts[j].y;
+        const dist = Math.sqrt(dx*dx+dy*dy);
+        const max = Math.min(w,h)*threshold;
+        if(dist < max){
+          const alpha = 0.06 + 0.1*(1-dist/max);
+          constCtx.beginPath();
+          constCtx.moveTo(pts[i].x,pts[i].y);
+          constCtx.lineTo(pts[j].x,pts[j].y);
+          constCtx.strokeStyle = `rgba(201,168,124,${alpha})`;
+          constCtx.lineWidth = 0.55;
+          constCtx.stroke();
+        }
+      }
+    }
+    for(const p of pts){
+      const glow = 0.25 + 0.18*Math.sin(t*0.0009 + p.x*0.008);
+      const grad = constCtx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*2.8);
+      grad.addColorStop(0,`rgba(201,168,124,${glow})`);
+      grad.addColorStop(1,'rgba(201,168,124,0)');
+      constCtx.beginPath();
+      constCtx.arc(p.x,p.y,p.r*2.8,0,Math.PI*2);
+      constCtx.fillStyle = grad;
+      constCtx.fill();
+      constCtx.beginPath();
+      constCtx.arc(p.x,p.y,p.r*0.7,0,Math.PI*2);
+      constCtx.fillStyle = `rgba(244,239,230,${0.25+0.3*Math.sin(t*0.0018+p.x)})`;
+      constCtx.fill();
+    }
+  }
+  function animate(t){ drawStars(t); drawConst(t); requestAnimationFrame(animate); }
+  animate(0);
 
-                    constCtx.beginPath();
-                    constCtx.arc(p.x, p.y, p.r * 0.8, 0, Math.PI * 2);
-                    constCtx.fillStyle = `rgba(245, 240, 232, ${0.3 + 0.3 * Math.sin(time * 0.002 + p.x)})`;
-                    constCtx.fill();
-                }
-            }
+  const observer = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+  },{ threshold:0.12, rootMargin:'0px 0px -30px 0px' });
+  document.querySelectorAll('.fade').forEach(el=>observer.observe(el));
 
-            // ---------- ANIMATION LOOP ----------
-            let animationFrame = null;
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{
+    a.addEventListener('click',e=>{
+      e.preventDefault();
+      const t = document.querySelector(a.getAttribute('href'));
+      if(t) t.scrollIntoView({ behavior:'smooth', block:'start' });
+    });
+  });
 
-            function animate(time) {
-                drawStars(time);
-                drawConstellationLines(time);
-                animationFrame = requestAnimationFrame(animate);
-            }
-
-            // handle resize for constellation points too
-            window.addEventListener('resize', () => {
-                resizeStarCanvas();
-                resizeConstCanvas();
-                constellationPoints = generateConstellationPoints();
-            });
-
-            animate(0);
-
-            // ---------- FADE-IN OBSERVER ----------
-            const fadeEls = document.querySelectorAll('.fade-in');
-
-            const observer = new IntersectionObserver((entries) => {
-                for (const entry of entries) {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                    }
-                }
-            }, {
-                threshold: 0.15,
-                rootMargin: '0px 0px -40px 0px',
-            });
-
-            for (const el of fadeEls) {
-                observer.observe(el);
-            }
-
-            // ---------- SMOOTH SCROLL FOR NAV ----------
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const targetId = this.getAttribute('href');
-                    if (targetId === '#') return;
-                    const target = document.querySelector(targetId);
-                    if (target) {
-                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }
-                });
-            });
-
-            // ---------- WAYPOINT INTERACTION (simple) ----------
-            const waypoints = document.querySelectorAll('.flight-path__waypoint');
-            waypoints.forEach((wp, idx) => {
-                wp.addEventListener('click', function() {
-                    waypoints.forEach(w => w.classList.remove('active'));
-                    this.classList.add('active');
-                });
-            });
-
-            // ---------- KEYBOARD ACCESSIBILITY ----------
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') {
-                    // subtle: remove active from waypoints
-                    waypoints.forEach(w => w.classList.remove('active'));
-                    // but keep Erie active
-                    const first = document.querySelector('.flight-path__waypoint');
-                    if (first) first.classList.add('active');
-                }
-            });
-
-            console.log('✦ The Dog Stars — a constellation of grief and hope ✦');
-            console.log('“What are we waiting for?”');
-
-        })();
-    </script>
-
+  const waypoints = document.querySelectorAll('.wp');
+  waypoints.forEach(wp=>{
+    wp.addEventListener('click',()=>{
+      waypoints.forEach(w=>w.classList.remove('active'));
+      wp.classList.add('active');
+    });
+  });
+})();
+</script>
 </body>
 </html>
