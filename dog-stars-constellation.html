@@ -691,6 +691,127 @@
             }
         }
 
+        /* ----- chapter cards ----- */
+        .chapter-grid {
+            display: grid;
+            gap: 14px;
+            margin-top: 40px;
+        }
+
+        .chapter-card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .chapter-card[open] {
+            border-color: var(--gold-glow);
+        }
+
+        .chapter-card__summary {
+            list-style: none;
+            cursor: pointer;
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .chapter-card__summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .chapter-card__num {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            color: var(--gold);
+            font-weight: 600;
+            min-width: 40px;
+        }
+
+        .chapter-card__heading {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .chapter-card__title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .chapter-card__meta {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            letter-spacing: 0.5px;
+            margin-top: 2px;
+        }
+
+        .chapter-card__chevron {
+            color: var(--gold);
+            font-size: 1rem;
+            transition: var(--transition);
+            flex-shrink: 0;
+        }
+
+        .chapter-card[open] .chapter-card__chevron {
+            transform: rotate(90deg);
+        }
+
+        .chapter-card__body {
+            padding: 0 24px 26px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .chapter-card__summary-text {
+            color: var(--text-dim);
+            font-size: 0.92rem;
+            line-height: 1.6;
+            margin: 18px 0 16px;
+        }
+
+        .chapter-card__quotes {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .chapter-card__quote {
+            font-style: italic;
+            font-size: 0.88rem;
+            color: var(--text);
+            font-weight: 300;
+            padding-left: 14px;
+            border-left: 2px solid var(--gold);
+        }
+
+        .chapter-card__quote span {
+            display: block;
+            font-style: normal;
+            font-size: 0.72rem;
+            color: var(--text-dim);
+            margin-top: 4px;
+        }
+
+        .chapter-card__tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .chapter-card__tag {
+            font-size: 0.7rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: var(--gold);
+            border: 1px solid var(--gold-glow);
+            padding: 4px 12px;
+            border-radius: 30px;
+        }
+
         /* ----- footer ----- */
         .footer {
             margin-top: 60px;
@@ -827,6 +948,7 @@
                 <a href="#world" class="btn btn--primary">How the World Ended</a>
                 <a href="#characters" class="btn btn--outline">Characters</a>
                 <a href="#story" class="btn btn--outline">The Story</a>
+                <a href="#chapters" class="btn btn--outline">Chapter by Chapter</a>
                 <a href="#poem" class="btn btn--outline">The Poem</a>
             </div>
             <div class="hero__scroll">↓ scroll to begin</div>
@@ -1184,6 +1306,238 @@
                         <li>Unidentified jets, crews speaking Arabic, pass overhead. The novel ends open — other survivors, other threats, the world still turning.</li>
                     </ul>
                 </div>
+            </div>
+        </section>
+
+        <!-- CHAPTER BY CHAPTER -->
+        <section id="chapters">
+            <div class="fade-in">
+                <div class="section__label">Book One, Close Reading</div>
+                <h2 class="section__title">Chapter by <span class="highlight">Chapter</span></h2>
+                <p class="section__desc">
+                    The first six chapters, one at a time — tap any chapter to open it up.
+                </p>
+            </div>
+
+            <div class="chapter-grid fade-in">
+                <details class="chapter-card">
+                    <summary class="chapter-card__summary">
+                        <span class="chapter-card__num">I</span>
+                        <span class="chapter-card__heading">
+                            <div class="chapter-card__title">The Beast, the Perimeter, and What's Gone</div>
+                            <div class="chapter-card__meta">pp. 8–24 · Book One</div>
+                        </span>
+                        <span class="chapter-card__chevron">▸</span>
+                    </summary>
+                    <div class="chapter-card__body">
+                        <p class="chapter-card__summary-text">
+                            Hig introduces his world: the Erie airport, the Beast, the perimeter he
+                            shares with Bangley, and Jasper beside him. A flashback carries us to
+                            Melissa, pregnant and dying of the flu, and the moment Hig smothered her
+                            at her own request. The chapter closes under the stars, with Hig still
+                            turning over a radio transmission from Grand Junction — and a fragment
+                            of Li Po about home.
+                        </p>
+                        <div class="chapter-card__quotes">
+                            <div class="chapter-card__quote">
+                                I keep the Beast running, I keep the 100 low lead on tap, I foresee attacks.
+                                I am young enough, I am old enough.
+                                <span>Hig, opening line</span>
+                            </div>
+                            <div class="chapter-card__quote">
+                                I don't want to be confused: we are nine years out. The flu killed almost
+                                everybody, then the blood disease killed more. The ones who are left are mostly Not Nice.
+                                <span>Hig</span>
+                            </div>
+                        </div>
+                        <div class="chapter-card__tags">
+                            <span class="chapter-card__tag">Grief</span>
+                            <span class="chapter-card__tag">Survival vs. Meaning</span>
+                            <span class="chapter-card__tag">Environmental Collapse</span>
+                        </div>
+                    </div>
+                </details>
+
+                <details class="chapter-card">
+                    <summary class="chapter-card__summary">
+                        <span class="chapter-card__num">II</span>
+                        <span class="chapter-card__heading">
+                            <div class="chapter-card__title">Flying as Escape, Bangley's Silence</div>
+                            <div class="chapter-card__meta">pp. 44–46 · Book One</div>
+                        </span>
+                        <span class="chapter-card__chevron">▸</span>
+                    </summary>
+                    <div class="chapter-card__body">
+                        <p class="chapter-card__summary-text">
+                            Hig explains why he flies — not freedom, but the way the wrecked world
+                            resolves into pattern from above. A flashback to Bangley's first flight
+                            reveals he already shot two people from the Mennonite settlement, calling
+                            them "Druids." When children wave up at the plane, Bangley goes quiet for
+                            the rest of the trip — the first sign of a moral rift between the two men.
+                        </p>
+                        <div class="chapter-card__quotes">
+                            <div class="chapter-card__quote">
+                                From up here there was no misery, no suffering, no strife, just pattern
+                                and perfection. The immortal stillness of a landscape painting.
+                                <span>Hig</span>
+                            </div>
+                            <div class="chapter-card__quote">
+                                He is as at home with his solitude as the note reverberating inside a
+                                bell. Prefers it. Will protect it to the death.
+                                <span>Hig, on Bangley</span>
+                            </div>
+                        </div>
+                        <div class="chapter-card__tags">
+                            <span class="chapter-card__tag">Escape vs. Reality</span>
+                            <span class="chapter-card__tag">Solitude</span>
+                            <span class="chapter-card__tag">Moral Divergence</span>
+                        </div>
+                    </div>
+                </details>
+
+                <details class="chapter-card">
+                    <summary class="chapter-card__summary">
+                        <span class="chapter-card__num">III</span>
+                        <span class="chapter-card__heading">
+                            <div class="chapter-card__title">The Pillow</div>
+                            <div class="chapter-card__meta">pp. 47–53 · Book One</div>
+                        </span>
+                        <span class="chapter-card__chevron">▸</span>
+                    </summary>
+                    <div class="chapter-card__body">
+                        <p class="chapter-card__summary-text">
+                            The night after Bangley kills a nine-year-old boy in a firefight, Hig
+                            walks the blood-soaked ground and feels almost nothing. His mind drifts —
+                            to Melissa's birthdays, to his father's fishing rod, and finally to the
+                            hospital where Melissa asked him to end her suffering, and he did. He
+                            surfaces only when he realizes Jasper isn't beside him.
+                        </p>
+                        <div class="chapter-card__quotes">
+                            <div class="chapter-card__quote">
+                                I wonder what it is this need to tell. To animate somehow the deathly
+                                stillness of the profoundest beauty. Breathe life in the telling.
+                                <span>Hig</span>
+                            </div>
+                            <div class="chapter-card__quote">
+                                I covered her face and used it. On my own wife... I loved her. This is
+                                what I live with.
+                                <span>Hig</span>
+                            </div>
+                        </div>
+                        <div class="chapter-card__tags">
+                            <span class="chapter-card__tag">Storytelling as Survival</span>
+                            <span class="chapter-card__tag">The Weight of Killing</span>
+                            <span class="chapter-card__tag">Memory</span>
+                        </div>
+                    </div>
+                </details>
+
+                <details class="chapter-card">
+                    <summary class="chapter-card__summary">
+                        <span class="chapter-card__num">IV</span>
+                        <span class="chapter-card__heading">
+                            <div class="chapter-card__title">The Garden</div>
+                            <div class="chapter-card__meta">pp. 54–62 · Book One</div>
+                        </span>
+                        <span class="chapter-card__chevron">▸</span>
+                    </summary>
+                    <div class="chapter-card__body">
+                        <p class="chapter-card__summary-text">
+                            Spring planting brings Hig a rare, unnamed happiness. He and Bangley argue
+                            over a planned trip to the mountains — until Bangley, coughing, admits he
+                            doesn't sleep well when Hig is gone. That night, packing, Hig remembers
+                            Melissa's pregnancy, the names they picked, and the terrible, unresolved
+                            fight on their last fishing trip together.
+                        </p>
+                        <div class="chapter-card__quotes">
+                            <div class="chapter-card__quote">
+                                There was something moving inside that resembled a kind of happiness.
+                                I would never have named it. Not then. For fear. But I name it now.
+                                <span>Hig</span>
+                            </div>
+                            <div class="chapter-card__quote">
+                                We were like a married couple unable anymore to speak the truth about
+                                the most important things.
+                                <span>Hig, on Bangley</span>
+                            </div>
+                        </div>
+                        <div class="chapter-card__tags">
+                            <span class="chapter-card__tag">Ritual as Survival</span>
+                            <span class="chapter-card__tag">Fragile Happiness</span>
+                            <span class="chapter-card__tag">Unspoken Truths</span>
+                        </div>
+                    </div>
+                </details>
+
+                <details class="chapter-card">
+                    <summary class="chapter-card__summary">
+                        <span class="chapter-card__num">V</span>
+                        <span class="chapter-card__heading">
+                            <div class="chapter-card__title">The Coke Truck</div>
+                            <div class="chapter-card__meta">pp. 64–77 · Book One</div>
+                        </span>
+                        <span class="chapter-card__chevron">▸</span>
+                    </summary>
+                    <div class="chapter-card__body">
+                        <p class="chapter-card__summary-text">
+                            A supply run turns violent: Hig kills an archer, tries to spare two other
+                            men, then guns one of them down in disgust after hearing a rumor — "the
+                            A-rabs" are coming, heard over a ham radio in Pueblo. Back home, Bangley
+                            dissects every tactical mistake Hig made, but takes the intel dead
+                            seriously.
+                        </p>
+                        <div class="chapter-card__quotes">
+                            <div class="chapter-card__quote">
+                                Try to do the right thing. Circumstance intervenes.
+                                <span>Hig</span>
+                            </div>
+                            <div class="chapter-card__quote">
+                                The A-rabs. We heard it. In Pueblo. Ham radio... They're here. Or coming. Kill us all.
+                                <span>Ponytail</span>
+                            </div>
+                        </div>
+                        <div class="chapter-card__tags">
+                            <span class="chapter-card__tag">Mercy vs. Pragmatism</span>
+                            <span class="chapter-card__tag">Moral Disgust</span>
+                            <span class="chapter-card__tag">The Wider World</span>
+                        </div>
+                    </div>
+                </details>
+
+                <details class="chapter-card">
+                    <summary class="chapter-card__summary">
+                        <span class="chapter-card__num">VI</span>
+                        <span class="chapter-card__heading">
+                            <div class="chapter-card__title">Jasper</div>
+                            <div class="chapter-card__meta">pp. 83–93 · Book One</div>
+                        </span>
+                        <span class="chapter-card__chevron">▸</span>
+                    </summary>
+                    <div class="chapter-card__body">
+                        <p class="chapter-card__summary-text">
+                            A hunting trip into the mountains — carp instead of trout, a fire, a night
+                            under open sky — ends with Jasper dead in his sleep, peacefully, of old
+                            age. Hig doesn't move for a day. He buries Jasper under a stone mound and
+                            walks on, for the first time in the novel, entirely alone.
+                        </p>
+                        <div class="chapter-card__quotes">
+                            <div class="chapter-card__quote">
+                                Grief is an element. It has its own cycle like the carbon cycle, the
+                                nitrogen. It never diminishes not ever.
+                                <span>Hig</span>
+                            </div>
+                            <div class="chapter-card__quote">
+                                Goodbye, bud. You are Jasper. My heart. We are never apart, not here, not there.
+                                <span>Hig</span>
+                            </div>
+                        </div>
+                        <div class="chapter-card__tags">
+                            <span class="chapter-card__tag">Grief as Element</span>
+                            <span class="chapter-card__tag">Ritual Mourning</span>
+                            <span class="chapter-card__tag">Total Isolation</span>
+                        </div>
+                    </div>
+                </details>
             </div>
         </section>
 
