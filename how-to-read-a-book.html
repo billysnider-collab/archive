@@ -348,6 +348,148 @@
 
   #hits{ font-family:'IBM Plex Mono', monospace; font-size:10.5px; color:var(--ink-soft); margin-top:6px; min-height:14px;}
 
+  /* ---------- LENS BAR (Rule filter) ---------- */
+  .lens-bar{
+    display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+    margin: -14px 0 26px;
+  }
+  .lens-bar .hint{
+    font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--ink-soft); margin-right:2px;
+  }
+  .lens-btn{
+    appearance:none; cursor:pointer; border-radius:20px; padding:6px 13px;
+    font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:.02em;
+    border:1px solid var(--rule); background:var(--card); color:var(--ink-soft);
+    transition:all .15s ease;
+  }
+  .lens-btn:hover{ border-color:var(--ink-soft); }
+  .lens-btn[data-stage="all"].active{ background:var(--ink); border-color:var(--ink); color:var(--card); }
+  .lens-btn[data-stage="Stage 1: Structure"].active{ background:var(--oxblood); border-color:var(--oxblood); color:var(--card); }
+  .lens-btn[data-stage="Stage 2: Interpretation"].active{ background:var(--green); border-color:var(--green); color:var(--card); }
+  .lens-btn[data-stage="Stage 3: Criticism"].active{ background:var(--gold); border-color:var(--gold); color:var(--card); }
+
+  .callout{ transition: opacity .25s ease, filter .25s ease, box-shadow .25s ease; }
+  .callout.lens-dim{ opacity:.25; filter:saturate(.4); }
+  .callout.lens-hit{ box-shadow: 0 0 0 2px rgba(0,0,0,0.05); }
+  .callout.lens-hit.stage-1{ border-left-color: var(--oxblood); }
+  .callout.lens-hit.stage-2{ border-left-color: var(--green); }
+  .callout.lens-hit.stage-3{ border-left-color: var(--gold); }
+
+  /* ---------- WORKSPACE (test yourself) ---------- */
+  .workspace{
+    margin-top:48px;
+    border:1px solid var(--rule);
+    border-radius:var(--radius);
+    background:var(--card);
+    padding:24px 26px 26px;
+  }
+  .workspace-head{ display:flex; align-items:center; gap:10px; margin-bottom:4px; }
+  .workspace-head h3{
+    font-family:'Fraunces', serif; font-weight:600; font-size:19px; margin:0; color:var(--ink);
+  }
+  .workspace-icon{ font-size:17px; }
+  .workspace-intro{ color:var(--ink-soft); font-size:13.5px; font-style:italic; margin:0 0 18px; }
+  .predict-block{ margin-bottom:16px; }
+  .predict-block label{
+    display:block; font-family:'IBM Plex Mono', monospace; font-size:11px;
+    text-transform:uppercase; letter-spacing:.04em; color:var(--ink-soft); margin-bottom:6px;
+  }
+  .predict-block textarea{
+    width:100%; min-height:60px; resize:vertical;
+    background:var(--paper); border:1px solid var(--rule); border-radius:var(--radius);
+    padding:10px 12px; color:var(--ink); font-family:'Source Serif 4', Georgia, serif; font-size:14.5px;
+  }
+  .predict-block textarea:focus{ outline:2px solid var(--oxblood-dim); outline-offset:1px; }
+
+  .reveal-btn{
+    appearance:none; cursor:pointer; background:var(--ink); color:var(--card);
+    border:none; padding:10px 18px; border-radius:var(--radius);
+    font-family:'IBM Plex Mono', monospace; font-size:11.5px; letter-spacing:.05em; text-transform:uppercase;
+    display:inline-flex; align-items:center; gap:8px; transition: background .15s ease;
+  }
+  .reveal-btn:hover{ background:var(--oxblood); }
+  .reveal-btn .chev{ transition: transform .3s ease; font-size:10px; }
+  .reveal-btn.open .chev{ transform: rotate(90deg); }
+
+  .answer-outer{ display:grid; grid-template-rows:0fr; transition: grid-template-rows .4s ease; }
+  .answer-outer.open{ grid-template-rows:1fr; }
+  .answer-inner{ overflow:hidden; }
+  .answer-body{ margin-top:18px; padding-top:16px; border-top:1px dashed var(--rule); }
+  .answer-rule{ margin-bottom:14px; }
+  .answer-rule:last-child{ margin-bottom:0; }
+  .answer-rule .rn{
+    font-family:'IBM Plex Mono', monospace; font-size:10.5px; text-transform:uppercase;
+    letter-spacing:.05em; color:var(--oxblood); display:block; margin-bottom:3px;
+  }
+  .answer-rule .rt{ font-weight:600; margin:0 0 3px; }
+  .answer-rule .rd{ color:var(--ink-soft); font-size:14px; margin:0; }
+
+  .rate-row{ display:flex; align-items:center; gap:8px; margin-top:20px; flex-wrap:wrap; }
+  .rate-row .rlabel{ font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--ink-soft); margin-right:2px; }
+  .rate-btn{
+    appearance:none; cursor:pointer; border-radius:var(--radius); padding:6px 12px;
+    font-family:'IBM Plex Mono', monospace; font-size:11.5px;
+    border:1px solid var(--rule); background:var(--paper); color:var(--ink-soft);
+    transition:all .15s ease;
+  }
+  .rate-btn:hover{ border-color:var(--ink-soft); }
+  .rate-btn[data-v="1"].active{ background:#f0d9d6; color:#7c2e2a; border-color:#7c2e2a; }
+  .rate-btn[data-v="2"].active{ background:#f3e6d0; color:#a3792f; border-color:#a3792f; }
+  .rate-btn[data-v="3"].active{ background:#dbe6f2; color:#345678; border-color:#345678; }
+  .rate-btn[data-v="4"].active{ background:#dfe9d9; color:#3a4a3a; border-color:#3a4a3a; }
+  .rated-at{ font-family:'IBM Plex Mono', monospace; font-size:10.5px; color:var(--ink-soft); margin-left:auto; }
+
+  /* ---------- DAILY REVIEW DRAWER ---------- */
+  .review-section{ margin-top:22px; }
+  .review-toggle{
+    display:flex; align-items:center; justify-content:space-between;
+    width:100%; background:none; border:1px solid var(--rule); border-radius:var(--radius);
+    padding:10px 12px; cursor:pointer; font-family:'IBM Plex Mono', monospace; font-size:11px;
+    text-transform:uppercase; letter-spacing:.05em; color:var(--ink);
+  }
+  .review-toggle .count-badge{
+    background:var(--oxblood); color:var(--card); border-radius:20px; padding:1px 8px; font-size:10.5px;
+  }
+  .review-list{ margin-top:8px; display:none; }
+  .review-list.open{ display:block; }
+  .review-item{
+    display:block; padding:9px 10px; border-radius:var(--radius); cursor:pointer;
+    font-size:12.5px; color:var(--ink-soft); border-left:3px solid var(--gold);
+    background:var(--card); margin-bottom:6px;
+  }
+  .review-item:hover{ color:var(--oxblood); }
+  .review-item .rev-ch{ font-family:'IBM Plex Mono', monospace; font-size:10px; color:var(--ink-soft); display:block; margin-bottom:2px; }
+  .review-empty{ font-size:12px; color:var(--ink-soft); font-style:italic; padding:8px 4px; }
+
+  .graph-link{
+    display:block; margin-top:10px; padding:10px 12px; background:var(--card);
+    border:1px solid var(--rule); color:var(--ink); text-align:center;
+    font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:.05em; text-transform:uppercase;
+    border-radius:var(--radius); cursor:pointer;
+  }
+  .graph-link:hover{ border-color:var(--oxblood); color:var(--oxblood); }
+
+  /* ---------- RULE GRAPH MODAL ---------- */
+  .modal-backdrop{
+    display:none; position:fixed; inset:0; background:rgba(20,17,14,.55);
+    z-index:50; align-items:center; justify-content:center; padding:30px;
+  }
+  .modal-backdrop.open{ display:flex; }
+  .modal-box{
+    background:var(--paper); border:1px solid var(--rule); border-radius:6px;
+    max-width:880px; width:100%; max-height:86vh; overflow-y:auto; padding:26px 28px 30px;
+    position:relative;
+  }
+  .modal-box h2{ font-family:'Fraunces', serif; font-size:22px; margin:0 0 4px; }
+  .modal-box .modal-sub{ color:var(--ink-soft); font-size:13px; font-style:italic; margin:0 0 18px; }
+  .modal-close{
+    position:absolute; top:18px; right:20px; cursor:pointer; background:none; border:none;
+    font-size:20px; color:var(--ink-soft); line-height:1;
+  }
+  .modal-close:hover{ color:var(--oxblood); }
+  #rule-graph-mermaid{ background:var(--card); border:1px solid var(--rule); border-radius:var(--radius); padding:16px; overflow-x:auto; }
+  #rule-graph-mermaid .node rect, #rule-graph-mermaid .node polygon{ cursor:pointer; }
+
   @media (max-width: 860px){
     .layout{ grid-template-columns: 1fr; }
     .sidebar{ position:relative; height:auto; border-right:none; border-bottom:1px solid var(--rule); }
@@ -374,13 +516,31 @@
     <ul class="toc" id="toc"></ul>
 
     <button class="rules-link" id="rules-btn">✎ Synthesized Rules Index</button>
+    <button class="graph-link" id="graph-btn">🌐 Rule Graph</button>
+
+    <div class="review-section">
+      <button class="review-toggle" id="review-toggle">
+        <span>⚡ Daily Review</span>
+        <span class="count-badge" id="review-count">0</span>
+      </button>
+      <div class="review-list" id="review-list"></div>
+    </div>
   </nav>
 
   <main id="main"></main>
 </div>
 
+<div class="modal-backdrop" id="graph-modal">
+  <div class="modal-box">
+    <button class="modal-close" id="graph-close">&times;</button>
+    <h2>The Rule Graph</h2>
+    <p class="modal-sub">Rules 1–11 in the order you apply them. Click a node to jump to the chapter that teaches it.</p>
+    <div id="rule-graph-mermaid" class="mermaid"></div>
+  </div>
+</div>
+
 <script>
-mermaid.initialize({ startOnLoad: false, theme: 'neutral' });
+mermaid.initialize({ startOnLoad: false, theme: 'neutral', securityLevel: 'loose' });
 
 const BOOK = {
   "title": "How to Read a Book",
@@ -624,6 +784,35 @@ document.getElementById('book-title').textContent = BOOK.title;
 document.getElementById('book-authors').textContent = BOOK.authors;
 
 let currentView = { type: 'chapter', chapter: BOOK.chapters[0].chapter };
+let activeStage = 'all';
+const STAGES = ['Stage 1: Structure', 'Stage 2: Interpretation', 'Stage 3: Criticism'];
+const stageNum = s => s.startsWith('Stage 1') ? 1 : s.startsWith('Stage 2') ? 2 : 3;
+
+/* ---------- persistent progress (window.storage) ---------- */
+const progressCache = {};
+async function loadChapterProgress(num){
+  if(progressCache[num]) return progressCache[num];
+  try{
+    const res = await window.storage.get('htrab-progress:ch'+num, false);
+    progressCache[num] = res ? JSON.parse(res.value) : {};
+  }catch(e){ progressCache[num] = {}; }
+  return progressCache[num];
+}
+async function saveChapterProgress(num, data){
+  progressCache[num] = data;
+  try{ await window.storage.set('htrab-progress:ch'+num, JSON.stringify(data), false); }
+  catch(e){ console.error('progress save failed', e); }
+}
+function timeAgo(ts){
+  const s = Math.floor((Date.now()-ts)/1000);
+  if(s<60) return 'just now';
+  if(s<3600) return Math.floor(s/60)+'m ago';
+  if(s<86400) return Math.floor(s/3600)+'h ago';
+  return Math.floor(s/86400)+'d ago';
+}
+function escapeHtml(s){
+  return (s||'').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
 
 function buildTOC(){
   tocEl.innerHTML = '';
@@ -650,13 +839,14 @@ function starRating(r){
   return '★'.repeat(n) + '☆'.repeat(5-n) + ` <span style="color:var(--ink-soft)">(${r}/10)</span>`;
 }
 
-function renderChapter(num){
+async function renderChapter(num, opts){
   const ch = BOOK.chapters.find(c => c.chapter === num);
   if(!ch) return;
   currentView = { type:'chapter', chapter:num };
   const idx = BOOK.chapters.indexOf(ch);
   const prev = BOOK.chapters[idx-1];
   const next = BOOK.chapters[idx+1];
+  const chapterRules = BOOK.rules_index.filter(r => r.chapter === num);
 
   mainEl.innerHTML = `
     <div class="card-header">
@@ -670,7 +860,18 @@ function renderChapter(num){
       ${ch.summary ? `<p class="summary">${ch.summary}</p>` : ''}
       ${ch.tags && ch.tags.length ? `<div class="tag-row">${ch.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>` : ''}
     </div>
+
+    ${chapterRules.length ? `
+    <div class="lens-bar">
+      <span class="hint">Rule Lens:</span>
+      <button class="lens-btn ${activeStage==='all'?'active':''}" data-stage="all">All</button>
+      ${STAGES.map(s=>`<button class="lens-btn ${activeStage===s?'active':''}" data-stage="${s}">${s.split(': ')[1]}</button>`).join('')}
+    </div>` : ''}
+
     <article>${ch.html}</article>
+
+    <div class="workspace" id="workspace"></div>
+
     <div class="chapter-nav">
       ${prev ? `<a id="nav-prev">← Ch ${prev.chapter}</a>` : '<span></span>'}
       <span class="spacer"></span>
@@ -680,9 +881,131 @@ function renderChapter(num){
   if(prev) document.getElementById('nav-prev').addEventListener('click', ()=>renderChapter(prev.chapter));
   if(next) document.getElementById('nav-next').addEventListener('click', ()=>renderChapter(next.chapter));
 
+  mainEl.querySelectorAll('.lens-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      activeStage = btn.dataset.stage;
+      mainEl.querySelectorAll('.lens-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      applyLensFilter();
+    });
+  });
+
+  tagRuleCallouts();
+  applyLensFilter();
+  await renderWorkspace(ch, chapterRules);
+
   highlightTOC();
-  window.scrollTo(0,0);
+  if(!opts || !opts.keepScroll) window.scrollTo(0,0);
   mermaid.run({ querySelector: '.mermaid' });
+}
+
+/* ---------- Rule Lens: tag & filter callouts by stage ---------- */
+function tagRuleCallouts(){
+  mainEl.querySelectorAll('article .callout').forEach(el => {
+    const titleEl = el.querySelector('.callout-title');
+    if(!titleEl) return;
+    const m = titleEl.textContent.match(/Rule\s+(\d+)/i);
+    if(!m) return;
+    const rule = BOOK.rules_index.find(r => r.num === Number(m[1]));
+    if(!rule) return;
+    el.dataset.stage = rule.stage;
+    el.classList.add('stage-'+stageNum(rule.stage));
+  });
+}
+function applyLensFilter(){
+  mainEl.querySelectorAll('article .callout').forEach(el => {
+    el.classList.remove('lens-dim','lens-hit');
+    if(activeStage === 'all' || !el.dataset.stage) return;
+    if(el.dataset.stage === activeStage) el.classList.add('lens-hit');
+    else el.classList.add('lens-dim');
+  });
+}
+
+/* ---------- Workspace: predict, reveal, rate ---------- */
+async function renderWorkspace(ch, chapterRules){
+  const wsEl = document.getElementById('workspace');
+  if(!wsEl) return;
+  const saved = await loadChapterProgress(ch.chapter);
+
+  const answerHtml = chapterRules.length
+    ? chapterRules.map(r => `
+        <div class="answer-rule">
+          <span class="rn">Rule ${r.num} · ${r.stage}</span>
+          <p class="rt">${r.title}</p>
+          <p class="rd">${r.desc}</p>
+        </div>`).join('')
+    : `<div class="answer-rule"><p class="rd">${ch.summary || 'This chapter sets up the rules that follow — no numbered rule of its own yet.'}</p></div>`;
+
+  wsEl.innerHTML = `
+    <div class="workspace-head">
+      <span class="workspace-icon">⚡</span>
+      <h3>Test Yourself — Chapter ${ch.chapter}</h3>
+    </div>
+    <p class="workspace-intro">Adler's own acid tests: can you translate it, and can you exemplify it? Try both before you look.</p>
+
+    <div class="predict-block">
+      <label>Translate this chapter's core idea into your own words</label>
+      <textarea data-field="translate" placeholder="No jargon, no borrowed phrases — your own sentence.">${escapeHtml(saved.translate)}</textarea>
+    </div>
+    <div class="predict-block">
+      <label>Give a real-world example of it in action</label>
+      <textarea data-field="example" placeholder="A concrete case, real or imagined.">${escapeHtml(saved.example)}</textarea>
+    </div>
+
+    <button class="reveal-btn ${saved.revealed?'open':''}" id="ws-reveal">
+      <span class="chev">&#9656;</span> <span class="reveal-label">${saved.revealed?'Hide the rule(s)':'Reveal the rule(s)'}</span>
+    </button>
+
+    <div class="answer-outer ${saved.revealed?'open':''}" id="ws-answer-outer">
+      <div class="answer-inner"><div class="answer-body">${answerHtml}</div></div>
+    </div>
+
+    <div class="rate-row">
+      <span class="rlabel">How'd you do?</span>
+      <button class="rate-btn ${saved.rating===1?'active':''}" data-v="1">1 · Forgot</button>
+      <button class="rate-btn ${saved.rating===2?'active':''}" data-v="2">2 · Unsure</button>
+      <button class="rate-btn ${saved.rating===3?'active':''}" data-v="3">3 · Close</button>
+      <button class="rate-btn ${saved.rating===4?'active':''}" data-v="4">4 · Got it</button>
+      <span class="rated-at" id="ws-rated-at">${saved.ratedAt ? 'rated ' + timeAgo(saved.ratedAt) : ''}</span>
+    </div>
+  `;
+
+  wsEl.querySelectorAll('textarea').forEach(ta => {
+    let t;
+    ta.addEventListener('input', () => {
+      clearTimeout(t);
+      t = setTimeout(async () => {
+        const cur = await loadChapterProgress(ch.chapter);
+        cur[ta.dataset.field] = ta.value;
+        await saveChapterProgress(ch.chapter, cur);
+      }, 400);
+    });
+  });
+
+  const revealBtn = document.getElementById('ws-reveal');
+  revealBtn.addEventListener('click', async () => {
+    const outer = document.getElementById('ws-answer-outer');
+    const isOpen = outer.classList.toggle('open');
+    revealBtn.classList.toggle('open', isOpen);
+    revealBtn.querySelector('.reveal-label').textContent = isOpen ? 'Hide the rule(s)' : 'Reveal the rule(s)';
+    const cur = await loadChapterProgress(ch.chapter);
+    cur.revealed = isOpen;
+    await saveChapterProgress(ch.chapter, cur);
+  });
+
+  wsEl.querySelectorAll('.rate-btn').forEach(rb => {
+    rb.addEventListener('click', async () => {
+      const v = Number(rb.dataset.v);
+      const cur = await loadChapterProgress(ch.chapter);
+      cur.rating = v;
+      cur.ratedAt = Date.now();
+      await saveChapterProgress(ch.chapter, cur);
+      wsEl.querySelectorAll('.rate-btn').forEach(b=>b.classList.remove('active'));
+      rb.classList.add('active');
+      document.getElementById('ws-rated-at').textContent = 'rated just now';
+      renderDailyReview();
+    });
+  });
 }
 
 function renderRulesIndex(){
@@ -696,9 +1019,14 @@ function renderRulesIndex(){
     <div class="rules-page">
       <h2 class="page-title">The Rules of Analytical Reading</h2>
       <p class="page-sub">Synthesized across all ${BOOK.chapters.length} chapters — every numbered rule Adler & Van Doren give, gathered in one place, in the order you apply them.</p>
+      <div class="lens-bar">
+        <span class="hint">Rule Lens:</span>
+        <button class="lens-btn ${activeStage==='all'?'active':''}" data-stage="all">All</button>
+        ${STAGES.map(s=>`<button class="lens-btn ${activeStage===s?'active':''}" data-stage="${s}">${s.split(': ')[1]}</button>`).join('')}
+      </div>
   `;
   Object.entries(stages).forEach(([stage, rules]) => {
-    html += `<div class="stage-group"><h3>${stage}</h3>`;
+    html += `<div class="stage-group" data-stage="${stage}"><h3>${stage}</h3>`;
     rules.forEach(r => {
       html += `
         <div class="rule-card" data-chapter="${r.chapter}">
@@ -716,6 +1044,16 @@ function renderRulesIndex(){
   mainEl.innerHTML = html;
   document.querySelectorAll('.rule-card').forEach(el => {
     el.addEventListener('click', () => renderChapter(Number(el.dataset.chapter)));
+  });
+  mainEl.querySelectorAll('.lens-bar .lens-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      activeStage = btn.dataset.stage;
+      mainEl.querySelectorAll('.lens-bar .lens-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      mainEl.querySelectorAll('.stage-group').forEach(g => {
+        g.style.display = (activeStage === 'all' || g.dataset.stage === activeStage) ? '' : 'none';
+      });
+    });
   });
   highlightTOC();
   window.scrollTo(0,0);
@@ -748,8 +1086,83 @@ searchInput.addEventListener('input', () => {
   hitsEl.textContent = `${count} chapter${count===1?'':'s'} match`;
 });
 
+/* ---------- Daily Review drawer ---------- */
+async function renderDailyReview(){
+  const listEl = document.getElementById('review-list');
+  const countEl = document.getElementById('review-count');
+  const DAY = 24*60*60*1000;
+  const due = [];
+  for(const ch of BOOK.chapters){
+    const p = await loadChapterProgress(ch.chapter);
+    if(p.rating && p.rating <= 2 && p.ratedAt && (Date.now() - p.ratedAt) > DAY){
+      due.push({ ch, p });
+    }
+  }
+  countEl.textContent = due.length;
+  listEl.innerHTML = due.length
+    ? due.map(({ch,p}) => `
+        <div class="review-item" data-chapter="${ch.chapter}">
+          <span class="rev-ch">Chapter ${ch.chapter} · rated ${p.rating===1?'Forgot':'Unsure'}, ${timeAgo(p.ratedAt)}</span>
+          ${ch.title.replace(/^Ch(apter)?\s*\d+[:\-–]?\s*/i,'')}
+        </div>`).join('')
+    : `<p class="review-empty">Nothing due — check back after 24h on anything you rated low.</p>`;
+  listEl.querySelectorAll('.review-item').forEach(el => {
+    el.addEventListener('click', () => {
+      renderChapter(Number(el.dataset.chapter));
+      setTimeout(() => document.getElementById('workspace')?.scrollIntoView({behavior:'smooth', block:'start'}), 60);
+    });
+  });
+}
+document.getElementById('review-toggle').addEventListener('click', () => {
+  document.getElementById('review-list').classList.toggle('open');
+});
+
+/* ---------- Rule Graph modal ---------- */
+const graphModal = document.getElementById('graph-modal');
+let graphRendered = false;
+window.jumpToRule = function(num){
+  const rule = BOOK.rules_index.find(r => r.num === num);
+  graphModal.classList.remove('open');
+  if(rule) renderChapter(rule.chapter);
+};
+async function openGraph(){
+  graphModal.classList.add('open');
+  if(!graphRendered){
+    graphRendered = true;
+    const chain = BOOK.rules_index.map(r => `R${r.num}`).join(' --> ');
+    const nodes = BOOK.rules_index.map(r => `    R${r.num}["Rule ${r.num}\\n${r.title}"]`).join('\n');
+    const clicks = BOOK.rules_index.map(r => `    click R${r.num} call jumpToRule(${r.num})`).join('\n');
+    const byStage = {1:[], 2:[], 3:[]};
+    BOOK.rules_index.forEach(r => byStage[stageNum(r.stage)].push(`R${r.num}`));
+    const graphDef = `flowchart TD
+${nodes}
+    ${chain}
+    subgraph SG1["Stage 1 — Structure"]
+      ${byStage[1].join('\n      ')}
+    end
+    subgraph SG2["Stage 2 — Interpretation"]
+      ${byStage[2].join('\n      ')}
+    end
+    subgraph SG3["Stage 3 — Criticism"]
+      ${byStage[3].join('\n      ')}
+    end
+    style SG1 fill:#f4efe2,stroke:#7c2e2a,color:#7c2e2a
+    style SG2 fill:#f4efe2,stroke:#3a4a3a,color:#3a4a3a
+    style SG3 fill:#f4efe2,stroke:#a3792f,color:#a3792f
+${clicks}`;
+    const target = document.getElementById('rule-graph-mermaid');
+    target.removeAttribute('data-processed');
+    target.innerHTML = graphDef;
+    await mermaid.run({ nodes: [target] });
+  }
+}
+document.getElementById('graph-btn').addEventListener('click', openGraph);
+document.getElementById('graph-close').addEventListener('click', () => graphModal.classList.remove('open'));
+graphModal.addEventListener('click', (e) => { if(e.target === graphModal) graphModal.classList.remove('open'); });
+
 buildTOC();
 renderChapter(BOOK.chapters[0].chapter);
+renderDailyReview();
 </script>
 
 </body>
