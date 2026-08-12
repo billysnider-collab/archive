@@ -89,24 +89,6 @@
   }
   #search:focus{ outline:2px solid var(--oxblood-dim); outline-offset:1px; }
 
-  .filter-pill{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:11px;
-    text-transform:uppercase;
-    letter-spacing:.04em;
-    padding:8px 13px;
-    border:1px solid var(--rule);
-    border-radius:20px;
-    background:var(--card);
-    cursor:pointer;
-    color:var(--ink-soft);
-  }
-  .filter-pill.active{
-    background:var(--oxblood);
-    border-color:var(--oxblood);
-    color:var(--card);
-  }
-
   main{
     max-width:900px;
     margin: 30px auto 100px;
@@ -119,7 +101,7 @@
 
   .book-row{
     display:grid;
-    grid-template-columns: 44px 1fr auto;
+    grid-template-columns: 44px 1fr;
     gap: 18px;
     align-items:start;
     padding: 20px 6px;
@@ -142,6 +124,15 @@
     font-weight:600;
   }
 
+  .kind{
+    display:block;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:.1em;
+    color:var(--ink-soft);
+    margin:2px 0 5px;
+  }
   .book-title{
     font-family:'Fraunces', serif;
     font-weight:600;
@@ -158,7 +149,7 @@
     font-size:14px;
     color:var(--ink-soft);
     margin:0 0 10px;
-    max-width:60ch;
+    max-width:64ch;
   }
   .tag-row{ display:flex; flex-wrap:wrap; gap:6px; }
   .tag{
@@ -168,37 +159,13 @@
     border:1px solid var(--rule);
     border-radius:20px;
     color:var(--ink-soft);
+    cursor:pointer;
+    transition:all .12s ease;
   }
-
-  .book-meta{
-    text-align:right;
-    white-space:nowrap;
-  }
-  .status{
-    display:inline-block;
-    font-family:'IBM Plex Mono', monospace;
-    font-size:10px;
-    text-transform:uppercase;
-    letter-spacing:.05em;
-    padding:3px 9px;
-    border-radius:20px;
-    margin-bottom:8px;
-  }
-  .status-finished{ background:#e7ede2; color:var(--green); border:1px solid #b9c9ac; }
-  .status-reading{ background:#f3e6d8; color:var(--gold); border:1px solid #dcc190; }
-  .status-queued{ background:var(--paper-2); color:var(--ink-soft); border:1px solid var(--rule); }
-  .rating{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:12px;
-    color:var(--gold);
-    display:block;
-  }
-  .chapters-count{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:11px;
-    color:var(--ink-soft);
-    display:block;
-    margin-top:6px;
+  .tag:hover, .tag.active{
+    background:var(--oxblood);
+    border-color:var(--oxblood);
+    color:var(--card);
   }
 
   #empty{
@@ -231,11 +198,7 @@
 </header>
 
 <div class="controls">
-  <input id="search" type="text" placeholder="search title, creator, tag…" autocomplete="off">
-  <button class="filter-pill active" data-status="all">All</button>
-  <button class="filter-pill" data-status="reading">Reading</button>
-  <button class="filter-pill" data-status="finished">Finished</button>
-  <button class="filter-pill" data-status="queued">Queued</button>
+  <input id="search" type="text" placeholder="search title, creator, tag… (or click a tag below)" autocomplete="off">
 </div>
 
 <main>
@@ -250,16 +213,14 @@
    BOOKS — one entry per book. Add new books here as you finish
    building each reading-aid page. `href` should point to that
    book's standalone HTML file.
-   status: "reading" | "finished" | "queued"
+   kind: what it is — "book" | "essay" | "short story" | "guide"
    ============================================================ */
 const BOOKS = [
   {
     title: "How to Read a Book",
     author: "Mortimer J. Adler & Charles Van Doren",
     href: "how-to-read-a-book.html",
-    status: "finished",
-    rating: 9.2,
-    chapters: 10,
+    kind: "book",
     summary: "A practical framework for reading with increasing levels of skill — elementary, inspectional, analytical, and syntopical — built around the habit of asking the right questions of a book.",
     tags: ["reading", "analytical-reading", "classics", "nonfiction"],
     accent: "#7c2e2a"
@@ -268,9 +229,7 @@ const BOOKS = [
     title: "The Dragonbone Chair",
     author: "Tad Williams",
     href: "the-dragonbone-chair.html",
-    status: "reading",
-    rating: null,
-    chapters: 4,
+    kind: "book",
     summary: "Book 1 of Memory, Sorrow, and Thorn — a scullion boy at a dying king's castle is pulled into a slow-burning epic of buried history, sibling rivalry, and returning ancient magic.",
     tags: ["fantasy", "epic-fantasy", "memory-sorrow-and-thorn", "tad-williams"],
     accent: "#3a4a3a"
@@ -279,9 +238,7 @@ const BOOKS = [
     title: "Building a Second Brain",
     author: "Tiago Forte",
     href: "building-a-second-brain.html",
-    status: "finished",
-    rating: 8,
-    chapters: 7,
+    kind: "book",
     summary: "A digital system for capturing, organizing, distilling, and expressing what you consume — built on the CODE method and the PARA folder structure, and rooted in the old practice of commonplace books.",
     tags: ["PKM", "secondbrain", "notetaking", "productivity"],
     accent: "#a3792f"
@@ -290,9 +247,7 @@ const BOOKS = [
     title: "Angel Down",
     author: "Daniel Kraus",
     href: "angel-down.html",
-    status: "reading",
-    rating: null,
-    chapters: 3,
+    kind: "book",
     summary: "WWI, the Argonne, October 1918 — burial-duty con man Cyril Bagger survives a shell that killed everyone around him, and starts hearing a shriek no one else can place.",
     tags: ["historical-fiction", "horror", "wwi", "daniel-kraus"],
     accent: "#7a2618"
@@ -301,9 +256,7 @@ const BOOKS = [
     title: "Why All Roads Lead To Crab",
     author: "LivingZoo",
     href: "genotype-pinball.html",
-    status: "finished",
-    rating: null,
-    chapters: null,
+    kind: "essay",
     summary: "Carcinization as a lens on convergent evolution — why unrelated decapod lineages keep re-evolving the crab body plan, and what that says about how genomes navigate possibility.",
     tags: ["biology", "evolution", "convergent-evolution"],
     accent: "#a3792f"
@@ -312,9 +265,7 @@ const BOOKS = [
     title: "Game Theory & Poker",
     author: "Synthesized — Chen (SIG), Schmid, MIT 15.S50",
     href: "poker-game-theory.html",
-    status: "finished",
-    rating: null,
-    chapters: 9,
+    kind: "guide",
     summary: "A friendly walkthrough: why bluffing needs a frequency not a rule, a hand-solvable A/K/Q equilibrium, how CFR actually learns, taming no-limit's infinite bet sizes, why three-player games break every guarantee, a detour through the Josephus death-circle puzzle, and what any of it means for your home game.",
     tags: ["game-theory", "poker", "cfr", "nash-equilibrium", "quant-trading"],
     accent: "#b35a3a"
@@ -323,9 +274,7 @@ const BOOKS = [
     title: "The Ones Who Walk Away from Omelas",
     author: "Ursula K. Le Guin",
     href: "omelas.html",
-    status: "finished",
-    rating: null,
-    chapters: null,
+    kind: "short story",
     summary: "A utopian city's happiness turns out to depend entirely on one child kept in misery in a locked room. Most citizens stay and carry the knowledge; a few leave and walk into the dark, alone, towards a place the story never describes.",
     tags: ["short-story", "utopia", "ethics", "le-guin"],
     accent: "#15110d"
@@ -334,42 +283,25 @@ const BOOKS = [
     title: "The Dog Stars",
     author: "Peter Heller",
     href: "dog-stars-constellation.html",
-    status: "finished",
-    rating: null,
-    chapters: null,
+    kind: "book",
     summary: "Nine years after a superflu and a second, blood-borne collapse, a pilot named Hig flies the perimeter of what's left, holding onto a dog, a wary alliance with a survivalist neighbor, and a radio transmission he can't stop chasing. Rebuilt here as a clickable constellation of the book's characters and themes.",
     tags: ["literary-fiction", "post-apocalyptic", "peter-heller", "grief"],
     accent: "#d0a24e"
   },
   {
-    title: "The Mogul File",
-    author: "Synthesized — Muller, Korff, UT Austin PHY 309L, All About History",
-    href: "mogul-case-file.html",
-    status: "finished",
-    rating: null,
-    chapters: 8,
-    summary: "A case file on Roswell: the atmospheric sound-channel physics that made Project Mogul possible, the classified cover story it produced, the eyewitness testimony that didn't hold up, and the media machine that let the myth outrun the declassified truth for 47 years.",
-    tags: ["roswell", "project-mogul", "ufology", "cold-war", "sound-channels", "declassified"],
-    accent: "#4f7657"
-  },
-  {
-    title: "Dionysus",
-    author: "Synthesized — Otto, Winnington-Ingram, Kiruta, Walton, Suzuki",
-    href: "dionysus.html",
-    status: "finished",
-    rating: null,
-    chapters: 9,
-    summary: "The god of ecstasy and madness, compiled whole: his double birth, his symbols, his powers, his entourage, the fall of Pentheus in The Bacchae, the myths of his revenge, his legacy from the Mysteries to Nietzsche, and Suzuki's staging of the myth as a warning about cults and totalitarianism.",
-    tags: ["greek-mythology", "the-bacchae", "euripides", "tragedy", "dionysus"],
-    accent: "#7d1f3d"
-  },
+    title: "Deep Simplicity",
+    author: "John Gribbin",
+    href: "deep-simplicity-retention.html",
+    kind: "book",
+    summary: "From the three-body problem to the logistic map and Feigenbaum's universal constant — how simple, iterated rules with feedback generate chaos, fractals, and eventually life. Rebuilt here as an active-recall engine: predict before revealing, rate your own certainty.",
+    tags: ["science", "chaos-theory", "complexity", "physics", "john-gribbin"],
+    accent: "#35507c"
+  }
   // {
   //   title: "...",
   //   author: "...",
   //   href: "slug.html",
-  //   status: "reading",
-  //   rating: null,
-  //   chapters: 0,
+  //   kind: "book",
   //   summary: "...",
   //   tags: [],
   //   accent: "#3a4a3a"
@@ -380,7 +312,7 @@ const shelf = document.getElementById('shelf');
 const countEl = document.getElementById('count');
 const emptyEl = document.getElementById('empty');
 const searchInput = document.getElementById('search');
-let activeStatus = 'all';
+let activeTag = null;
 
 function initials(title){
   return title.split(' ').filter(w => /^[A-Z0-9]/.test(w)).slice(0,2).map(w=>w[0]).join('') || title[0];
@@ -389,10 +321,10 @@ function initials(title){
 function render(){
   const q = searchInput.value.trim().toLowerCase();
   const filtered = BOOKS.filter(b => {
-    const statusOk = activeStatus === 'all' || b.status === activeStatus;
+    const tagOk = !activeTag || (b.tags||[]).includes(activeTag);
     const hay = (b.title + ' ' + b.author + ' ' + (b.tags||[]).join(' ')).toLowerCase();
     const searchOk = !q || hay.includes(q);
-    return statusOk && searchOk;
+    return tagOk && searchOk;
   });
 
   countEl.textContent = `${BOOKS.length} entr${BOOKS.length===1?'y':'ies'} in the archive`;
@@ -400,35 +332,33 @@ function render(){
   emptyEl.style.display = filtered.length ? 'none' : 'block';
 
   filtered.forEach(b => {
-    const row = document.createElement('a');
+    const row = document.createElement('div');
     row.className = 'book-row';
-    row.href = b.href;
     row.innerHTML = `
-      <div class="spine" style="background:${b.accent || '#7c2e2a'}">${initials(b.title)}</div>
+      <a href="${b.href}" class="spine" style="background:${b.accent || '#7c2e2a'}">${initials(b.title)}</a>
       <div>
-        <p class="book-title">${b.title}</p>
-        <p class="book-author">${b.author}</p>
-        ${b.summary ? `<p class="book-summary">${b.summary}</p>` : ''}
-        ${b.tags && b.tags.length ? `<div class="tag-row">${b.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>` : ''}
-      </div>
-      <div class="book-meta">
-        <span class="status status-${b.status}">${b.status}</span>
-        ${b.rating ? `<span class="rating">★ ${b.rating}/10</span>` : ''}
-        ${b.chapters ? `<span class="chapters-count">${b.chapters} chapters</span>` : ''}
+        <a href="${b.href}" style="text-decoration:none;color:inherit;">
+          ${b.kind ? `<span class="kind">${b.kind}</span>` : ''}
+          <p class="book-title">${b.title}</p>
+          <p class="book-author">${b.author}</p>
+          ${b.summary ? `<p class="book-summary">${b.summary}</p>` : ''}
+        </a>
+        ${b.tags && b.tags.length ? `<div class="tag-row">${b.tags.map(t=>`<span class="tag ${t===activeTag?'active':''}" data-tag="${t}">${t}</span>`).join('')}</div>` : ''}
       </div>
     `;
     shelf.appendChild(row);
   });
+
+  shelf.querySelectorAll('.tag').forEach(el => {
+    el.addEventListener('click', (e) => {
+      e.preventDefault();
+      const t = el.dataset.tag;
+      activeTag = (activeTag === t) ? null : t;
+      render();
+    });
+  });
 }
 
-document.querySelectorAll('.filter-pill').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    activeStatus = btn.dataset.status;
-    render();
-  });
-});
 searchInput.addEventListener('input', render);
 
 render();

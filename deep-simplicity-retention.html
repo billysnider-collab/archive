@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deep Simplicity — The Engine Room</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0a0d14;
+    --bg-raised: #10141d;
+    --bg-card: #131824;
+    --line: #232a38;
+    --text: #dfe6ee;
+    --text-dim: #8993a4;
+    --text-faint: #4d5566;
+    --rule: #5b8def;
+    --rule-soft: rgba(91,141,239,0.12);
+    --feedback: #35c07f;
+    --feedback-soft: rgba(53,192,127,0.12);
+    --result: #e8934a;
+    --result-soft: rgba(232,147,74,0.12);
+    --r1: #e2544e;
+    --r2: #d8963a;
+    --r3: #5b8def;
+    --r4: #35c07f;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    padding-bottom:80px;
+  }
+  h1,h2,h3,.serif{font-family:'Fraunces',serif;}
+  .eq{font-family:'JetBrains Mono',monospace;}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;
+    border-bottom:1px solid var(--line);
+    overflow:hidden;
+    background:radial-gradient(ellipse at 50% -10%, #131a29 0%, var(--bg) 60%);
+  }
+  #bifurcation{
+    display:block;
+    width:100%;
+    height:280px;
+  }
+  .hero-inner{
+    position:relative;
+    max-width:920px;
+    margin:0 auto;
+    padding:28px 24px 32px;
+  }
+  .hero-eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--text-faint);
+    margin-bottom:10px;
+  }
+  .hero h1{
+    font-size:clamp(28px,4.5vw,42px);
+    font-weight:600;
+    margin:0 0 8px;
+    line-height:1.1;
+    color:#f2f5f9;
+  }
+  .hero p{
+    color:var(--text-dim);
+    max-width:56ch;
+    line-height:1.55;
+    margin:0;
+    font-size:15px;
+  }
+  .hero-caption{
+    position:absolute;
+    left:24px;
+    bottom:10px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    color:var(--text-faint);
+  }
+
+  /* ---------- NAV ---------- */
+  .nav{
+    position:sticky;
+    top:0;
+    z-index:20;
+    background:rgba(10,13,20,0.92);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{
+    max-width:920px;
+    margin:0 auto;
+    padding:0 24px;
+    display:flex;
+    gap:4px;
+    overflow-x:auto;
+  }
+  .tab{
+    appearance:none;
+    background:none;
+    border:none;
+    color:var(--text-dim);
+    font-family:'Inter',sans-serif;
+    font-size:13.5px;
+    font-weight:500;
+    padding:14px 14px;
+    cursor:pointer;
+    border-bottom:2px solid transparent;
+    white-space:nowrap;
+    transition:color .15s ease;
+  }
+  .tab:hover{color:var(--text);}
+  .tab.active{color:#f2f5f9;border-bottom-color:var(--rule);}
+  .tab .n{
+    font-family:'JetBrains Mono',monospace;
+    color:var(--text-faint);
+    margin-right:6px;
+    font-size:11px;
+  }
+
+  main{max-width:920px;margin:0 auto;padding:32px 24px 0;}
+
+  /* ---------- CHAPTER HEADER ---------- */
+  .chapter-lens{
+    background:var(--bg-raised);
+    border:1px solid var(--line);
+    border-left:3px solid var(--rule);
+    border-radius:6px;
+    padding:18px 20px;
+    margin-bottom:22px;
+  }
+  .chapter-lens .label{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--text-faint);
+    margin-bottom:8px;
+  }
+  .chapter-lens .q{
+    font-style:italic;
+    color:var(--text);
+    line-height:1.5;
+    margin:0 0 8px;
+    font-size:15px;
+  }
+  .chapter-lens .a{
+    color:var(--text-dim);
+    line-height:1.5;
+    margin:0;
+    font-size:14px;
+  }
+
+  /* ---------- LENS FILTER ---------- */
+  .lens-bar{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-bottom:8px;
+  }
+  .lens-bar .hint{
+    font-size:12px;
+    color:var(--text-faint);
+    margin-right:2px;
+  }
+  .lens-btn{
+    appearance:none;
+    cursor:pointer;
+    border-radius:20px;
+    padding:6px 14px;
+    font-family:'Inter',sans-serif;
+    font-size:12.5px;
+    font-weight:600;
+    border:1px solid var(--line);
+    background:var(--bg-raised);
+    color:var(--text-dim);
+    transition:all .15s ease;
+  }
+  .lens-btn:hover{border-color:var(--text-faint);}
+  .lens-btn[data-lens="all"].active{background:#1c2231;color:#f2f5f9;border-color:#3a4256;}
+  .lens-btn[data-lens="rule"].active{background:var(--rule-soft);color:var(--rule);border-color:var(--rule);}
+  .lens-btn[data-lens="feedback"].active{background:var(--feedback-soft);color:var(--feedback);border-color:var(--feedback);}
+  .lens-btn[data-lens="result"].active{background:var(--result-soft);color:var(--result);border-color:var(--result);}
+
+  .progress-track{
+    height:3px;
+    background:var(--line);
+    border-radius:3px;
+    margin:14px 0 28px;
+    overflow:hidden;
+  }
+  .progress-fill{
+    height:100%;
+    background:linear-gradient(90deg,var(--rule),var(--feedback));
+    width:0%;
+    transition:width .4s ease;
+  }
+
+  /* ---------- CARDS ---------- */
+  .card{
+    background:var(--bg-card);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:20px 20px 18px;
+    margin-bottom:16px;
+    transition:opacity .25s ease, filter .25s ease, border-color .2s ease;
+  }
+  .card.dimmed{opacity:0.28;filter:saturate(0.3);}
+  .card-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:12px;
+    margin-bottom:10px;
+  }
+  .qnum{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    color:var(--text-faint);
+  }
+  .lens-chip{
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;
+    letter-spacing:0.05em;
+    text-transform:uppercase;
+    padding:3px 8px;
+    border-radius:4px;
+    white-space:nowrap;
+  }
+  .lens-chip.rule{background:var(--rule-soft);color:var(--rule);}
+  .lens-chip.feedback{background:var(--feedback-soft);color:var(--feedback);}
+  .lens-chip.result{background:var(--result-soft);color:var(--result);}
+
+  .question{
+    font-size:15.5px;
+    line-height:1.55;
+    color:#eef1f6;
+    margin:0 0 14px;
+  }
+
+  .predict-wrap{margin-bottom:14px;}
+  .predict-wrap label{
+    display:block;
+    font-size:11.5px;
+    color:var(--text-faint);
+    margin-bottom:5px;
+    font-family:'JetBrains Mono',monospace;
+  }
+  .predict-wrap input{
+    width:100%;
+    background:var(--bg-raised);
+    border:1px solid var(--line);
+    border-radius:5px;
+    padding:9px 11px;
+    color:var(--text);
+    font-family:'Inter',sans-serif;
+    font-size:13.5px;
+  }
+  .predict-wrap input:focus{outline:none;border-color:var(--text-faint);}
+  .predict-wrap input::placeholder{color:var(--text-faint);}
+
+  .reveal-btn{
+    appearance:none;
+    cursor:pointer;
+    background:none;
+    border:1px solid var(--line);
+    color:var(--text-dim);
+    padding:8px 14px;
+    border-radius:6px;
+    font-size:13px;
+    font-weight:500;
+    font-family:'Inter',sans-serif;
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    transition:all .15s ease;
+  }
+  .reveal-btn:hover{border-color:var(--rule);color:#f2f5f9;}
+  .reveal-btn .chev{transition:transform .3s ease;font-size:10px;}
+  .reveal-btn.open .chev{transform:rotate(90deg);}
+
+  .answer-outer{
+    display:grid;
+    grid-template-rows:0fr;
+    transition:grid-template-rows .38s ease;
+  }
+  .answer-outer.open{grid-template-rows:1fr;}
+  .answer-inner{overflow:hidden;}
+  .answer-body{
+    margin-top:14px;
+    padding-top:14px;
+    border-top:1px dashed var(--line);
+  }
+  .your-guess{
+    font-size:12.5px;
+    color:var(--text-faint);
+    margin-bottom:10px;
+    line-height:1.5;
+  }
+  .your-guess .tag{
+    font-family:'JetBrains Mono',monospace;
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    font-size:10px;
+    color:var(--result);
+    margin-right:6px;
+  }
+  .your-guess em{color:var(--text-dim);font-style:italic;}
+  .answer-text{
+    font-size:14.5px;
+    line-height:1.65;
+    color:var(--text-dim);
+    white-space:pre-line;
+  }
+
+  .rate-row{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-top:16px;
+    flex-wrap:wrap;
+  }
+  .rate-row .rlabel{
+    font-size:11.5px;
+    color:var(--text-faint);
+    font-family:'JetBrains Mono',monospace;
+    margin-right:2px;
+  }
+  .rate-btn{
+    appearance:none;
+    cursor:pointer;
+    border-radius:6px;
+    padding:6px 12px;
+    font-size:12.5px;
+    font-weight:600;
+    font-family:'Inter',sans-serif;
+    border:1px solid var(--line);
+    background:var(--bg-raised);
+    color:var(--text-dim);
+    transition:all .15s ease;
+  }
+  .rate-btn:hover{border-color:var(--text-faint);}
+  .rate-btn[data-v="1"].active{background:rgba(226,84,78,0.16);color:var(--r1);border-color:var(--r1);}
+  .rate-btn[data-v="2"].active{background:rgba(216,150,58,0.16);color:var(--r2);border-color:var(--r2);}
+  .rate-btn[data-v="3"].active{background:rgba(91,141,239,0.16);color:var(--r3);border-color:var(--r3);}
+  .rate-btn[data-v="4"].active{background:rgba(53,192,127,0.16);color:var(--r4);border-color:var(--r4);}
+  .rated-at{
+    font-size:11px;
+    color:var(--text-faint);
+    margin-left:auto;
+    font-family:'JetBrains Mono',monospace;
+  }
+
+  footer{
+    max-width:920px;
+    margin:36px auto 0;
+    padding:20px 24px 0;
+    border-top:1px solid var(--line);
+    color:var(--text-faint);
+    font-size:12px;
+    font-family:'JetBrains Mono',monospace;
+  }
+
+  ::selection{background:var(--rule);color:#fff;}
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important;}
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <canvas id="bifurcation"></canvas>
+  <div class="hero-inner">
+    <div class="hero-eyebrow">x&#8341;&#8330;&#8321; = r &middot; x&#8341; &middot; (1 &minus; x&#8341;)</div>
+    <h1>The Engine Room</h1>
+    <p>Active recall through <em>Deep Simplicity</em>, Ch. 1&ndash;3. Predict before you look. Rate your own honesty. The diagram behind this text is not decoration &mdash; it's the actual logistic map, rendered live, r = 2.4 &rarr; 4.0.</p>
+  </div>
+  <div class="hero-caption">feigenbaum cascade &middot; computed in your browser, right now</div>
+</div>
+
+<nav class="nav">
+  <div class="nav-inner" id="tabs"></div>
+</nav>
+
+<main id="main"></main>
+
+<footer>deep simplicity &middot; john gribbin &middot; ratings stored privately, tied to this browser</footer>
+
+<script>
+/* ============ DATA ============ */
+const chapters = [
+{
+  id:"ch1", num:1,
+  title:"Order Out of Chaos — The Control Case",
+  lensQ:"What happens when you take a simple rule and iterate it a lot, without a designer, but also without any energy flowing through the system?",
+  lensA:"You get a boring, predictable, dead equilibrium — but even that predictability is an illusion because you'd need infinite information to reverse it.",
+  questions:[
+    {q:"Why does the two-body problem have a clean solution, but the three-body problem doesn't? What breaks?",
+     a:"Symmetry and conserved quantities. Two-body: 6 degrees of freedom, 10 conserved quantities, a central force — integrable, confined to a conic section. Three-body: 18 degrees of freedom, still only 10 conserved quantities. The force is no longer central; each mass feels acceleration from the changing positions of the other two. What breaks is the missing second vector integral (like the Laplace-Runge-Lenz vector) that would fix the ellipse's orientation. The equations exist — they just have no closed-form solution in elementary functions.",
+     lens:"rule"},
+    {q:"Laplace's demon assumes perfect knowledge. What hidden assumption about computability does it depend on?",
+     a:"Two assumptions. First, algorithmic compressibility: the demon assumes it can store the initial state in finite memory, but most real numbers are irrational and need infinite digits — the universe can't store its own state inside itself with perfect fidelity. Second, faster-than-realtime simulation: the demon assumes it can compute the future faster than the universe evolves, but the universe is its own fastest simulator — there's no shortcut, so even infinite memory wouldn't let the computation outrun the territory.",
+     lens:"result"},
+    {q:"What exactly counts as a feedback loop here — and why does a third body introduce one where two bodies don't have it?",
+     a:"A feedback loop is when a system's output becomes an input that alters its own future behavior. Two bodies: A pulls B, B pulls A, but the resulting orbit doesn't reshape the force law — it's a closed, passive ellipse. Three bodies: C's position alters the pull on B, which changes B's position, which changes B's pull on A, which changes A's position relative to C, and so on. Output (new positions) keeps changing the input (force vectors) for the next moment — a circular dependency. That circularity is the feedback loop.",
+     lens:"feedback"},
+    {q:"If Newton's laws are just as deterministic in the three-body case as the two-body case, what actually changed?",
+     a:"The laws didn't get more complex — every state still has exactly one future state. What changed is the integrability of the mathematics, not the laws of nature. Degrees of freedom tripled (18 vs 6) without gaining any new conserved quantities to constrain the motion into closed form. The complexity lives in the topology of interactions, not in the rule itself. Nature just runs the simulation in real time; we can't write the answer on a blackboard.",
+     lens:"rule"},
+    {q:"Poincaré tried to prove stability and instead revealed instability. What does this say about the limits of mathematics?",
+     a:"That mathematics has its own autonomous logic that can contradict what we want to be true. Poincaré expected a neat, periodic Clockwork Universe; the math forced him to confront that the equations contain no guarantee of a closed-form solution. There are true statements in physics that cannot be proven analytically — not from lack of cleverness, but because the mathematical terrain doesn't contain the needed shortcuts. It's a preview of Gödel: within a sufficiently powerful formal system, some truths can't be derived from within it.",
+     lens:"result"},
+    {q:"Predict what \"iteration\" is going to do to this small crack in Newtonian predictability.",
+     a:"Iteration blows the crack into a canyon. Each approximation step introduces a tiny rounding error; the feedback loop (mutual perturbations) amplifies those errors exponentially rather than smoothing them out. Instead of converging on the true orbit, the iterated path diverges from it — turning an \"unsolvable\" problem into an \"unpredictable\" one. The crack becomes the foundation of deterministic chaos, seeding everything from sandpiles to the edge of chaos to life itself.",
+     lens:"result"}
+  ]
+},
+{
+  id:"ch2", num:2,
+  title:"The Return of Chaos — The Crack Becomes a Canyon",
+  lensQ:"What happens when you take a simple rule, add feedback, and iterate it — but the system is so sensitive that tiny differences in the starting point get amplified instead of smoothed out?",
+  lensA:"You get deterministic chaos — lawful, non-repeating, and fundamentally unpredictable in practice, even though it's completely governed by Newton's laws.",
+  questions:[
+    {q:"Lorenz's rerun diverged because of a rounding difference around one part in 4,000. Is that amplification linear or something faster, and why does the distinction matter for how long a forecast stays useful?",
+     a:"It's exponential, not linear. Linear growth adds the same amount each step — errors stay small relative to the system for a long time. Exponential growth multiplies by the same factor each step — Lorenz's error doubled roughly every 4 simulated days, and after ~40 days it had grown to the size of the attractor itself. This creates a hard predictability horizon: to double the forecast window you'd need to square your precision, which is why faster computers only buy a little more time. The 10–14 day weather limit is fundamental, not technological.",
+     lens:"feedback"},
+    {q:"The chapter claims \"the universe is its own fastest simulator\" — no shortcut except running it forward. Is Gribbin ruling out better math, or ruling out any possible math?",
+     a:"Any possible math — but with a distinction. For integrable systems (two-body problem) shortcuts do exist, like the ellipse formula. For non-integrable, chaotic systems, no such transformation exists: the dynamics are computationally irreducible, so the only way to know the future is to simulate every intermediate step. This isn't a limitation of our cleverness; it's related to Turing's halting problem and Gödel's incompleteness — the system is the computation, and no map can run faster than the territory it maps.",
+     lens:"result"},
+    {q:"Poincaré ran into the same wall decades before Lorenz, with no computer at all. Why did it take an actual machine to make the point land, when the mathematical result already existed?",
+     a:"Because proof isn't the same as demonstration. Poincaré proved the approximations diverge — an abstract, technical result. Lorenz saw it happen: two nearly identical runs, plotted, visibly splitting apart into the butterfly attractor. His \"mistake\" (typing 0.506 instead of 0.506127) revealed sensitivity to exactly the kind of imperfection that always exists in measurement. And weather felt relevant to everyone in a way celestial mechanics didn't — sometimes you need to see a phenomenon to believe it, even when the proof already exists.",
+     lens:"result"},
+    {q:"Most real numbers are irrational and need infinite digits to specify exactly. How does that turn sensitivity to initial conditions into a permanent feature of any physical measurement, not just a 1960s computer limitation?",
+     a:"Because measurement always has finite precision, but chaotic dynamics require infinite precision for long-term prediction. Any real measurement approximates the true (almost certainly irrational) state with a rational number, leaving an unmeasured tail of digits. In a chaotic system that tail eventually grows to dominate the outcome. Even infinitely precise instruments couldn't help, because you'd need infinite memory to store the state — an epistemological barrier, not a technological one. Classical mechanics, eating its own tail.",
+     lens:"rule"},
+    {q:"Chapter 1 called this a crack in Newtonian predictability; Chapter 2 calls it \"chaos.\" Are those the same claim stated twice, or is something new being added?",
+     a:"Related but distinct. Chapter 1's claim: we can't find a closed-form solution, so we approximate — and with enough terms, approximation can get arbitrarily accurate. Chapter 2's claim: the approximations themselves are unstable, and errors grow exponentially past a hard horizon no amount of computation can fix. What's new is the recognition that approximation isn't just a nuisance — in a chaotic system it's self-defeating, growing to dominate the solution rather than converging on it.",
+     lens:"result"},
+    {q:"Chaotic systems are fully deterministic, no randomness in the equations. If shown an unlabeled chaotic trajectory, what would you actually check to tell it apart from genuine randomness?",
+     a:"Five real tests. The attractor: chaos is confined to a bounded, structured, fractal-dimensional shape; true randomness fills space uniformly. The power spectrum: chaos is broadband with characteristic peaks and a 1/f falloff; true noise is flat. Predictability horizon: chaos is predictable in the near term from equations and initial conditions; true randomness isn't predictable from step one. The Lyapunov exponent: a positive value is chaos's signature; true randomness has none. Recurrence: chaos approaches but never exactly repeats, filling a fractal structure; random points fill space evenly.",
+     lens:"result"},
+    {q:"Setting up ch. 3: if amplification-of-small-differences is the core mechanism, what do you predict happens when it's stripped to its simplest form — one number fed back into one equation, over and over?",
+     a:"This is the logistic map, and it reveals the amplification mechanism is universal. For small r the system settles to a fixed point; as r increases it bifurcates to a 2-cycle, then 4, then 8; near r≈3.57 it turns chaotic and aperiodic, though windows of order still appear inside the chaos. The same cascade shows up in every system with a single hump — dripping taps, chemical reactions, animal populations — and the ratio between bifurcations converges on the universal Feigenbaum number, 4.669.",
+     lens:"feedback"}
+  ]
+},
+{
+  id:"ch3", num:3,
+  title:"Chaos Out of Order — The Universal Engine",
+  lensQ:"What happens when you strip the feedback mechanism down to its bare bones — one number, one equation, one repetitive operation — and turn the knob on a single parameter?",
+  lensA:"You discover the route from order to chaos is universal. The same period-doubling cascade, the same Feigenbaum number (4.669), and the same fractal self-similarity appear in every system with a single hump of nonlinearity.",
+  questions:[
+    {q:"The logistic map is about as simple as an equation gets. Why does turning the knob on a single parameter r take the system through fixed point → oscillation → period-doubling → chaos, when the shape of the equation itself never changes?",
+     a:"Because the shape of the iterated map changes, even though the original map's shape stays fixed. Each iteration — f(f(x)), f(f(f(x))) — creates a more complex effective function with more humps and valleys. As r increases, the slope at the fixed point steepens; once it exceeds -1 (r=3) the fixed point becomes unstable and the system jumps to a stable 2-cycle, which later destabilizes into a 4-cycle, and so on. The x² term is what lets the slope vary with x at all — the hump is the engine of bifurcation.",
+     lens:"feedback"},
+    {q:"Chapter 2 needed three continuous dimensions for chaos (Poincaré–Bendixson). The logistic map is one-dimensional and discrete. Was dimensionality ever the key ingredient, or was it never doing the real work?",
+     a:"Dimensionality was never the key. The key is non-linearity plus iteration, and the capacity for stretching and folding phase space. Poincaré–Bendixson only constrains continuous 2D flows, where trajectories can't cross. The logistic map is discrete — it jumps — and those jumps let it fold without needing a spare dimension. Dimensionality is sufficient for continuous systems, but never necessary; any system with a single hump of non-linearity and feedback can generate chaos.",
+     lens:"rule"},
+    {q:"Feigenbaum's 4.669 shows up whether the underlying rule is the logistic map, a different quadratic map, or a dripping faucet. What does it mean for a number to be more fundamental than the equation that produced it — is this closer to physics or to pure mathematics?",
+     a:"Closer to pure mathematics — specifically the renormalization-group structure of iterated maps with a quadratic maximum. The period-doubling cascade is scale-invariant at the onset of chaos, so the ratio of scaling factors converges to a universal constant, much like π appears in every circle regardless of size. It's not purely math either, though: it was discovered experimentally, in computers and dripping faucets, before being proven. It's a bridge number — abstract, but showing up wherever the universe runs a dynamical system.",
+     lens:"result"},
+    {q:"Between each period-doubling and full chaos there are windows of pure periodic order sitting inside the chaotic region. If you only sampled r at those windows, you'd call the system orderly. What does this suggest about characterizing a real-world system as \"chaotic\" from limited observation?",
+     a:"That you can't confidently characterize a system as chaotic or orderly without sampling a wide range of the controlling parameter — and even then you might land in a window and miss it. Observation is parameter-dependent, the windows are thin, and small environmental shifts could push a real system across the boundary either way. \"Chaotic\" turns out to be a property of the regime, not a fixed label for the system itself.",
+     lens:"result"},
+    {q:"Self-similarity means the bifurcation diagram looks the same zoomed in as zoomed out. Is the same behavior repeated at each scale, the same numbers, or just the same shape?",
+     a:"Same shape and same behavior, but not the same numbers. The dynamical sequence — fixed point, period-2, period-4… chaos, windows, more doubling — repeats identically, and the geometric \"tuning fork\" structure looks qualitatively the same at every scale. But the specific r-values where bifurcations occur differ at each scale, scaled by Feigenbaum's constant. The ratios are fixed; the absolute coordinates aren't — which is exactly why fractals end up with fractional dimensions rather than being exact copies of themselves.",
+     lens:"result"},
+    {q:"Chapter 2's feedback had no obvious design — weather just is what it is. Chapter 3's feedback is explicit: x is deliberately fed back into the same formula. Does this change what \"feedback loop\" means going forward?",
+     a:"Yes. Before, feedback was an emergent property buried in physical equations — gravity, fluid dynamics — that you couldn't always point to directly. Now it's a formal, discrete, mechanical step in an algorithm: the logistic map as the prototype of all feedback systems, studyable independent of any physical implementation. Feedback becomes a tool you can design with or extract from real systems, and the computer becomes the laboratory — a computational primitive that reveals physics because the same structure recurs inside it.",
+     lens:"feedback"},
+    {q:"Setting up ch. 4: if one iterated number generates infinite fine structure from pure repetition, what happens once two interacting quantities feed back into each other across a surface, instead of one point bouncing along a line?",
+     a:"You get spatial patterns — spots, stripes, spirals, Turing patterns. One variable produces temporal dynamics: sequences and fractal structure in time. Two variables — an activator and an inhibitor — add spatial interaction via diffusion, so feedback becomes both local (reactions at a point) and non-local (diffusion to neighbors). The same non-linearity-plus-iteration mechanism now produces spatial self-organization: leopard spots, zebra stripes, Belousov-Zhabotinsky spirals, Bénard hexagons — the logistic map becoming the Turing mechanism behind the shapes of living things.",
+     lens:"result"}
+  ]
+}
+];
+
+/* ============ STATE ============ */
+let activeChapter = 0;
+let activeLens = "all";
+let progressCache = {}; // { ch1: {0:{rating,prediction,ratedAt}, ...}, ... }
+
+const lensLabel = {rule:"Rule",feedback:"Feedback",result:"Result"};
+const ratingLabel = {1:"Forgot",2:"Unsure",3:"Close",4:"Got it"};
+
+/* ============ STORAGE ============ */
+async function loadProgress(chId){
+  if(progressCache[chId]) return progressCache[chId];
+  try{
+    const res = await window.storage.get('ds-progress:'+chId, false);
+    progressCache[chId] = res ? JSON.parse(res.value) : {};
+  }catch(e){
+    progressCache[chId] = {};
+  }
+  return progressCache[chId];
+}
+async function saveProgress(chId, data){
+  progressCache[chId] = data;
+  try{
+    await window.storage.set('ds-progress:'+chId, JSON.stringify(data), false);
+  }catch(e){
+    console.error('storage save failed', e);
+  }
+}
+
+/* ============ RENDER ============ */
+const tabsEl = document.getElementById('tabs');
+const mainEl = document.getElementById('main');
+
+function renderTabs(){
+  tabsEl.innerHTML = chapters.map((c,i)=>
+    `<button class="tab ${i===activeChapter?'active':''}" data-i="${i}">
+      <span class="n">0${c.num}</span>${c.title.split(' — ')[0]}
+    </button>`
+  ).join('');
+  tabsEl.querySelectorAll('.tab').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      activeChapter = parseInt(btn.dataset.i);
+      renderTabs();
+      renderChapter();
+    });
+  });
+}
+
+async function renderChapter(){
+  const ch = chapters[activeChapter];
+  const progress = await loadProgress(ch.id);
+
+  mainEl.innerHTML = `
+    <div class="chapter-lens">
+      <div class="label">Master Lens · Chapter ${ch.num}</div>
+      <p class="q">"${ch.lensQ}"</p>
+      <p class="a">${ch.lensA}</p>
+    </div>
+
+    <div class="lens-bar">
+      <span class="hint">Filter by lens:</span>
+      <button class="lens-btn ${activeLens==='all'?'active':''}" data-lens="all">All</button>
+      <button class="lens-btn ${activeLens==='rule'?'active':''}" data-lens="rule">Rule</button>
+      <button class="lens-btn ${activeLens==='feedback'?'active':''}" data-lens="feedback">Feedback</button>
+      <button class="lens-btn ${activeLens==='result'?'active':''}" data-lens="result">Result</button>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+
+    <div id="cards"></div>
+  `;
+
+  mainEl.querySelectorAll('.lens-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      activeLens = btn.dataset.lens;
+      renderChapter();
+    });
+  });
+
+  const cardsEl = document.getElementById('cards');
+  cardsEl.innerHTML = ch.questions.map((item, qi)=>{
+    const saved = progress[qi] || {};
+    const dimmed = activeLens!=='all' && item.lens!==activeLens;
+    return `
+    <div class="card ${dimmed?'dimmed':''}" data-qi="${qi}">
+      <div class="card-top">
+        <span class="qnum">Q${qi+1} / ${ch.questions.length}</span>
+        <span class="lens-chip ${item.lens}">${lensLabel[item.lens]}</span>
+      </div>
+      <p class="question">${item.q}</p>
+
+      <div class="predict-wrap">
+        <label>Your prediction, before revealing —</label>
+        <input type="text" class="predict-input" placeholder="Type your guess here..." value="${saved.prediction ? escapeAttr(saved.prediction) : ''}">
+      </div>
+
+      <button class="reveal-btn ${saved.revealed?'open':''}" data-action="reveal">
+        <span class="chev">&#9656;</span> <span class="reveal-label">${saved.revealed?'Hide answer':'Reveal answer'}</span>
+      </button>
+
+      <div class="answer-outer ${saved.revealed?'open':''}">
+        <div class="answer-inner">
+          <div class="answer-body">
+            <div class="your-guess"><span class="tag">You predicted</span><em class="guess-echo">${saved.prediction ? escapeHtml(saved.prediction) : '— (nothing typed) —'}</em></div>
+            <p class="answer-text">${item.a}</p>
+
+            <div class="rate-row">
+              <span class="rlabel">How'd you do?</span>
+              <button class="rate-btn ${saved.rating===1?'active':''}" data-v="1">1 · Forgot</button>
+              <button class="rate-btn ${saved.rating===2?'active':''}" data-v="2">2 · Unsure</button>
+              <button class="rate-btn ${saved.rating===3?'active':''}" data-v="3">3 · Close</button>
+              <button class="rate-btn ${saved.rating===4?'active':''}" data-v="4">4 · Got it</button>
+              <span class="rated-at">${saved.ratedAt ? 'rated ' + timeAgo(saved.ratedAt) : ''}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  updateProgressBar(ch, progress);
+  wireCardEvents(ch, progress, cardsEl);
+}
+
+function wireCardEvents(ch, progress, cardsEl){
+  cardsEl.querySelectorAll('.card').forEach(card=>{
+    const qi = parseInt(card.dataset.qi);
+
+    // prediction typing -> save on blur / debounce
+    const input = card.querySelector('.predict-input');
+    let t;
+    input.addEventListener('input', ()=>{
+      clearTimeout(t);
+      t = setTimeout(async ()=>{
+        const cur = progress[qi] || {};
+        cur.prediction = input.value;
+        progress[qi] = cur;
+        await saveProgress(ch.id, progress);
+        const echo = card.querySelector('.guess-echo');
+        echo.textContent = input.value ? input.value : '— (nothing typed) —';
+      }, 400);
+    });
+
+    // reveal toggle
+    const revealBtn = card.querySelector('[data-action="reveal"]');
+    revealBtn.addEventListener('click', async ()=>{
+      const outer = card.querySelector('.answer-outer');
+      const isOpen = outer.classList.toggle('open');
+      revealBtn.classList.toggle('open', isOpen);
+      revealBtn.querySelector('.reveal-label').textContent = isOpen ? 'Hide answer' : 'Reveal answer';
+      const cur = progress[qi] || {};
+      cur.revealed = isOpen;
+      progress[qi] = cur;
+      await saveProgress(ch.id, progress);
+    });
+
+    // rating buttons
+    card.querySelectorAll('.rate-btn').forEach(rb=>{
+      rb.addEventListener('click', async ()=>{
+        const v = parseInt(rb.dataset.v);
+        const cur = progress[qi] || {};
+        cur.rating = v;
+        cur.ratedAt = Date.now();
+        progress[qi] = cur;
+        await saveProgress(ch.id, progress);
+        card.querySelectorAll('.rate-btn').forEach(b=>b.classList.remove('active'));
+        rb.classList.add('active');
+        card.querySelector('.rated-at').textContent = 'rated just now';
+        updateProgressBar(ch, progress);
+      });
+    });
+  });
+}
+
+function updateProgressBar(ch, progress){
+  const total = ch.questions.length;
+  const rated = Object.values(progress).filter(p=>p && p.rating).length;
+  const fill = document.getElementById('progress-fill');
+  if(fill) fill.style.width = (total ? (rated/total*100) : 0) + '%';
+}
+
+function escapeHtml(s){
+  return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+function escapeAttr(s){ return escapeHtml(s); }
+function timeAgo(ts){
+  const s = Math.floor((Date.now()-ts)/1000);
+  if(s<60) return 'just now';
+  if(s<3600) return Math.floor(s/60)+'m ago';
+  if(s<86400) return Math.floor(s/3600)+'h ago';
+  return Math.floor(s/86400)+'d ago';
+}
+
+/* ============ BIFURCATION DIAGRAM (hero, live-computed) ============ */
+function drawBifurcation(){
+  const canvas = document.getElementById('bifurcation');
+  const dpr = window.devicePixelRatio || 1;
+  const w = canvas.clientWidth, h = canvas.clientHeight;
+  canvas.width = w*dpr; canvas.height = h*dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr,dpr);
+  ctx.clearRect(0,0,w,h);
+
+  const rMin=2.4, rMax=4.0;
+  const steps = Math.max(300, Math.floor(w));
+  ctx.fillStyle = 'rgba(91,141,239,0.35)';
+  for(let i=0;i<steps;i++){
+    const r = rMin + (rMax-rMin) * (i/steps);
+    let x = 0.5;
+    for(let n=0;n<250;n++){ x = r*x*(1-x); }
+    const px = (i/steps)*w;
+    ctx.fillStyle = r<3 ? 'rgba(91,141,239,0.45)' : (r<3.57 ? 'rgba(53,192,127,0.4)' : 'rgba(232,147,74,0.32)');
+    for(let n=0;n<70;n++){
+      x = r*x*(1-x);
+      const py = h - x*h;
+      ctx.fillRect(px, py, 1, 1);
+    }
+  }
+}
+
+/* ============ INIT ============ */
+window.addEventListener('resize', ()=>{ drawBifurcation(); });
+drawBifurcation();
+renderTabs();
+renderChapter();
+</script>
+</body>
+</html>
