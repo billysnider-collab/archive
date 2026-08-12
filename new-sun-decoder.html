@@ -5,131 +5,124 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>The Book of the New Sun – Chapter Companion</title>
   <style>
-    /* ----- Reset & Base ----- */
+    /* ----- Reset & Base (clean, minimal) ----- */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
     body {
-      font-family: 'Segoe UI', 'Palatino', Georgia, serif;
-      background: #0b0a0a;
-      color: #d4cfc7;
-      line-height: 1.6;
+      font-family: 'Georgia', 'Palatino', 'Times New Roman', serif;
+      background: #f7f5f1;
+      color: #2c2824;
+      line-height: 1.7;
       padding: 0;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
     }
     a {
-      color: #b8a78b;
+      color: #7a6a5a;
       text-decoration: none;
     }
     a:hover {
-      color: #e6d5b3;
+      color: #4a3f35;
       text-decoration: underline;
     }
 
     /* ----- Layout ----- */
     .app {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+      width: 100%;
+      flex: 1;
       display: flex;
       flex-direction: column;
-      min-height: 100vh;
-      max-width: 1300px;
-      margin: 0 auto;
-      width: 100%;
-      padding: 1rem;
     }
 
-    /* ----- Header / Brand ----- */
+    /* ----- Header ----- */
     .header {
-      padding: 1.5rem 0 0.5rem 0;
-      border-bottom: 1px solid #2a2622;
-      margin-bottom: 1.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 2px solid #e0d8d0;
+      margin-bottom: 2rem;
     }
     .header h1 {
-      font-size: 1.8rem;
-      font-weight: 300;
-      letter-spacing: 4px;
-      text-transform: uppercase;
-      color: #c9b69a;
-      text-shadow: 0 0 10px rgba(180, 140, 100, 0.1);
+      font-size: 2.2rem;
+      font-weight: 400;
+      letter-spacing: 3px;
+      color: #2c2824;
       margin-bottom: 0.2rem;
     }
     .header h1 small {
       font-size: 1rem;
       font-weight: 300;
-      letter-spacing: 2px;
-      color: #6a5e4e;
+      color: #8a7e72;
       margin-left: 1rem;
+      letter-spacing: 1px;
     }
     .header .sub {
-      color: #6a5e4e;
-      font-size: 0.85rem;
-      letter-spacing: 2px;
+      color: #8a7e72;
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+      font-style: italic;
     }
 
-    /* ----- Navigation (Chapters) ----- */
+    /* ----- Chapter Navigation ----- */
     .chapter-nav {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.5rem 1rem;
-      padding: 0.5rem 0 1rem 0;
-      border-bottom: 1px solid #1f1b17;
-      margin-bottom: 1.5rem;
+      gap: 0.4rem 0.8rem;
+      padding: 0.8rem 0 1.2rem 0;
+      border-bottom: 1px solid #e0d8d0;
+      margin-bottom: 2rem;
     }
     .chapter-nav button {
       background: transparent;
-      border: 1px solid #3a322c;
-      color: #b8a78b;
-      padding: 0.4rem 1.2rem;
-      font-size: 0.9rem;
+      border: none;
+      color: #6a5e52;
+      padding: 0.3rem 0.8rem;
+      font-size: 0.85rem;
       font-family: inherit;
       cursor: pointer;
-      border-radius: 20px;
-      transition: all 0.2s ease;
-      letter-spacing: 0.5px;
+      border-radius: 16px;
+      transition: all 0.2s;
+      letter-spacing: 0.3px;
     }
     .chapter-nav button:hover {
-      background: #2a2420;
-      border-color: #6a5e4e;
-      color: #e6d5b3;
+      background: #e8e2da;
+      color: #2c2824;
     }
     .chapter-nav button.active {
-      background: #3a322c;
-      border-color: #b8a78b;
-      color: #f0e6d8;
-      box-shadow: 0 0 12px rgba(180, 140, 100, 0.15);
+      background: #2c2824;
+      color: #f7f5f1;
     }
 
-    /* ----- Main Content Area ----- */
+    /* ----- Content ----- */
     .content {
       flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 2rem;
     }
 
-    /* Chapter Title & Metadata */
+    /* Chapter Header */
     .chapter-header {
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
       align-items: baseline;
-      border-bottom: 1px solid #2a2622;
-      padding-bottom: 0.5rem;
-      margin-bottom: 0.5rem;
+      border-bottom: 1px solid #e0d8d0;
+      padding-bottom: 0.6rem;
+      margin-bottom: 1.2rem;
     }
     .chapter-header h2 {
-      font-size: 1.8rem;
-      font-weight: 300;
-      color: #e6d5b3;
-      letter-spacing: 1px;
+      font-size: 2rem;
+      font-weight: 400;
+      color: #2c2824;
+      letter-spacing: 0.5px;
     }
     .chapter-header .meta {
-      color: #6a5e4e;
+      color: #8a7e72;
       font-size: 0.85rem;
-      letter-spacing: 1px;
+      letter-spacing: 0.5px;
     }
     .chapter-header .meta span {
       margin-left: 1rem;
@@ -139,71 +132,76 @@
     .tags {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.4rem 0.8rem;
-      margin-bottom: 1rem;
+      gap: 0.3rem 0.7rem;
+      margin-bottom: 1.5rem;
     }
     .tag {
-      background: #1f1b17;
-      color: #b8a78b;
-      padding: 0.1rem 0.8rem;
+      background: #ece8e2;
+      color: #4a3f35;
+      padding: 0.05rem 0.8rem;
       border-radius: 12px;
       font-size: 0.75rem;
-      letter-spacing: 0.5px;
-      border: 1px solid #2a2622;
+      letter-spacing: 0.3px;
     }
 
     /* Sections */
     .section {
-      background: #12100e;
-      border-left: 3px solid #3a322c;
-      padding: 1rem 1.5rem;
-      margin-bottom: 1.5rem;
-      border-radius: 0 6px 6px 0;
+      background: #fcfaf8;
+      padding: 1.2rem 1.8rem;
+      margin-bottom: 1.8rem;
+      border-radius: 4px;
+      border-left: 4px solid #d0c8be;
     }
     .section h3 {
       font-size: 1rem;
       font-weight: 600;
       letter-spacing: 1px;
       text-transform: uppercase;
-      color: #b8a78b;
-      margin-bottom: 0.5rem;
-      border-bottom: 1px solid #1f1b17;
+      color: #5a4e42;
+      margin-bottom: 0.6rem;
+      border-bottom: 1px solid #e8e2da;
       padding-bottom: 0.3rem;
     }
-    .section p, .section li {
-      color: #d4cfc7;
+    .section p,
+    .section li {
+      color: #3a3530;
       font-size: 0.95rem;
     }
-    .section ul, .section ol {
+    .section ul,
+    .section ol {
       padding-left: 1.5rem;
-      margin: 0.5rem 0;
+      margin: 0.4rem 0;
     }
     .section li {
-      margin-bottom: 0.3rem;
-    }
-    .section .quote {
-      font-style: italic;
-      color: #c9b69a;
-      padding: 0.5rem 1rem;
-      background: #1a1714;
-      border-radius: 4px;
-      margin: 0.5rem 0;
-      border-left: 3px solid #6a5e4e;
-    }
-    .section .quote::before {
-      content: "“";
-      color: #6a5e4e;
-      font-size: 1.4rem;
-      margin-right: 0.2rem;
-    }
-    .section .quote::after {
-      content: "”";
-      color: #6a5e4e;
-      font-size: 1.4rem;
-      margin-left: 0.2rem;
+      margin-bottom: 0.25rem;
     }
 
-    /* Vocabulary table */
+    /* Quotes */
+    .quote {
+      font-style: italic;
+      color: #2c2824;
+      padding: 0.6rem 1.2rem;
+      background: #f3f0eb;
+      border-radius: 3px;
+      margin: 0.5rem 0;
+      border-left: 3px solid #b0a498;
+    }
+    .quote::before {
+      content: "“";
+      color: #8a7e72;
+      font-size: 1.6rem;
+      line-height: 0.8;
+      margin-right: 0.1rem;
+    }
+    .quote::after {
+      content: "”";
+      color: #8a7e72;
+      font-size: 1.6rem;
+      line-height: 0.8;
+      margin-left: 0.1rem;
+    }
+
+    /* ----- Vocabulary Table (cleaner) ----- */
     .vocab-table {
       width: 100%;
       border-collapse: collapse;
@@ -211,85 +209,106 @@
     }
     .vocab-table th {
       text-align: left;
-      color: #b8a78b;
-      font-weight: 500;
-      letter-spacing: 1px;
-      border-bottom: 1px solid #2a2622;
+      color: #5a4e42;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      border-bottom: 2px solid #d0c8be;
       padding: 0.4rem 0.5rem;
     }
     .vocab-table td {
-      padding: 0.4rem 0.5rem;
-      border-bottom: 1px solid #1f1b17;
+      padding: 0.5rem 0.5rem;
+      border-bottom: 1px solid #e8e2da;
       vertical-align: top;
     }
     .vocab-table .term {
-      color: #e6d5b3;
-      font-weight: 500;
+      color: #2c2824;
+      font-weight: 600;
       white-space: nowrap;
     }
+    .vocab-table .etym {
+      color: #6a5e52;
+      font-size: 0.8rem;
+      font-style: italic;
+    }
     .vocab-table .def {
-      color: #b8a78b;
+      color: #3a3530;
     }
     .vocab-table .excerpt {
-      color: #a0907a;
+      color: #6a5e52;
       font-style: italic;
       font-size: 0.85rem;
     }
 
-    /* Critical Angles - cards */
+    /* ----- Critical Angles (cards) ----- */
     .angle-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
       gap: 1rem;
       margin-top: 0.5rem;
     }
     .angle-card {
-      background: #1a1714;
-      border: 1px solid #2a2622;
-      border-radius: 6px;
+      background: #f3f0eb;
+      border-radius: 4px;
       padding: 0.8rem 1rem;
-      transition: background 0.2s;
-    }
-    .angle-card:hover {
-      background: #24201c;
     }
     .angle-card .angle-title {
       font-weight: 600;
-      color: #e6d5b3;
-      margin-bottom: 0.3rem;
+      color: #2c2824;
+      margin-bottom: 0.2rem;
       font-size: 0.9rem;
+      letter-spacing: 0.3px;
     }
     .angle-card .angle-text {
-      font-size: 0.85rem;
-      color: #c9b69a;
+      font-size: 0.88rem;
+      color: #4a3f35;
     }
 
-    /* Questions & Notes */
+    /* Questions */
     .question-list li {
-      list-style-type: "❓ ";
-      padding-left: 0.5rem;
-      margin-bottom: 0.4rem;
+      list-style-type: none;
+      padding-left: 1.2rem;
+      margin-bottom: 0.3rem;
     }
-    .note-box {
-      background: #1a1714;
-      border: 1px solid #2a2622;
-      border-radius: 6px;
-      padding: 1rem;
-      font-style: italic;
-      color: #b8a78b;
+    .question-list li::before {
+      content: "❓ ";
+      color: #8a7e72;
     }
 
-    /* Responsive */
+    /* Personal Notes */
+    .note-box {
+      background: #f3f0eb;
+      border-radius: 4px;
+      padding: 0.8rem 1.2rem;
+      font-style: italic;
+      color: #4a3f35;
+    }
+
+    /* Connections list */
+    .connections-list li {
+      list-style-type: none;
+      padding-left: 0.5rem;
+      margin-bottom: 0.2rem;
+    }
+    .connections-list li::before {
+      content: "▪ ";
+      color: #8a7e72;
+    }
+
+    /* ----- Responsive ----- */
     @media (max-width: 700px) {
       .app {
-        padding: 0.5rem;
+        padding: 1rem 0.8rem;
       }
       .header h1 {
-        font-size: 1.3rem;
+        font-size: 1.5rem;
       }
-      .chapter-nav button {
-        padding: 0.3rem 0.8rem;
-        font-size: 0.8rem;
+      .header h1 small {
+        display: block;
+        margin-left: 0;
+        font-size: 0.9rem;
+      }
+      .chapter-header h2 {
+        font-size: 1.4rem;
       }
       .section {
         padding: 0.8rem 1rem;
@@ -297,8 +316,18 @@
       .angle-grid {
         grid-template-columns: 1fr;
       }
-      .chapter-header h2 {
-        font-size: 1.4rem;
+      .chapter-nav button {
+        font-size: 0.8rem;
+        padding: 0.2rem 0.6rem;
+      }
+      .vocab-table th,
+      .vocab-table td {
+        padding: 0.3rem 0.3rem;
+        font-size: 0.85rem;
+      }
+      .vocab-table .etym {
+        display: inline-block;
+        margin-top: 0.2rem;
       }
     }
   </style>
@@ -321,158 +350,155 @@
   </div>
 
   <script>
-    // ----- DATA (from your YAML notes) -----
-    const chapters = [
-      {
-        id: 1,
-        title: "Resurrection and Death",
-        book: "The Shadow of the Torturer",
-        part: 1,
-        summary: "Severian, an apprentice torturer, and his companions Drotte, Roche, and Eata are locked out of the necropolis. They encounter volunteer guards who have opened the gate to protect their dead from grave robbers. Eata slips through; the others follow. In the foggy necropolis, Severian stumbles upon Vodalus, an exultant rebel, and his companions Hildegrin and Thea, who are exhuming a corpse. Vodalus fights off three volunteers; Severian intervenes, saving Vodalus's life. Vodalus gives him a gold chrisos coin. The chapter ends with Severian reflecting on the coin's significance and his nascent loyalty to Vodalus.",
-        tags: ["reading-notes", "book-of-the-new-sun", "severian", "vodalus", "unreliable-narrator", "foreshadowing", "eidolon"],
-        vocabulary: [
-          { term: "Fuligin", definition: "The color darker than black, worn by the torturers' guild.", excerpt: "'We are the torturers... I am a journeyman of the Order of the Seekers for Truth and Penitence.'" },
-          { term: "Necropolis", definition: "A cemetery, especially a large ancient one.", excerpt: "'Our necropolis is said to be the oldest in Nessus.'" },
-          { term: "Exultant", definition: "The highest noble class, tall and aristocratic.", excerpt: "'I was too inexperienced to recognize as an exultant's...'" },
-          { term: "Armiger", definition: "A lesser noble, below exultants.", excerpt: "(not directly in this chapter but introduced elsewhere.)" },
-          { term: "Cataphatrct", definition: "A heavily armored soldier.", excerpt: "'I saw two cataphatrcts...' (Chapter later)" },
-          { term: "Asimi / Chrisos / Orichalk", definition: "Currency: silver (asimi), gold (chrisos), brass (orichalk).", excerpt: "'He laid something in my palm: a small coin... It was a gold chrisos.'" },
-          { term: "Analeptic alzabo", definition: "A drug derived from the alzabo beast; allows sharing of memories by eating flesh.", excerpt: "Mentioned later but seeds planted here with the corpse-eating." },
-          { term: "Vodalarius", definition: "A follower of Vodalus.", excerpt: "'I am a Vodalarius. One of the thousands of Vodalarii...'" }
-        ],
-        critical_angles: [
-          { title: "Unreliable Narrator", text: "Severian opens by saying: 'It is possible I already had some presentiment of my future.' He claims perfect memory, yet immediately frames his story as a constructed narrative. He describes himself as a 'stupid boy' but also as a man who later becomes Autarch. The retrospective framing is everything." },
-          { title: "Eidolon Thread", text: "Severian as a 'construct' is foreshadowed here by his dissociation. He says: 'Just as all that appears imperishable tends toward its own destruction, those moments that at the time seem the most fleeting recreate themselves—not only in my memory (which in the final accounting loses nothing) but in the throbbing of my heart and the prickling of my hair.' He is not a single self but a recreation of moments." },
-          { title: "Foreshadowing", text: "The locked gate = the gate of death, the gate of the necropolis, the gate to his exile. Vodalus's pistol shot = the first energy weapon. The corpse they exhume = Thecla? Or resurrection? The coin with the flying ship = the ship of Tzadkiel." },
-          { title: "Time-Bending", text: "The opening is set in a fog that 'recreates itself.' Severian says: 'In the recesses of my mind we stand shivering there even now.' The past is present. He is writing from the future." },
-          { title: "Metafiction", text: "Severian is already telling a story. The opening lines are a framing device: 'It is possible I already had some presentiment of my future... That is why I have begun this account of it...' He is aware he is writing for an audience." },
-          { title: "Women as Mirrors", text: "Thea appears here for the first time—heart-shaped face, dove's voice. She is Thecla's half-sister. She is a khaibit (copy) of the real Thea? Or is she the real one? This chapter introduces the motif of doubles: Thea/Thecla, Severian/Apu-Punchau." },
-          { title: "Religious/Philosophical", text: "The volunteers are guarding 'their own dead.' The necropolis is a sacred space. Vodalus is violating it. Severian is caught between the sacred and the profane. The coin is a sacrament of loyalty." },
-          { title: "Sword as Soul", text: "Severian does not yet have Terminus Est. He kills the axeman with the axeman's own ax. He hasn't earned his sword yet. His identity as a torturer is still contingent." }
-        ],
-        quotes: [
-          "'We believe that we invent symbols. The truth is that they invent us; we are their creatures, shaped by their hard, defining edges.'",
-          "'It was in this fashion that I began the long journey by which I have backed into the throne.'",
-          "'The locked and rusted gate that stood before us, with wisps of river fog threading its spikes like the mountain paths, remains in my mind now as the symbol of my exile.'"
-        ],
-        connections: [
-          "Chapter 1 → Chapter 2 (Severian): The mausoleum and the coin are revisited.",
-          "Vodalus → Thea → Thecla: The triangle of exultant women.",
-          "The Coin → The Ship → Tzadkiel's ship in later books.",
-          "The Fight → Severian's first killing → echoes in his later executions."
-        ],
-        questions: [
-          "Why does Severian not mention Hildegrin by name here? (He does later in the series.)",
-          "The corpse they exhume—is it Thecla? Is it himself? (Apu-Punchau?)",
-          "Severian says he 'forgets nothing.' Why does he not remember the axeman's face?",
-          "What is the real significance of the coin? Is it just a chrisos, or is it a token of his future Autarchy?"
-        ],
-        personal_notes: "First read: exciting adventure. Second read: everything is a symbol. The gate, the fog, the coin, the fight—it's all about Severian's exile and his eventual return. The 'resurrection' in the title is his own."
-      },
-      {
-        id: 2,
-        title: "Severian",
-        book: "The Shadow of the Torturer",
-        part: 1,
-        summary: "Severian describes his upbringing in the Matachin Tower of the torturers' guild. He was raised without knowledge of his parents—the guild recruits by taking male children of clients. The necropolis adjacent to the Citadel served as his playground, and he discovered a secret mausoleum bearing a blazon (a ship, a fountain, and a rose) and a funeral bronze that remarkably resembled him. He recounts the apprentices' secret swimming expeditions—first in the cistern under the Bell Keep, then in Gyoll. During one swim, Severian nearly drowns in the roots of the nenuphars, has a vision of Master Malrubius and a giant woman, and is rescued by Drotte. After this near-death experience—and after saving Vodalus—he can no longer swim in Gyoll. The chapter ends with the nenuphars as a symbol of death.",
-        tags: ["reading-notes", "book-of-the-new-sun", "severian", "necropolis", "mausoleum", "drowning", "unreliable-narrator", "foreshadowing", "eidolon", "thecla", "nenuphars"],
-        vocabulary: [
-          { term: "Matachin Tower", definition: "The tower of the torturers' guild.", excerpt: "'In our Matachin Tower, a certain bar of iron thrusts from a bulkhead...'" },
-          { term: "Oubliette", definition: "The underground prison/torture chambers beneath the tower.", excerpt: "'stretches the labyrinth of the oubliette.'" },
-          { term: "Necropolis", definition: "The vast cemetery adjacent to the Citadel.", excerpt: "'Our necropolis is said to be the oldest in Nessus.'" },
-          { term: "Armiger / Optimate", definition: "Lesser noble classes.", excerpt: "'the armigers and optimates of the city favored the highest slopes.'" },
-          { term: "Exultant", definition: "The highest noble class.", excerpt: "'Each would be an exultant if he could...'" },
-          { term: "Nenuphars", definition: "Blue water lilies; their roots nearly drown Severian.", excerpt: "'blue nenuphars penned between walls of stone... Under flower and leaves are black roots as fine and strong as hair.'" },
-          { term: "Gyoll", definition: "The great river of Nessus.", excerpt: "'our other swimming place was in Gyoll, which winds through Nessus like a great, weary snake.'" },
-          { term: "Citadel", definition: "The ancient fortress housing the guild towers.", excerpt: "'the Citadel was their stronghold.'" },
-          { term: "Fuligin", definition: "The color darker than black, worn by torturers.", excerpt: "'the fuligin mask' (later)." },
-          { term: "Blazon / Device", definition: "Heraldic emblem.", excerpt: "'the devices graved in bronze above the door... a fountain rising above waters, and a ship volant, and below these a rose.'" }
-        ],
-        critical_angles: [
-          { title: "Unreliable Narrator", text: "Severian declares: 'From my earliest memory I remember all.' Yet he admits to not knowing his parents, and his account of the drowning is layered with vision and symbol, not pure fact. His 'perfect memory' is selective—he remembers the vision but not the exact face of the woman. He is constructing his origin, not merely reporting it." },
-          { title: "Eidolon Thread", text: "The funeral bronze in the mausoleum is a perfect foreshadowing of Severian as a double/construct. 'My straight nose, deep-set eyes, and sunken cheeks were much like his, and I longed to know if he too had dark hair.' This is Apu-Punchau—Severian's own future self (or past self) as a corpse. He is staring at his own tomb." },
-          { title: "Foreshadowing", text: "The mausoleum blazon (ship, fountain, rose) = the ship of Tzadkiel, the White Fountain, the rose (perhaps the Claw or the New Sun). The funeral bronze = Apu-Punchau. The near-drowning = the undine Juturna saving him. Master Malrubius's vision = the aquastor." },
-          { title: "Time-Bending", text: "The drowning vision collapses past and future. Severian sees Master Malrubius (who will die) and a giant woman (the undine, or perhaps Thecla). The nenuphar roots are 'as fine and strong as hair, reaching down into the dark waters'—time itself is a net of roots." },
-          { title: "Metafiction", text: "Severian is writing his own origin story. He says: 'I have chosen to describe all this now because I never went again after the day on which I saved Vodalus.' He is consciously framing his past for the reader, selecting what matters for the story." },
-          { title: "Women as Mirrors", text: "The drowning vision: 'Out of the darkness came the face of a woman, as immense as the green face of the moon.' This is Thecla? The undine? Valeria? She appears as a mirror of all the women he will love." },
-          { title: "Religious/Philosophical", text: "The nenuphars are a meditation on death: they are beautiful but deadly. The near-drowning is a baptism or a death-rebirth. He emerges changed." },
-          { title: "Sword as Soul", text: "Severian has no sword yet. He is an apprentice, not a journeyman. His identity is still being formed. The mausoleum is his tomb, not his armory." }
-        ],
-        quotes: [
-          "'From my earliest memory I remember all.'",
-          "'My straight nose, deep-set eyes, and sunken cheeks were much like his, and I longed to know if he too had dark hair.'",
-          "'When I think of my own death, or of the death of someone who has been kind to me, or even of the death of the sun, the image that comes to my mind is that of the nenuphar, with its glossy, pale leaves and azure flower. Under flower and leaves are black roots as fine and strong as hair, reaching down into the dark waters.'",
-          "'I did not come up. Somehow I had entered a region where the roots seemed far thicker than I had ever encountered them before.'"
-        ],
-        connections: [
-          "Chapter 1 (The Locked Gate) → The necropolis is revisited. The mausoleum is where Severian will hide the chrisos.",
-          "The Mausoleum Blazon → The ship appears on Vodalus's coin. The fountain is the White Fountain of Urth of the New Sun. The rose is the Claw or the New Sun itself.",
-          "The Funeral Bronze → Apu-Punchau, the Head of Day, is Severian's own corpse.",
-          "The Drowning → Juturna the undine will save him later. This is the first of many water encounters.",
-          "Master Malrubius → He will reappear as an aquastor (eidolon) later."
-        ],
-        questions: [
-          "Why does Severian remember everything except the face of the woman in his drowning vision?",
-          "The mausoleum blazon: ship, fountain, rose—are these the three stages of his journey? (Exile, rebirth, sacrifice?)",
-          "The funeral bronze looks like him. Is it his tomb, or Apu-Punchau's? Or both?",
-          "The nenuphars are a symbol of death. Why does he use this image for the death of the sun itself?",
-          "He says he never swam again after saving Vodalus. Is that literal, or is he saying he stopped diving into death?"
-        ],
-        personal_notes: "First read: a childhood memoir. Second read: everything is a tomb. The mausoleum is his future. The drowning is his first death. He is already writing from beyond the grave."
-      },
-      {
-        id: 3,
-        title: "The Autarch's Face",
-        book: "The Shadow of the Torturer",
-        part: 1,
-        summary: "Severian finally examines the gold chrisos Vodalus gave him. One side bears a woman's face (the Autarch?); the reverse shows a flying ship—identical to the blazon on his secret mausoleum. He hides it under a stone in the mausoleum, reciting a charm. He then returns to his duties, viewing a client who was tortured for information about Vodalus. Master Palaemon admonishes him for listening to clients. Severian questions Drotte about Vodalus (who tells him nothing). He reflects on the hated guild, the arrival of new prisoners, and his disillusionment when he discovers that none of them are actually Vodalarii. The chapter ends with Severian questioning his own sanity and memory—the coin's face is not Vodalus's, and he wonders if Vodalus was real at all.",
-        tags: ["reading-notes", "book-of-the-new-sun", "severian", "autarch", "coin", "master-palaemon", "thecla", "unreliable-narrator", "foreshadowing", "symbolism", "guild"],
-        vocabulary: [
-          { term: "Chrisos", definition: "A gold coin of the Commonwealth.", excerpt: "'It was a gold chrisos... the first time I had ever touched a piece of gold.'" },
-          { term: "Autarch", definition: "The ruler of the Commonwealth. The 'face' on the coin.", excerpt: "'This one bore what I at first thought was a woman's face—a woman crowned...'" },
-          { term: "Khaibit", definition: "A shadow-woman, a concubine stand-in for exultant women.", excerpt: "'they have these khaibits, what they call the shadow women...'" },
-          { term: "Dimarchi", definition: "Military police / soldiers who escort prisoners.", excerpt: "'They were guarded by dimarchi, hard-bitten troopers...'" },
-          { term: "Coffle", definition: "A line of prisoners chained together.", excerpt: "'The less important arrived in coffles of ten to twenty men and women, chained one behind the other by the neck.'" },
-          { term: "Oubliette", definition: "The underground prison.", excerpt: "'I carried my bucket out to empty in the stone sink in the Old Yard...'" },
-          { term: "Fuligin", definition: "The guild's color—darker than black.", excerpt: "'the fuligin mask of his rank.'" },
-          { term: "Vodalarii", definition: "Followers of Vodalus.", excerpt: "'Not one—not one—of the prisoners whose papers I had read had been an adherent of Vodalus.'" },
-          { term: "Eidolon", definition: "A phantom, a ghost of memory.", excerpt: "'I felt Vodalus had been only an eidolon created by my imagination...'" },
-          { term: "Mausoleum", definition: "The tomb where Severian hid the coin.", excerpt: "'I slipped into the necropolis alone and sought out my mausoleum.'" }
-        ],
-        critical_angles: [
-          { title: "Unreliable Narrator", text: "Severian's crisis of memory is front and center. He has just boasted of remembering everything, yet he begins to doubt his own mind. 'I could no longer be sure my own mind was not lying to me...' His 'perfect memory' is a curse because it makes him unable to distinguish between memory and imagination." },
-          { title: "Eidolon Thread", text: "'I felt Vodalus had been only an eidolon created by my imagination from the fog...' The eidolon concept appears explicitly here. Severian is haunted by the possibility that his memories are phantoms—just as he will later be a phantom, an eidolon created by Tzadkiel." },
-          { title: "Foreshadowing", text: "The coin's reverse (flying ship) = Tzadkiel's ship. The coin's obverse (woman's face) = the Autarch. The charm he recites = a burial charm. Master Gurloes's lecture on khaibits = the theme of doubles and substitutes." },
-          { title: "Time-Bending", text: "Severian hides the coin in the mausoleum that contains his own funeral bronze. He is burying his past self. The coin will be recovered later—in The Citadel of the Autarch when he returns as Autarch." },
-          { title: "Metafiction", text: "Severian's crisis is about narrative itself. He says: 'It could be argued that it was the most harrowing of my life. I had lied often... Now I could no longer be sure my own mind was not lying to me.' He is writing a book that might be a lie." },
-          { title: "Women as Mirrors", text: "The coin bears a woman's face—the Autarch's face. But the Autarch is a man (later revealed). The face is androgynous. This is the first hint that the Autarchy is a composite, a Legion of personalities." },
-          { title: "Religious/Philosophical", text: "'We believe that we invent symbols. The truth is that they invent us...' This is the philosophical heart of the chapter. The coin is a symbol that invents Severian's loyalty to Vodalus. He is shaped by the coin, not the other way around." },
-          { title: "Sword as Soul", text: "Severian has no sword yet. His identity is still defined by the coin—a symbol of loyalty, of exile, of his future. The coin is his first token of power." }
-        ],
-        quotes: [
-          "'This one bore what I at first thought was a woman's face—a woman crowned, neither young nor old, but silent and perfect in the citrine metal.'",
-          "'We believe that we invent symbols. The truth is that they invent us; we are their creatures, shaped by their hard, defining edges.'",
-          "'I could no longer be sure my own mind was not lying to me; all my falsehoods were recoiling on me, and I who remembered everything could not be certain those memories were more than my own dreams.'",
-          "'I felt Vodalus had been only an eidolon created by my imagination from the fog...'"
-        ],
-        connections: [
-          "Chapter 1 → The coin from Vodalus is finally examined.",
-          "Chapter 2 → The mausoleum and the funeral bronze are revisited.",
-          "The Flying Ship → The ship of Tzadkiel in The Urth of the New Sun.",
-          "The Woman's Face → The Autarch as Legion; also Valeria, Thecla.",
-          "The Charm → 'Where I put you, there you lie...' This is a burial charm. Severian is burying his past self.",
-          "The New Clients → The prisoners arrive; Severian's hope that they are Vodalarii is crushed."
-        ],
-        questions: [
-          "Why does Severian think the coin's woman's face is the Autarch? Is the Autarch a woman?",
-          "The coin has the same flying ship as his mausoleum blazon. Is this coincidence, or is the mausoleum his tomb? Is he burying his own future?",
-          "Severian says he 'forgets nothing,' yet he doubts his memories. Is this a contradiction, or is he choosing which memories to trust?",
-          "The charm he recites—is it effective? Does the coin stay hidden?",
-          "Why does Severian feel relief when he realizes the prisoners aren't Vodalarii? Is he disappointed, or is he protecting his fantasy?"
-        ],
-        personal_notes: "First read: a chapter about guild politics and a coin. Second read: a chapter about the nature of reality, memory, and the self. The coin is not just a coin—it's the symbol of his divided loyalty. The woman's face on it is the Autarch, but also Thecla, also Valeria, also himself. He is burying his past in the mausoleum that contains his own corpse. The crisis of memory is the crisis of the entire narrative."
-      }
-    ];
+    // ----- DATA (chapters with etymology added) -----
+    const chapters = [{
+      id: 1,
+      title: "Resurrection and Death",
+      book: "The Shadow of the Torturer",
+      part: 1,
+      summary: "Severian, an apprentice torturer, and his companions Drotte, Roche, and Eata are locked out of the necropolis. They encounter volunteer guards who have opened the gate to protect their dead from grave robbers. Eata slips through; the others follow. In the foggy necropolis, Severian stumbles upon Vodalus, an exultant rebel, and his companions Hildegrin and Thea, who are exhuming a corpse. Vodalus fights off three volunteers; Severian intervenes, saving Vodalus's life. Vodalus gives him a gold chrisos coin. The chapter ends with Severian reflecting on the coin's significance and his nascent loyalty to Vodalus.",
+      tags: ["reading-notes", "book-of-the-new-sun", "severian", "vodalus", "unreliable-narrator", "foreshadowing", "eidolon"],
+      vocabulary: [
+        { term: "Fuligin", definition: "The color darker than black, worn by the torturers' guild.", etymology: "From Latin 'fuligo' – soot, smoke. Wolfe coins it as the ultimate dark, beyond black.", excerpt: "'We are the torturers... I am a journeyman of the Order of the Seekers for Truth and Penitence.'" },
+        { term: "Necropolis", definition: "A cemetery, especially a large ancient one.", etymology: "From Greek 'nekros' (dead) + 'polis' (city) – city of the dead.", excerpt: "'Our necropolis is said to be the oldest in Nessus.'" },
+        { term: "Exultant", definition: "The highest noble class, tall and aristocratic.", etymology: "From Latin 'exsultare' – to leap up, rejoice. Suggests their elevated status and arrogance.", excerpt: "'I was too inexperienced to recognize as an exultant's...'" },
+        { term: "Armiger", definition: "A lesser noble, below exultants.", etymology: "From Latin 'arma' (arms) + 'gerere' (to bear) – one who bears arms, a squire or lesser noble.", excerpt: "(introduced elsewhere)" },
+        { term: "Cataphract", definition: "A heavily armored soldier.", etymology: "From Greek 'kataphraktos' – covered, armored. Used for fully armored cavalry.", excerpt: "'I saw two cataphatrcts...' (Chapter later)" },
+        { term: "Chrisos", definition: "A gold coin of the Commonwealth.", etymology: "From Greek 'chrysos' – gold. Wolfe uses it for the highest denomination.", excerpt: "'He laid something in my palm: a small coin... It was a gold chrisos.'" },
+        { term: "Asimi / Orichalk", definition: "Silver (asimi) and brass (orichalk) coins.", etymology: "Asimi from Greek 'asēmos' – without mark (plain silver). Orichalk from Greek 'oreikhalkos' – mountain copper (brass).", excerpt: "'Silver asimi I had glimpsed once or twice.'" },
+        { term: "Analeptic alzabo", definition: "A drug derived from the alzabo beast; allows sharing of memories by eating flesh.", etymology: "'Analeptic' from Greek 'analēptikos' – restorative. 'Alzabo' is a neologism, possibly echoing 'al-zabā' (Arabic for hyena) or purely invented.", excerpt: "Mentioned later but seeds planted here with the corpse-eating." },
+        { term: "Vodalarius", definition: "A follower of Vodalus.", etymology: "Vodalus + Latin suffix '-arius' – belonging to, follower of.", excerpt: "'I am a Vodalarius. One of the thousands of Vodalarii...'" }
+      ],
+      critical_angles: [
+        { title: "Unreliable Narrator", text: "Severian opens by saying: 'It is possible I already had some presentiment of my future.' He claims perfect memory, yet immediately frames his story as a constructed narrative. He describes himself as a 'stupid boy' but also as a man who later becomes Autarch. The retrospective framing is everything." },
+        { title: "Eidolon Thread", text: "Severian as a 'construct' is foreshadowed here by his dissociation. He says: 'Just as all that appears imperishable tends toward its own destruction, those moments that at the time seem the most fleeting recreate themselves—not only in my memory (which in the final accounting loses nothing) but in the throbbing of my heart and the prickling of my hair.' He is not a single self but a recreation of moments." },
+        { title: "Foreshadowing", text: "The locked gate = the gate of death, the gate of the necropolis, the gate to his exile. Vodalus's pistol shot = the first energy weapon. The corpse they exhume = Thecla? Or resurrection? The coin with the flying ship = the ship of Tzadkiel." },
+        { title: "Time-Bending", text: "The opening is set in a fog that 'recreates itself.' Severian says: 'In the recesses of my mind we stand shivering there even now.' The past is present. He is writing from the future." },
+        { title: "Metafiction", text: "Severian is already telling a story. The opening lines are a framing device: 'It is possible I already had some presentiment of my future... That is why I have begun this account of it...' He is aware he is writing for an audience." },
+        { title: "Women as Mirrors", text: "Thea appears here for the first time—heart-shaped face, dove's voice. She is Thecla's half-sister. She is a khaibit (copy) of the real Thea? Or is she the real one? This chapter introduces the motif of doubles: Thea/Thecla, Severian/Apu-Punchau." },
+        { title: "Religious/Philosophical", text: "The volunteers are guarding 'their own dead.' The necropolis is a sacred space. Vodalus is violating it. Severian is caught between the sacred and the profane. The coin is a sacrament of loyalty." },
+        { title: "Sword as Soul", text: "Severian does not yet have Terminus Est. He kills the axeman with the axeman's own ax. He hasn't earned his sword yet. His identity as a torturer is still contingent." }
+      ],
+      quotes: [
+        "'We believe that we invent symbols. The truth is that they invent us; we are their creatures, shaped by their hard, defining edges.'",
+        "'It was in this fashion that I began the long journey by which I have backed into the throne.'",
+        "'The locked and rusted gate that stood before us, with wisps of river fog threading its spikes like the mountain paths, remains in my mind now as the symbol of my exile.'"
+      ],
+      connections: [
+        "Chapter 1 → Chapter 2 (Severian): The mausoleum and the coin are revisited.",
+        "Vodalus → Thea → Thecla: The triangle of exultant women.",
+        "The Coin → The Ship → Tzadkiel's ship in later books.",
+        "The Fight → Severian's first killing → echoes in his later executions."
+      ],
+      questions: [
+        "Why does Severian not mention Hildegrin by name here? (He does later in the series.)",
+        "The corpse they exhume—is it Thecla? Is it himself? (Apu-Punchau?)",
+        "Severian says he 'forgets nothing.' Why does he not remember the axeman's face?",
+        "What is the real significance of the coin? Is it just a chrisos, or is it a token of his future Autarchy?"
+      ],
+      personal_notes: "First read: exciting adventure. Second read: everything is a symbol. The gate, the fog, the coin, the fight—it's all about Severian's exile and his eventual return. The 'resurrection' in the title is his own."
+    }, {
+      id: 2,
+      title: "Severian",
+      book: "The Shadow of the Torturer",
+      part: 1,
+      summary: "Severian describes his upbringing in the Matachin Tower of the torturers' guild. He was raised without knowledge of his parents—the guild recruits by taking male children of clients. The necropolis adjacent to the Citadel served as his playground, and he discovered a secret mausoleum bearing a blazon (a ship, a fountain, and a rose) and a funeral bronze that remarkably resembled him. He recounts the apprentices' secret swimming expeditions—first in the cistern under the Bell Keep, then in Gyoll. During one swim, Severian nearly drowns in the roots of the nenuphars, has a vision of Master Malrubius and a giant woman, and is rescued by Drotte. After this near-death experience—and after saving Vodalus—he can no longer swim in Gyoll. The chapter ends with the nenuphars as a symbol of death.",
+      tags: ["reading-notes", "book-of-the-new-sun", "severian", "necropolis", "mausoleum", "drowning", "unreliable-narrator", "foreshadowing", "eidolon", "thecla", "nenuphars"],
+      vocabulary: [
+        { term: "Matachin Tower", definition: "The tower of the torturers' guild.", etymology: "'Matachin' – possibly from Spanish 'matachín' (a sword dancer, or a butcher). Wolfe may imply a place of ritualized violence.", excerpt: "'In our Matachin Tower, a certain bar of iron thrusts from a bulkhead...'" },
+        { term: "Oubliette", definition: "The underground prison/torture chambers beneath the tower.", etymology: "From French 'oublier' – to forget. A dungeon where prisoners are forgotten.", excerpt: "'stretches the labyrinth of the oubliette.'" },
+        { term: "Necropolis", definition: "The vast cemetery adjacent to the Citadel.", etymology: "Greek 'nekros' (dead) + 'polis' (city).", excerpt: "'Our necropolis is said to be the oldest in Nessus.'" },
+        { term: "Armiger / Optimate", definition: "Lesser noble classes.", etymology: "'Armiger' – Latin 'arma' (arms) + 'gerere' (to bear). 'Optimate' – Latin 'optimus' (best) – the best people, aristocracy.", excerpt: "'the armigers and optimates of the city favored the highest slopes.'" },
+        { term: "Exultant", definition: "The highest noble class.", etymology: "From Latin 'exsultare' – to leap for joy. Suggests their elevated status and arrogance.", excerpt: "'Each would be an exultant if he could...'" },
+        { term: "Nenuphars", definition: "Blue water lilies; their roots nearly drown Severian.", etymology: "From French 'nénuphar', from Persian 'nīlūfar' – water lily. Wolfe uses them as a symbol of beauty masking death.", excerpt: "'blue nenuphars penned between walls of stone... Under flower and leaves are black roots as fine and strong as hair.'" },
+        { term: "Gyoll", definition: "The great river of Nessus.", etymology: "A neologism, possibly echoing 'Gyges' or 'giol' (a channel). Wolfe's invented name for the central waterway.", excerpt: "'our other swimming place was in Gyoll, which winds through Nessus like a great, weary snake.'" },
+        { term: "Citadel", definition: "The ancient fortress housing the guild towers.", etymology: "From Italian 'cittadella' – little city. A fortress dominating a city.", excerpt: "'the Citadel was their stronghold.'" },
+        { term: "Fuligin", definition: "The color darker than black, worn by torturers.", etymology: "From Latin 'fuligo' – soot.", excerpt: "'the fuligin mask' (later)." },
+        { term: "Blazon / Device", definition: "Heraldic emblem.", etymology: "From Old French 'blason' – shield, coat of arms. A formal description of a coat of arms.", excerpt: "'the devices graved in bronze above the door... a fountain rising above waters, and a ship volant, and below these a rose.'" }
+      ],
+      critical_angles: [
+        { title: "Unreliable Narrator", text: "Severian declares: 'From my earliest memory I remember all.' Yet he admits to not knowing his parents, and his account of the drowning is layered with vision and symbol, not pure fact. His 'perfect memory' is selective—he remembers the vision but not the exact face of the woman. He is constructing his origin, not merely reporting it." },
+        { title: "Eidolon Thread", text: "The funeral bronze in the mausoleum is a perfect foreshadowing of Severian as a double/construct. 'My straight nose, deep-set eyes, and sunken cheeks were much like his, and I longed to know if he too had dark hair.' This is Apu-Punchau—Severian's own future self (or past self) as a corpse. He is staring at his own tomb." },
+        { title: "Foreshadowing", text: "The mausoleum blazon (ship, fountain, rose) = the ship of Tzadkiel, the White Fountain, the rose (perhaps the Claw or the New Sun). The funeral bronze = Apu-Punchau. The near-drowning = the undine Juturna saving him. Master Malrubius's vision = the aquastor." },
+        { title: "Time-Bending", text: "The drowning vision collapses past and future. Severian sees Master Malrubius (who will die) and a giant woman (the undine, or perhaps Thecla). The nenuphar roots are 'as fine and strong as hair, reaching down into the dark waters'—time itself is a net of roots." },
+        { title: "Metafiction", text: "Severian is writing his own origin story. He says: 'I have chosen to describe all this now because I never went again after the day on which I saved Vodalus.' He is consciously framing his past for the reader, selecting what matters for the story." },
+        { title: "Women as Mirrors", text: "The drowning vision: 'Out of the darkness came the face of a woman, as immense as the green face of the moon.' This is Thecla? The undine? Valeria? She appears as a mirror of all the women he will love." },
+        { title: "Religious/Philosophical", text: "The nenuphars are a meditation on death: they are beautiful but deadly. The near-drowning is a baptism or a death-rebirth. He emerges changed." },
+        { title: "Sword as Soul", text: "Severian has no sword yet. He is an apprentice, not a journeyman. His identity is still being formed. The mausoleum is his tomb, not his armory." }
+      ],
+      quotes: [
+        "'From my earliest memory I remember all.'",
+        "'My straight nose, deep-set eyes, and sunken cheeks were much like his, and I longed to know if he too had dark hair.'",
+        "'When I think of my own death, or of the death of someone who has been kind to me, or even of the death of the sun, the image that comes to my mind is that of the nenuphar, with its glossy, pale leaves and azure flower. Under flower and leaves are black roots as fine and strong as hair, reaching down into the dark waters.'",
+        "'I did not come up. Somehow I had entered a region where the roots seemed far thicker than I had ever encountered them before.'"
+      ],
+      connections: [
+        "Chapter 1 (The Locked Gate) → The necropolis is revisited. The mausoleum is where Severian will hide the chrisos.",
+        "The Mausoleum Blazon → The ship appears on Vodalus's coin. The fountain is the White Fountain of Urth of the New Sun. The rose is the Claw or the New Sun itself.",
+        "The Funeral Bronze → Apu-Punchau, the Head of Day, is Severian's own corpse.",
+        "The Drowning → Juturna the undine will save him later. This is the first of many water encounters.",
+        "Master Malrubius → He will reappear as an aquastor (eidolon) later."
+      ],
+      questions: [
+        "Why does Severian remember everything except the face of the woman in his drowning vision?",
+        "The mausoleum blazon: ship, fountain, rose—are these the three stages of his journey? (Exile, rebirth, sacrifice?)",
+        "The funeral bronze looks like him. Is it his tomb, or Apu-Punchau's? Or both?",
+        "The nenuphars are a symbol of death. Why does he use this image for the death of the sun itself?",
+        "He says he never swam again after saving Vodalus. Is that literal, or is he saying he stopped diving into death?"
+      ],
+      personal_notes: "First read: a childhood memoir. Second read: everything is a tomb. The mausoleum is his future. The drowning is his first death. He is already writing from beyond the grave."
+    }, {
+      id: 3,
+      title: "The Autarch's Face",
+      book: "The Shadow of the Torturer",
+      part: 1,
+      summary: "Severian finally examines the gold chrisos Vodalus gave him. One side bears a woman's face (the Autarch?); the reverse shows a flying ship—identical to the blazon on his secret mausoleum. He hides it under a stone in the mausoleum, reciting a charm. He then returns to his duties, viewing a client who was tortured for information about Vodalus. Master Palaemon admonishes him for listening to clients. Severian questions Drotte about Vodalus (who tells him nothing). He reflects on the hated guild, the arrival of new prisoners, and his disillusionment when he discovers that none of them are actually Vodalarii. The chapter ends with Severian questioning his own sanity and memory—the coin's face is not Vodalus's, and he wonders if Vodalus was real at all.",
+      tags: ["reading-notes", "book-of-the-new-sun", "severian", "autarch", "coin", "master-palaemon", "thecla", "unreliable-narrator", "foreshadowing", "symbolism", "guild"],
+      vocabulary: [
+        { term: "Chrisos", definition: "A gold coin of the Commonwealth.", etymology: "From Greek 'chrysos' – gold.", excerpt: "'It was a gold chrisos... the first time I had ever touched a piece of gold.'" },
+        { term: "Autarch", definition: "The ruler of the Commonwealth. The 'face' on the coin.", etymology: "From Greek 'autos' (self) + 'archein' (to rule) – self-ruler. Implies the ruler embodies the state.", excerpt: "'This one bore what I at first thought was a woman's face—a woman crowned...'" },
+        { term: "Khaibit", definition: "A shadow-woman, a concubine stand-in for exultant women.", etymology: "From Egyptian 'khaibit' – shadow. A double, a ghostly substitute.", excerpt: "'they have these khaibits, what they call the shadow women...'" },
+        { term: "Dimarchi", definition: "Military police / soldiers who escort prisoners.", etymology: "From Greek 'di' (two) + 'marchos' (leader) – perhaps 'those who fight in two ways' (cavalry/infantry).", excerpt: "'They were guarded by dimarchi, hard-bitten troopers...'" },
+        { term: "Coffle", definition: "A line of prisoners chained together.", etymology: "From Arabic 'qāfilah' – caravan. A line of slaves or prisoners chained together.", excerpt: "'The less important arrived in coffles of ten to twenty men and women, chained one behind the other by the neck.'" },
+        { term: "Oubliette", definition: "The underground prison.", etymology: "From French 'oublier' – to forget.", excerpt: "'I carried my bucket out to empty in the stone sink in the Old Yard...'" },
+        { term: "Fuligin", definition: "The guild's color—darker than black.", etymology: "From Latin 'fuligo' – soot.", excerpt: "'the fuligin mask of his rank.'" },
+        { term: "Vodalarii", definition: "Followers of Vodalus.", etymology: "Vodalus + Latin suffix '-arius'.", excerpt: "'Not one—not one—of the prisoners whose papers I had read had been an adherent of Vodalus.'" },
+        { term: "Eidolon", definition: "A phantom, a ghost of memory.", etymology: "From Greek 'eidōlon' – image, phantom, ghost. A shade of the dead.", excerpt: "'I felt Vodalus had been only an eidolon created by my imagination...'" },
+        { term: "Mausoleum", definition: "The tomb where Severian hid the coin.", etymology: "From Mausolus, a Persian satrap, whose tomb was one of the Seven Wonders. Hence, a grand tomb.", excerpt: "'I slipped into the necropolis alone and sought out my mausoleum.'" }
+      ],
+      critical_angles: [
+        { title: "Unreliable Narrator", text: "Severian's crisis of memory is front and center. He has just boasted of remembering everything, yet he begins to doubt his own mind. 'I could no longer be sure my own mind was not lying to me...' His 'perfect memory' is a curse because it makes him unable to distinguish between memory and imagination." },
+        { title: "Eidolon Thread", text: "'I felt Vodalus had been only an eidolon created by my imagination from the fog...' The eidolon concept appears explicitly here. Severian is haunted by the possibility that his memories are phantoms—just as he will later be a phantom, an eidolon created by Tzadkiel." },
+        { title: "Foreshadowing", text: "The coin's reverse (flying ship) = Tzadkiel's ship. The coin's obverse (woman's face) = the Autarch. The charm he recites = a burial charm. Master Gurloes's lecture on khaibits = the theme of doubles and substitutes." },
+        { title: "Time-Bending", text: "Severian hides the coin in the mausoleum that contains his own funeral bronze. He is burying his past self. The coin will be recovered later—in The Citadel of the Autarch when he returns as Autarch." },
+        { title: "Metafiction", text: "Severian's crisis is about narrative itself. He says: 'It could be argued that it was the most harrowing of my life. I had lied often... Now I could no longer be sure my own mind was not lying to me.' He is writing a book that might be a lie." },
+        { title: "Women as Mirrors", text: "The coin bears a woman's face—the Autarch's face. But the Autarch is a man (later revealed). The face is androgynous. This is the first hint that the Autarchy is a composite, a Legion of personalities." },
+        { title: "Religious/Philosophical", text: "'We believe that we invent symbols. The truth is that they invent us...' This is the philosophical heart of the chapter. The coin is a symbol that invents Severian's loyalty to Vodalus. He is shaped by the coin, not the other way around." },
+        { title: "Sword as Soul", text: "Severian has no sword yet. His identity is still defined by the coin—a symbol of loyalty, of exile, of his future. The coin is his first token of power." }
+      ],
+      quotes: [
+        "'This one bore what I at first thought was a woman's face—a woman crowned, neither young nor old, but silent and perfect in the citrine metal.'",
+        "'We believe that we invent symbols. The truth is that they invent us; we are their creatures, shaped by their hard, defining edges.'",
+        "'I could no longer be sure my own mind was not lying to me; all my falsehoods were recoiling on me, and I who remembered everything could not be certain those memories were more than my own dreams.'",
+        "'I felt Vodalus had been only an eidolon created by my imagination from the fog...'"
+      ],
+      connections: [
+        "Chapter 1 → The coin from Vodalus is finally examined.",
+        "Chapter 2 → The mausoleum and the funeral bronze are revisited.",
+        "The Flying Ship → The ship of Tzadkiel in The Urth of the New Sun.",
+        "The Woman's Face → The Autarch as Legion; also Valeria, Thecla.",
+        "The Charm → 'Where I put you, there you lie...' This is a burial charm. Severian is burying his past self.",
+        "The New Clients → The prisoners arrive; Severian's hope that they are Vodalarii is crushed."
+      ],
+      questions: [
+        "Why does Severian think the coin's woman's face is the Autarch? Is the Autarch a woman?",
+        "The coin has the same flying ship as his mausoleum blazon. Is this coincidence, or is the mausoleum his tomb? Is he burying his own future?",
+        "Severian says he 'forgets nothing,' yet he doubts his memories. Is this a contradiction, or is he choosing which memories to trust?",
+        "The charm he recites—is it effective? Does the coin stay hidden?",
+        "Why does Severian feel relief when he realizes the prisoners aren't Vodalarii? Is he disappointed, or is he protecting his fantasy?"
+      ],
+      personal_notes: "First read: a chapter about guild politics and a coin. Second read: a chapter about the nature of reality, memory, and the self. The coin is not just a coin—it's the symbol of his divided loyalty. The woman's face on it is the Autarch, but also Thecla, also Valeria, also himself. He is burying his past in the mausoleum that contains his own corpse. The crisis of memory is the crisis of the entire narrative."
+    }];
 
     // ----- RENDER FUNCTIONS -----
     function renderNav() {
@@ -485,20 +511,13 @@
         btn.addEventListener('click', () => selectChapter(idx));
         nav.appendChild(btn);
       });
-      // Activate first chapter
-      if (chapters.length > 0) {
-        selectChapter(0);
-      }
+      if (chapters.length > 0) selectChapter(0);
     }
 
     function selectChapter(index) {
-      // Update nav buttons
       const buttons = document.querySelectorAll('.chapter-nav button');
-      buttons.forEach((btn, i) => {
-        btn.classList.toggle('active', i === index);
-      });
+      buttons.forEach((btn, i) => btn.classList.toggle('active', i === index));
       renderChapter(index);
-      // Save to URL hash for bookmarking
       window.location.hash = `ch-${chapters[index].id}`;
     }
 
@@ -507,30 +526,30 @@
       const container = document.getElementById('content');
       if (!ch) return;
 
-      // Build tags HTML
       const tagsHtml = ch.tags.map(t => `<span class="tag">#${t}</span>`).join('');
 
-      // Build vocabulary table
       let vocabHtml = '';
       if (ch.vocabulary && ch.vocabulary.length) {
-        vocabHtml = `<div class="section"><h3>📖 Vocabulary</h3><table class="vocab-table"><thead><tr><th>Term</th><th>Definition</th><th>Excerpt</th></tr></thead><tbody>`;
+        vocabHtml =
+          `<div class="section"><h3>📖 Vocabulary</h3><table class="vocab-table"><thead><tr><th>Term</th><th>Etymology</th><th>Definition</th><th>Excerpt</th></tr></thead><tbody>`;
         ch.vocabulary.forEach(v => {
-          vocabHtml += `<tr><td class="term">${v.term}</td><td class="def">${v.definition}</td><td class="excerpt">${v.excerpt}</td></tr>`;
+          vocabHtml +=
+            `<tr><td class="term">${v.term}</td><td class="etym">${v.etymology || '—'}</td><td class="def">${v.definition}</td><td class="excerpt">${v.excerpt}</td></tr>`;
         });
         vocabHtml += `</tbody></table></div>`;
       }
 
-      // Build critical angles
       let anglesHtml = '';
       if (ch.critical_angles && ch.critical_angles.length) {
-        anglesHtml = `<div class="section"><h3>🔍 Critical Angles</h3><div class="angle-grid">`;
+        anglesHtml =
+          `<div class="section"><h3>🔍 Critical Angles</h3><div class="angle-grid">`;
         ch.critical_angles.forEach(a => {
-          anglesHtml += `<div class="angle-card"><div class="angle-title">${a.title}</div><div class="angle-text">${a.text}</div></div>`;
+          anglesHtml +=
+            `<div class="angle-card"><div class="angle-title">${a.title}</div><div class="angle-text">${a.text}</div></div>`;
         });
         anglesHtml += `</div></div>`;
       }
 
-      // Build quotes
       let quotesHtml = '';
       if (ch.quotes && ch.quotes.length) {
         quotesHtml = `<div class="section"><h3>📌 Notable Quotes</h3>`;
@@ -540,41 +559,36 @@
         quotesHtml += `</div>`;
       }
 
-      // Build connections
       let connectionsHtml = '';
       if (ch.connections && ch.connections.length) {
-        connectionsHtml = `<div class="section"><h3>🔗 Connections</h3><ul>`;
+        connectionsHtml =
+          `<div class="section"><h3>🔗 Connections</h3><ul class="connections-list">`;
         ch.connections.forEach(c => {
           connectionsHtml += `<li>${c}</li>`;
         });
         connectionsHtml += `</ul></div>`;
       }
 
-      // Build questions
       let questionsHtml = '';
       if (ch.questions && ch.questions.length) {
-        questionsHtml = `<div class="section"><h3>🤔 Questions for Reread</h3><ul class="question-list">`;
+        questionsHtml =
+          `<div class="section"><h3>🤔 Questions for Reread</h3><ul class="question-list">`;
         ch.questions.forEach(q => {
           questionsHtml += `<li>${q}</li>`;
         });
         questionsHtml += `</ul></div>`;
       }
 
-      // Personal notes
       let notesHtml = '';
       if (ch.personal_notes) {
-        notesHtml = `<div class="section"><h3>📝 Personal Notes</h3><div class="note-box">${ch.personal_notes}</div></div>`;
+        notesHtml =
+          `<div class="section"><h3>📝 Personal Notes</h3><div class="note-box">${ch.personal_notes}</div></div>`;
       }
 
-      // Assemble full content
       container.innerHTML = `
         <div class="chapter-header">
           <h2>${ch.title}</h2>
-          <div class="meta">
-            <span>${ch.book}</span>
-            <span>Part ${ch.part}</span>
-            <span>Chapter ${ch.id}</span>
-          </div>
+          <div class="meta"><span>${ch.book}</span><span>Part ${ch.part}</span><span>Chapter ${ch.id}</span></div>
         </div>
         <div class="tags">${tagsHtml}</div>
         <div class="section"><h3>📖 Summary</h3><p>${ch.summary}</p></div>
@@ -587,18 +601,13 @@
       `;
     }
 
-    // ----- INITIALIZATION -----
     renderNav();
-
-    // Handle hash on load (e.g., #ch-2)
     window.addEventListener('load', () => {
       const hash = window.location.hash;
       if (hash.startsWith('#ch-')) {
         const id = parseInt(hash.replace('#ch-', ''), 10);
         const idx = chapters.findIndex(c => c.id === id);
-        if (idx >= 0) {
-          selectChapter(idx);
-        }
+        if (idx >= 0) selectChapter(idx);
       }
     });
   </script>
