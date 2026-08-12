@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Book of the New Sun – Decoder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body {
+    background:#0c0a09;
+    color:#d4c9b8;
+    font-family:'Cormorant Garamond', Georgia, serif;
+    font-size:1.2rem;
+    line-height:1.7;
+  }
+  ::-webkit-scrollbar { width:8px; }
+  ::-webkit-scrollbar-track { background:#1a1614; }
+  ::-webkit-scrollbar-thumb { background:#b8944e; border-radius:4px; }
+
+  .container { display:flex; max-width:1400px; margin:0 auto; min-height:100vh; }
+
+  .toc {
+    position:sticky; top:0; height:100vh; width:280px;
+    background:#14100e; border-right:1px solid #2a231e;
+    padding:2.5rem 1.5rem; flex-shrink:0;
+    display:flex; flex-direction:column; overflow-y:auto;
+  }
+  .toc-title {
+    font-family:'Cinzel', serif; font-weight:900; font-size:1.1rem;
+    color:#b8944e; text-transform:uppercase; letter-spacing:3px;
+    border-bottom:1px solid #2a231e; padding-bottom:1.2rem; margin-bottom:1.8rem;
+  }
+  .toc-title span {
+    display:block; font-weight:400; font-size:0.7rem; letter-spacing:2px;
+    color:#7a6b5a; margin-top:4px; text-transform:none;
+  }
+  .toc-list { list-style:none; flex:1; }
+  .toc-list li { margin-bottom:0.8rem; }
+  .toc-list a {
+    color:#b8a99a; text-decoration:none; font-size:1.1rem; font-weight:400;
+    border-left:2px solid transparent; padding-left:0.8rem;
+    transition:all 0.2s ease; display:block;
+  }
+  .toc-list a:hover { color:#e8d5b0; border-left-color:#b8944e; padding-left:1.2rem; }
+  .toc-chapter-num {
+    display:block; font-size:0.75rem; color:#7a6b5a;
+    font-family:'Cinzel', serif; letter-spacing:1px; text-transform:uppercase;
+  }
+  .toc-footer {
+    margin-top:2rem; font-size:0.75rem; color:#4a403a;
+    border-top:1px solid #2a231e; padding-top:1.2rem; text-align:center;
+    letter-spacing:1px; font-family:'Cinzel', serif;
+  }
+
+  .main { flex:1; padding:3rem 4rem 6rem; max-width:900px; margin:0 auto; }
+
+  .chapter { margin-bottom:5rem; padding-bottom:4rem; border-bottom:1px solid #2a231e; }
+  .chapter:last-of-type { border-bottom:none; margin-bottom:0; }
+  .chapter-meta {
+    font-family:'Cinzel', serif; font-size:0.8rem; color:#b8944e;
+    letter-spacing:2px; text-transform:uppercase; margin-bottom:0.5rem;
+  }
+  .chapter-title {
+    font-family:'Cinzel', serif; font-weight:900; font-size:2.8rem;
+    color:#e8d5b0; line-height:1.1; margin-bottom:0.3rem;
+  }
+  .chapter-book {
+    font-family:'Cinzel', serif; font-size:1rem; color:#7a6b5a;
+    letter-spacing:2px; margin-bottom:1.8rem; font-weight:400;
+  }
+
+  h3 {
+    font-family:'Cinzel', serif; font-weight:700; color:#c9b088;
+    font-size:1.5rem; margin-top:2.5rem; margin-bottom:0.8rem; letter-spacing:1px;
+  }
+  h4 {
+    font-family:'Cinzel', serif; font-weight:700; color:#b8944e;
+    font-size:1.15rem; margin-top:2rem; margin-bottom:0.5rem; letter-spacing:0.5px;
+  }
+
+  .summary {
+    background:#1a1614; padding:1.5rem 2rem; border-left:3px solid #b8944e;
+    border-radius:0 6px 6px 0; margin:1.5rem 0; font-style:italic; color:#d4c9b8;
+  }
+
+  .vocab-entry {
+    background:#14100e; border:1px solid #2a231e; border-radius:8px;
+    padding:1.5rem 2rem; margin:1.8rem 0; transition:border-color 0.3s ease;
+  }
+  .vocab-entry:hover { border-color:#b8944e; }
+  .vocab-word {
+    font-family:'Cinzel', serif; font-weight:700; font-size:1.5rem; color:#e8d5b0;
+    display:inline-block; border-bottom:2px solid #b8944e; padding-bottom:0.2rem; margin-bottom:0.8rem;
+  }
+  .vocab-entry blockquote {
+    border-left:3px solid #4a403a; padding-left:1.2rem; margin:0.8rem 0 1rem 0;
+    font-style:italic; color:#c9b088; font-size:1.1rem;
+  }
+  .vocab-entry blockquote::before { content:"“"; color:#b8944e; font-size:1.8rem; line-height:0; vertical-align:-0.4rem; margin-right:0.2rem; }
+  .vocab-entry blockquote::after { content:"”"; color:#b8944e; font-size:1.8rem; line-height:0; vertical-align:-0.2rem; margin-left:0.2rem; }
+  .vocab-etym {
+    font-size:0.95rem; color:#b8a99a; background:#1f1a17; padding:0.4rem 0.8rem;
+    border-radius:4px; display:inline-block; margin:0.3rem 0 0.8rem 0;
+  }
+  .vocab-etym strong { color:#b8944e; font-weight:700; }
+  .vocab-decoded { margin-top:0.5rem; }
+
+  .closing-thesis {
+    background:#1a1614; padding:1.8rem 2rem; border-radius:8px; border:1px solid #2a231e;
+    margin-top:2.5rem; font-size:1.2rem; color:#e8d5b0;
+  }
+  .closing-thesis strong { color:#b8944e; font-weight:700; }
+
+  .discussion-questions {
+    background:#0f0d0b; padding:1.5rem 2rem; border-radius:8px; margin-top:2rem;
+    border:1px dashed #4a403a;
+  }
+  .discussion-questions h4 { margin-top:0; }
+  .discussion-questions ul { list-style:none; padding-left:0; }
+  .discussion-questions li { padding-left:1.5rem; position:relative; margin-bottom:0.6rem; }
+  .discussion-questions li::before { content:"✦"; color:#b8944e; position:absolute; left:0; }
+
+  .chapter-nav {
+    display:flex; justify-content:space-between; margin-top:2.5rem; padding-top:1.5rem;
+    border-top:1px solid #2a231e; font-family:'Cinzel', serif; font-size:0.9rem; letter-spacing:1px;
+  }
+  .chapter-nav a { color:#b8944e; text-decoration:none; transition:color 0.2s; }
+  .chapter-nav a:hover { color:#e8d5b0; }
+
+  @media (max-width:900px) {
+    .container { flex-direction:column; }
+    .toc {
+      position:relative; height:auto; width:100%; border-right:none;
+      border-bottom:1px solid #2a231e; padding:1.5rem 1rem;
+      flex-direction:row; flex-wrap:wrap; gap:0.5rem;
+    }
+    .toc-title { width:100%; margin-bottom:0.5rem; padding-bottom:0.5rem; }
+    .toc-list { display:flex; flex-wrap:wrap; gap:0.5rem 1.5rem; }
+    .toc-list li { margin-bottom:0; }
+    .toc-list a { border-left:none; padding-left:0; font-size:0.95rem; }
+    .toc-list a:hover { padding-left:0; border-left:none; color:#e8d5b0; }
+    .toc-footer { display:none; }
+    .main { padding:2rem 1.2rem 4rem; }
+    .chapter-title { font-size:2rem; }
+    .vocab-entry { padding:1rem 1.2rem; }
+  }
+  @media (max-width:480px) {
+    body { font-size:1rem; }
+    .chapter-title { font-size:1.6rem; }
+    .summary { padding:1rem 1.2rem; }
+    .closing-thesis { padding:1rem 1.2rem; font-size:1rem; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <nav class="toc" aria-label="Table of Contents">
+    <div class="toc-title">The New Sun<span>Decoder · Chapters I–III</span></div>
+    <ul class="toc-list">
+      <li><a href="#ch1"><span class="toc-chapter-num">Chapter I</span>The Severian</a></li>
+      <li><a href="#ch2"><span class="toc-chapter-num">Chapter II</span>Severian</a></li>
+      <li><a href="#ch3"><span class="toc-chapter-num">Chapter III</span>The Autarch's Face</a></li>
+    </ul>
+    <div class="toc-footer"><span>✦ one fossil-word at a time ✦</span></div>
+  </nav>
+
+  <main class="main">
+    <article class="chapter" id="ch1">
+      <div class="chapter-meta">Chapter I</div>
+      <h1 class="chapter-title">The Severian</h1>
+      <div class="chapter-book"><em>The Shadow of the Torturer</em></div>
+      <div class="summary"><strong>Summary:</strong> Severian, an apprentice torturer, stands in the Matachin Tower awaiting his flogging for showing mercy to a condemned prisoner. As he waits, he reflects on the guild's history, its paradoxical pride, and the philosophical veneer they drape over their grim craft.</div>
+
+      <h3>🧬 Vocabulary Decoder</h3>
+      <div class="vocab-entry">
+        <div class="vocab-word">Algedonic</div>
+        <blockquote>“I had heard of the algedonic principle, by which pain and pleasure are recognized as aspects of the same thing.”</blockquote>
+        <div class="vocab-etym"><strong>Etymology:</strong> Greek <em>álgos</em> (pain) + <em>hēdonḗ</em> (pleasure)</div>
+        <div class="vocab-decoded"><strong>Decoded:</strong> The core philosophy of the torturers, who collapse the binary of suffering and ecstasy. Severian claims he didn't yet understand it — a narrator who tells you he was naive while showing you he already speaks from dark wisdom.</div>
+      </div>
+      <div class="vocab-entry">
+        <div class="vocab-word">Fuligin</div>
+        <blockquote>“Our cloaks are fuligin, blacker than black.”</blockquote>
+        <div class="vocab-etym"><strong>Etymology:</strong> Latin <em>fuligo</em> — soot, chimney-black</div>
+        <div class="vocab-decoded"><strong>Decoded:</strong> By avoiding "black" or "dark," Wolfe forces you to see it as ash — the residue of fire. The torturers are the Commonwealth's burnt offering, its hidden stain.</div>
+      </div>
+      <div class="vocab-entry">
+        <div class="vocab-word">Carnifex</div>
+        <blockquote>“We are the carnifex — the butchers — and we are feared.”</blockquote>
+        <div class="vocab-etym"><strong>Etymology:</strong> Latin <em>caro</em> (flesh) + <em>facere</em> (to make) → "flesh-maker"</div>
+        <div class="vocab-decoded"><strong>Decoded:</strong> The public name reduces intellectuals to butchers, while hinting their work is creative: they "make" flesh by remaking it through pain.</div>
+      </div>
+
+      <h3>🧠 The Linguistic Trap</h3>
+      <p>Wolfe used archaic words because the far future would find present English as archaic as Latin. But the deeper trick: Latinate roots make Severian sound authoritative and truthful, concealing what they describe. When he calls the whip "algedonic," he sanitizes it. Your job is to hear the scream behind the syllable.</p>
+
+      <div class="closing-thesis"><strong>Closing Thesis:</strong> <em>Chapter 1 is a lexicon, not a scene. Every word is a lie that tells the truth.</em></div>
+
+      <div class="discussion-questions">
+        <h4>📝 Discussion Questions</h4>
+        <ul>
+          <li>Why does Severian emphasize that he <em>chose</em> mercy, rather than it being an accident?</li>
+          <li>If the torturers are philosophers, does that make their cruelty more or less defensible?</li>
+        </ul>
+      </div>
+      <div class="chapter-nav"><span>← Introduction</span><a href="#ch2">Chapter II →</a></div>
+    </article>
+
+    <article class="chapter" id="ch2">
+      <div class="chapter-meta">Chapter II</div>
+      <h1 class="chapter-title">Severian</h1>
+      <div class="chapter-book"><em>The Shadow of the Torturer</em></div>
+      <div class="summary"><strong>Summary:</strong> A flashback within a flashback: Severian's childhood among the torturers, the necropolis he made his playground, and his near-drowning in the River Gyoll, where he glimpses an immense face in the dark before being revived.</div>
+
+      <h3>🧬 Vocabulary Decoder</h3>
+      <div class="vocab-entry">
+        <div class="vocab-word">Necropolis</div>
+        <blockquote>“Our necropolis is said to be the oldest in Nessus.”</blockquote>
+        <div class="vocab-etym"><strong>Etymology:</strong> Greek <em>nekros</em> (corpse) + <em>polis</em> (city) → "city of the dead"</div>
+        <div class="vocab-decoded"><strong>Decoded:</strong> Not a graveyard but a city. Severian's relationship with death is inverted: he doesn't fear it, he lives in it.</div>
+      </div>
+      <div class="vocab-entry">
+        <div class="vocab-word">Nenuphar</div>
+        <blockquote>“When I think of my own death... the image that comes to my mind is that of the nenuphar.”</blockquote>
+        <div class="vocab-etym"><strong>Etymology:</strong> Medieval Latin ← Arabic <em>nīnūfar</em> ← Persian ← Sanskrit <em>nīlotpala</em>, "blue lotus"</div>
+        <div class="vocab-decoded"><strong>Decoded:</strong> The chapter's emotional core — a water lily, beautiful on the surface with black roots in dark water. The algedonic principle made floral.</div>
+      </div>
+      <div class="vocab-entry">
+        <div class="vocab-word">Saros</div>
+        <blockquote>“The decades of a saros would not be long enough for me to write all they meant.”</blockquote>
+        <div class="vocab-etym"><strong>Etymology:</strong> Greek <em>sarōs</em>, via Babylonian — an 18-year eclipse cycle</div>
+        <div class="vocab-decoded"><strong>Decoded:</strong> Severian writes from outside normal time, evoking cycles and recurrence — themes central to the series.</div>
+      </div>
+
+      <h3>⚖️ Thematic Irony: The Necropolis as Nursery</h3>
+      <p>Severian describes the city of the dead with nostalgia — his playground, teeming with birds and foxes. He has been raised so close to death that it has become ordinary, even beautiful.</p>
+
+      <div class="closing-thesis"><strong>Closing Thesis:</strong> <em>The nenuphar is Severian's emblem: beautiful above, rooted in darkness, floating between worlds.</em></div>
+
+      <div class="discussion-questions">
+        <h4>📝 Discussion Questions</h4>
+        <ul>
+          <li>Why does Severian describe the necropolis with such fondness?</li>
+          <li>He never explains the drowned woman's face. Why leave it mysterious?</li>
+        </ul>
+      </div>
+      <div class="chapter-nav"><a href="#ch1">← Chapter I</a><a href="#ch3">Chapter III →</a></div>
+    </article>
+
+    <article class="chapter" id="ch3">
+      <div class="chapter-meta">Chapter III</div>
+      <h1 class="chapter-title">The Autarch's Face</h1>
+      <div class="chapter-book"><em>The Shadow of the Torturer</em></div>
+      <div class="summary"><strong>Summary:</strong> Severian examines the gold chrisos given to him by Vodalus, stamped with the Autarch's androgynous face, then reflects on the tower's oubliettes and the proverb: "Ask not the Autarch a question, for they will give you three answers."</div>
+
+      <h3>🧬 Vocabulary Decoder</h3>
+      <div class="vocab-entry">
+        <div class="vocab-word">Chrisos</div>
+        <blockquote>“It was a chrisos, the largest gold coin of the Commonwealth.”</blockquote>
+        <div class="vocab-etym"><strong>Etymology:</strong> Greek <em>khrysos</em> — gold</div>
+        <div class="vocab-decoded"><strong>Decoded:</strong> Not just money — a piece of the Commonwealth's soul, echoing <em>Christos</em> and hinting at redemptive weight.</div>
+      </div>
+      <div class="vocab-entry">
+        <div class="vocab-word">Autarch</div>
+        <blockquote>“A face that was neither man's nor woman's, but something of both.”</blockquote>
+        <div class="vocab-etym"><strong>Etymology:</strong> Greek <em>autos</em> (self) + <em>archein</em> (to rule)</div>
+        <div class="vocab-decoded"><strong>Decoded:</strong> A ruler transcending gender, foreshadowing the true, stranger nature of the Autarchy Severian will one day inherit.</div>
+      </div>
+      <div class="vocab-entry">
+        <div class="vocab-word">Oubliette</div>
+        <blockquote>“Below the level of the oubliettes, where the light never reached.”</blockquote>
+        <div class="vocab-etym"><strong>Etymology:</strong> French <em>oublier</em> — to forget</div>
+        <div class="vocab-decoded"><strong>Decoded:</strong> Cells not for punishment but erasure — and Severian, with his perfect memory, is a living contradiction to their purpose.</div>
+      </div>
+
+      <h3>⚖️ Thematic Irony: The Proverb of the Autarch</h3>
+      <p>"Ask not the Autarch a question, for they will give you three answers" is a masterclass in ambiguity — wise or evasive, depending how you read it. The three answers compress the entire series' hidden history into a riddle.</p>
+
+      <div class="closing-thesis"><strong>Closing Thesis:</strong> <em>Severian holds the Autarch's face in his hand, not knowing he will one day wear it.</em></div>
+
+      <div class="discussion-questions">
+        <h4>📝 Discussion Questions</h4>
+        <ul>
+          <li>Why does Severian spend so long examining the coin?</li>
+          <li>Why might Wolfe have made the Autarch's face androgynous?</li>
+        </ul>
+      </div>
+      <div class="chapter-nav"><a href="#ch2">← Chapter II</a><span>Chapter IV →</span></div>
+    </article>
+  </main>
+</div>
+</body>
+</html>
