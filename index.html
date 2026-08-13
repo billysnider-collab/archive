@@ -36,7 +36,7 @@
   header{
     max-width: 900px;
     margin: 0 auto;
-    padding: 64px 28px 30px;
+    padding: 64px 28px 28px;
     border-bottom: 2px solid var(--ink);
   }
   .kicker{
@@ -51,35 +51,35 @@
     font-family:'Fraunces', serif;
     font-weight:600;
     font-size:44px;
-    margin:0 0 10px;
+    margin:0 0 12px;
     letter-spacing:-.01em;
   }
   .lede{
     color:var(--ink-soft);
     font-style:italic;
-    font-size:16px;
-    max-width:56ch;
-    margin:0 0 6px;
+    font-size:16.5px;
+    max-width:58ch;
+    margin:0 0 8px;
+    line-height:1.5;
   }
   .count{
     font-family:'IBM Plex Mono', monospace;
     font-size:11.5px;
     color:var(--ink-soft);
-    margin-top:14px;
+    margin-top:16px;
   }
 
   .controls{
     max-width:900px;
-    margin: 24px auto 0;
+    margin: 22px auto 0;
     padding: 0 28px;
     display:flex;
-    gap:10px;
-    flex-wrap:wrap;
-    align-items:center;
+    flex-direction:column;
+    gap:14px;
   }
   #search{
-    flex: 1 1 240px;
-    padding:10px 12px;
+    width:100%;
+    padding:11px 14px;
     font-family:'IBM Plex Mono', monospace;
     font-size:13px;
     background:var(--card);
@@ -89,9 +89,36 @@
   }
   #search:focus{ outline:2px solid var(--oxblood-dim); outline-offset:1px; }
 
+  .filters{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+  }
+  .filter-btn{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    padding:4px 11px;
+    border:1px solid var(--rule);
+    border-radius:20px;
+    background:transparent;
+    color:var(--ink-soft);
+    cursor:pointer;
+    transition:all .12s ease;
+    letter-spacing:.02em;
+  }
+  .filter-btn:hover{
+    border-color:var(--oxblood-dim);
+    color:var(--ink);
+  }
+  .filter-btn.active{
+    background:var(--oxblood);
+    border-color:var(--oxblood);
+    color:var(--card);
+  }
+
   main{
     max-width:900px;
-    margin: 30px auto 100px;
+    margin: 28px auto 100px;
     padding: 0 28px;
   }
 
@@ -99,17 +126,18 @@
     border-top: 1px solid var(--rule);
   }
 
-  .book-row{
+  .entry-row{
     display:grid;
     grid-template-columns: 44px 1fr;
     gap: 18px;
     align-items:start;
-    padding: 20px 6px;
+    padding: 22px 6px;
     border-bottom: 1px solid var(--rule);
     cursor:pointer;
+    transition: background .12s ease;
   }
-  .book-row:hover{ background: rgba(42,38,34,.035); }
-  .book-row:hover .book-title{ color:var(--oxblood); }
+  .entry-row:hover{ background: rgba(42,38,34,.035); }
+  .entry-row:hover .entry-title{ color:var(--oxblood); }
 
   .spine{
     width:44px;
@@ -122,6 +150,7 @@
     font-size:11px;
     color:var(--card);
     font-weight:600;
+    flex-shrink:0;
   }
 
   .kind{
@@ -133,22 +162,23 @@
     color:var(--ink-soft);
     margin:2px 0 5px;
   }
-  .book-title{
+  .entry-title{
     font-family:'Fraunces', serif;
     font-weight:600;
     font-size:19px;
     margin:0 0 4px;
+    transition: color .12s ease;
   }
-  .book-author{
+  .entry-author{
     font-size:14px;
     font-style:italic;
     color:var(--ink-soft);
     margin:0 0 8px;
   }
-  .book-summary{
+  .entry-summary{
     font-size:14px;
     color:var(--ink-soft);
-    margin:0 0 10px;
+    margin:0 0 11px;
     max-width:64ch;
   }
   .tag-row{ display:flex; flex-wrap:wrap; gap:6px; }
@@ -191,31 +221,36 @@
 <body>
 
 <header>
-  <p class="kicker">Personal Archive</p>
+  <p class="kicker">Personal Knowledge Archive</p>
   <h1>The Archive</h1>
-  <p class="lede">A running collection of books, essays, and videos — each one rebuilt into a synthesized reading aid or notes page.</p>
+  <p class="lede">Notes, reading aids, and conceptual maps — rebuilt from books, essays, and original synthesis. A running record of ideas worth keeping.</p>
   <p class="count" id="count"></p>
 </header>
 
 <div class="controls">
-  <input id="search" type="text" placeholder="search title, creator, tag… (or click a tag below)" autocomplete="off">
+  <input id="search" type="text" placeholder="Search title, creator, or tag…" autocomplete="off">
+  <div class="filters" id="filters">
+    <button class="filter-btn active" data-kind="all">All</button>
+    <button class="filter-btn" data-kind="book">Books</button>
+    <button class="filter-btn" data-kind="essay">Essays</button>
+    <button class="filter-btn" data-kind="guide">Guides</button>
+    <button class="filter-btn" data-kind="short story">Stories</button>
+  </div>
 </div>
 
 <main>
   <div class="shelf" id="shelf"></div>
-  <p id="empty">No books match that search.</p>
+  <p id="empty">No entries match that search.</p>
 </main>
 
-<footer>the archive · add an entry by appending one to the BOOKS array</footer>
+<footer>the archive · a personal record of synthesized thought</footer>
 
 <script>
 /* ============================================================
-   BOOKS — one entry per book. Add new books here as you finish
-   building each reading-aid page. `href` should point to that
-   book's standalone HTML file.
-   kind: what it is — "book" | "essay" | "short story" | "guide"
+   ENTRIES — one object per page.
+   kind: "book" | "essay" | "guide" | "short story" | "synthesis"
    ============================================================ */
-const BOOKS = [
+const ENTRIES = [
   {
     title: "How to Read a Book",
     author: "Mortimer J. Adler & Charles Van Doren",
@@ -315,22 +350,16 @@ const BOOKS = [
     tags: ["biology", "evolution", "contingency", "convergence", "philosophy-of-science"],
     accent: "#5b9a8b"
   }
-  // {
-  //   title: "...",
-  //   author: "...",
-  //   href: "slug.html",
-  //   kind: "book",
-  //   summary: "...",
-  //   tags: [],
-  //   accent: "#3a4a3a"
-  // },
 ];
 
 const shelf = document.getElementById('shelf');
 const countEl = document.getElementById('count');
 const emptyEl = document.getElementById('empty');
 const searchInput = document.getElementById('search');
+const filterBtns = document.querySelectorAll('.filter-btn');
+
 let activeTag = null;
+let activeKind = 'all';
 
 function initials(title){
   return title.split(' ').filter(w => /^[A-Z0-9]/.test(w)).slice(0,2).map(w=>w[0]).join('') || title[0];
@@ -338,28 +367,29 @@ function initials(title){
 
 function render(){
   const q = searchInput.value.trim().toLowerCase();
-  const filtered = BOOKS.filter(b => {
+  const filtered = ENTRIES.filter(b => {
+    const kindOk = activeKind === 'all' || b.kind === activeKind;
     const tagOk = !activeTag || (b.tags||[]).includes(activeTag);
     const hay = (b.title + ' ' + b.author + ' ' + (b.tags||[]).join(' ')).toLowerCase();
     const searchOk = !q || hay.includes(q);
-    return tagOk && searchOk;
+    return kindOk && tagOk && searchOk;
   });
 
-  countEl.textContent = `${BOOKS.length} entr${BOOKS.length===1?'y':'ies'} in the archive`;
+  countEl.textContent = `${ENTRIES.length} entr${ENTRIES.length===1?'y':'ies'} in the archive`;
   shelf.innerHTML = '';
   emptyEl.style.display = filtered.length ? 'none' : 'block';
 
   filtered.forEach(b => {
     const row = document.createElement('div');
-    row.className = 'book-row';
+    row.className = 'entry-row';
     row.innerHTML = `
-      <a href="${b.href}" class="spine" style="background:${b.accent || '#7c2e2a'}">${initials(b.title)}</a>
+      <a href="${b.href}" class="spine" style="background: ${b.accent || '#7c2e2a'}">${initials(b.title)}</a>
       <div>
         <a href="${b.href}" style="text-decoration:none;color:inherit;">
           ${b.kind ? `<span class="kind">${b.kind}</span>` : ''}
-          <p class="book-title">${b.title}</p>
-          <p class="book-author">${b.author}</p>
-          ${b.summary ? `<p class="book-summary">${b.summary}</p>` : ''}
+          <p class="entry-title">${b.title}</p>
+          <p class="entry-author">${b.author}</p>
+          ${b.summary ? `<p class="entry-summary">${b.summary}</p>` : ''}
         </a>
         ${b.tags && b.tags.length ? `<div class="tag-row">${b.tags.map(t=>`<span class="tag ${t===activeTag?'active':''}" data-tag="${t}">${t}</span>`).join('')}</div>` : ''}
       </div>
@@ -377,8 +407,16 @@ function render(){
   });
 }
 
-searchInput.addEventListener('input', render);
+filterBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    filterBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeKind = btn.dataset.kind;
+    render();
+  });
+});
 
+searchInput.addEventListener('input', render);
 render();
 </script>
 
