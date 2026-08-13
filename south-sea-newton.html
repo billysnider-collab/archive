@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Newton and the South Sea Bubble — The Ledger Bard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --void: #070b12;
+      --surface: #0f1724;
+      --border: #1c2838;
+      --text: #e8e4d9;
+      --muted: #a89b7c;
+      --gold: #c9a227;
+      --crimson: #9e2a2a;
+      --serif: 'Instrument Serif', Georgia, serif;
+      --sans: 'Inter', system-ui, sans-serif;
+      --mono: 'IBM Plex Mono', ui-monospace, monospace;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--void);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 17.5px;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      padding: 0;
+      min-height: 100vh;
+    }
+
+    /* subtle star-field */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        radial-gradient(1.5px 1.5px at 20px 30px, rgba(232,228,217,0.15), transparent),
+        radial-gradient(1.5px 1.5px at 40px 70px, rgba(232,228,217,0.12), transparent),
+        radial-gradient(1px 1px at 90px 40px, rgba(232,228,217,0.18), transparent),
+        radial-gradient(1.5px 1.5px at 160px 80px, rgba(232,228,217,0.1), transparent),
+        radial-gradient(1px 1px at 230px 50px, rgba(232,228,217,0.14), transparent),
+        radial-gradient(1.5px 1.5px at 300px 120px, rgba(232,228,217,0.11), transparent),
+        radial-gradient(1px 1px at 380px 20px, rgba(232,228,217,0.16), transparent),
+        radial-gradient(1.5px 1.5px at 450px 90px, rgba(232,228,217,0.09), transparent);
+      background-size: 500px 160px;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.7;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 2.5rem 1.4rem 5rem;
+    }
+
+    /* ----- HEADER ----- */
+    .logo {
+      font-family: var(--serif);
+      font-size: 1.15rem;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      margin-bottom: 3.5rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    .logo span { color: var(--gold); }
+    .logo-meta {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .scene-number {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.75rem;
+    }
+
+    h1 {
+      font-family: var(--serif);
+      font-size: clamp(2.1rem, 6.5vw, 2.85rem);
+      font-weight: 400;
+      line-height: 1.15;
+      margin-bottom: 1.4rem;
+      letter-spacing: -0.02em;
+    }
+    h1 em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .subhead {
+      color: var(--muted);
+      font-size: 1.08rem;
+      line-height: 1.55;
+      margin-bottom: 2.75rem;
+      border-left: 2px solid var(--gold);
+      padding-left: 1.2rem;
+    }
+
+    /* ----- TYPOGRAPHY ----- */
+    .drop-cap::first-letter {
+      font-family: var(--serif);
+      font-size: 3.6rem;
+      float: left;
+      line-height: 0.72;
+      padding-right: 0.14em;
+      padding-top: 0.06em;
+      color: var(--gold);
+    }
+
+    p { margin-bottom: 1.3rem; }
+
+    .section-title {
+      font-family: var(--serif);
+      font-size: 1.7rem;
+      margin: 3.5rem 0 1.3rem;
+      letter-spacing: -0.01em;
+    }
+
+    /* ----- QUOTES ----- */
+    .quote-block {
+      background: var(--surface);
+      border-left: 3px solid var(--gold);
+      padding: 1.6rem 1.75rem;
+      margin: 2.2rem 0;
+      border-radius: 0 4px 4px 0;
+    }
+    .quote-block.crimson {
+      border-left-color: var(--crimson);
+    }
+    .quote-block p {
+      font-family: var(--serif);
+      font-size: 1.28rem;
+      line-height: 1.4;
+      font-style: italic;
+      margin-bottom: 0.55rem;
+      color: var(--text);
+    }
+    .quote-block cite {
+      display: block;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      font-style: normal;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+
+    /* ----- TIMELINE (the spine) ----- */
+    .timeline-wrap {
+      margin: 2.5rem 0 3rem;
+      position: relative;
+    }
+
+    .timeline-line {
+      position: absolute;
+      left: 7px;
+      top: 8px;
+      bottom: 8px;
+      width: 2px;
+      background: linear-gradient(
+        to bottom,
+        var(--gold) 0%,
+        var(--gold) 42%,
+        var(--crimson) 48%,
+        var(--crimson) 100%
+      );
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 16px 1fr;
+      gap: 1.1rem;
+      margin-bottom: 1.6rem;
+      position: relative;
+    }
+    .timeline-item:last-child { margin-bottom: 0; }
+
+    .timeline-node {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--void);
+      border: 2px solid var(--gold);
+      margin-top: 4px;
+      z-index: 2;
+    }
+    .timeline-item.crash .timeline-node {
+      border-color: var(--crimson);
+      background: var(--crimson);
+    }
+
+    .timeline-content .year {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      color: var(--gold);
+      letter-spacing: 0.04em;
+      margin-bottom: 0.25rem;
+    }
+    .timeline-item.crash .timeline-content .year {
+      color: var(--crimson);
+    }
+    .timeline-content .event {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.55;
+    }
+    .timeline-item.crash .timeline-content .event {
+      color: #c4b8a8;
+    }
+
+    /* ----- DECISION SLIDER ----- */
+    .decision {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1.5rem 1.4rem 1.6rem;
+      margin: 2.5rem 0;
+    }
+    .decision-label {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+    .decision-track {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 0.6rem;
+    }
+    .decision-track span:last-child { color: var(--crimson); }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(to right, var(--gold), var(--crimson));
+      border-radius: 2px;
+      outline: none;
+      margin: 0.8rem 0 1.1rem;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--text);
+      border: 2px solid var(--void);
+      cursor: pointer;
+      box-shadow: 0 0 0 3px rgba(201,162,39,0.25);
+    }
+
+    .decision-result {
+      font-family: var(--serif);
+      font-size: 1.15rem;
+      color: var(--text);
+      min-height: 1.6em;
+    }
+    .decision-result .loss {
+      color: var(--crimson);
+      font-family: var(--mono);
+      font-size: 0.95rem;
+    }
+
+    /* ----- RUPTURE ----- */
+    .rupture {
+      height: 1px;
+      background: var(--border);
+      margin: 3rem 0;
+      position: relative;
+    }
+    .rupture::after {
+      content: "";
+      position: absolute;
+      left: 8%;
+      right: 4%;
+      top: -1px;
+      height: 1px;
+      background: var(--crimson);
+      transform: rotate(-0.4deg);
+      opacity: 0.7;
+    }
+
+    /* ----- MODERN MAP ----- */
+    .modern-map {
+      background: var(--surface);
+      border-left: 3px solid var(--crimson);
+      padding: 1.3rem 1.5rem;
+      margin: 2.2rem 0;
+      border-radius: 0 4px 4px 0;
+    }
+    .modern-map h4 {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--crimson);
+      margin-bottom: 0.55rem;
+    }
+    .modern-map p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    /* ----- LESSONS ----- */
+    .moral {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1.6rem 1.5rem;
+      margin: 2.5rem 0;
+    }
+    .moral h3 {
+      font-family: var(--serif);
+      font-size: 1.35rem;
+      color: var(--gold);
+      margin-bottom: 1rem;
+    }
+    .moral p {
+      margin-bottom: 0.85rem;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+    .moral p:last-child { margin-bottom: 0; }
+    .moral strong { color: var(--text); }
+
+    /* ----- NOTE ----- */
+    .note {
+      font-size: 0.88rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+      padding-top: 1.4rem;
+      margin-top: 3rem;
+      line-height: 1.6;
+    }
+
+    /* ----- FOOTER ----- */
+    footer {
+      margin-top: 4rem;
+      padding-top: 1.75rem;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+    footer .bard {
+      font-family: var(--serif);
+      font-style: italic;
+      color: var(--text);
+      margin-bottom: 0.25rem;
+    }
+
+    @media (max-width: 600px) {
+      .container { padding: 1.75rem 1.1rem 4rem; }
+      .timeline-item { gap: 0.9rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="logo">
+    <div>The Ledger <span>Bard</span></div>
+    <div class="logo-meta">1720</div>
+  </div>
+
+  <div class="scene-number">South Sea Bubble · Isaac Newton</div>
+
+  <h1>The Man Who Mapped the Stars<br>and Still Lost to the <em>Crowd</em></h1>
+
+  <div class="subhead">
+    Sir Isaac Newton sold near the top, watched the price keep rising, bought back in, and learned that genius is no vaccine against FOMO.
+  </div>
+
+  <!-- OPENING -->
+  <p class="drop-cap">
+    In the spring of 1720 the greatest mathematical mind in Europe did something very ordinary. He looked at a rising stock price, decided it had gone far enough, and sold. Then he watched his friends get richer. Then he bought back in.
+  </p>
+
+  <p>
+    By the time the South Sea Bubble finished with him, Isaac Newton had turned a brilliant early exit into one of the most expensive object lessons in financial history. The numbers are still debated, but the shape of the story is not: he tasted the madness, stepped away, and then drank deeply of it.
+  </p>
+
+  <!-- BRIEF CONTEXT -->
+  <h2 class="section-title">The Scheme That Captured a Nation</h2>
+  <p>
+    The South Sea Company had been chartered in 1711 to take over a slice of Britain’s national debt in exchange for a monopoly on trade with Spanish America. The trade itself was mostly fiction. What mattered was the story. By 1720 the company offered to absorb almost the entire national debt. Parliament debated. Rumours flew. The stock began its climb.
+  </p>
+  <p>
+    Mackay, writing more than a century later, captured the fever:
+  </p>
+  <div class="quote-block">
+    <p>“The inordinate thirst of gain that had afflicted all ranks of society was not to be slaked even in the South Sea. Other schemes, of the most extravagant kind, were started… an undertaking of great advantage, but nobody to know what it is.”</p>
+    <cite>— Charles Mackay, Extraordinary Popular Delusions</cite>
+  </div>
+
+  <!-- TIMELINE — THE SPINE -->
+  <h2 class="section-title">Newton’s Year</h2>
+  <p>
+    Modern forensic work by mathematician Andrew Odlyzko, drawing on Newton’s surviving instructions to brokers, dividend records, and estate papers, gives the clearest picture yet.
+  </p>
+
+  <div class="timeline-wrap">
+    <div class="timeline-line"></div>
+
+    <div class="timeline-item">
+      <div class="timeline-node"></div>
+      <div class="timeline-content">
+        <div class="year">Early 1720</div>
+        <div class="event">Holds ~10,000 units of South Sea stock (market value ~£13,000) plus ~£19,000 in government securities. Total liquid wealth around £32,000.</div>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-node"></div>
+      <div class="timeline-content">
+        <div class="year">19–23 April 1720</div>
+        <div class="event">Begins selling. Liquidates the bulk of his South Sea holdings while the price sits in the £400–£500 range. Thomas Guy is selling at the same moment.</div>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-node"></div>
+      <div class="timeline-content">
+        <div class="year">April–May</div>
+        <div class="event">Realises a profit Odlyzko estimates near £20,000 — far larger than the £7,000 figure long repeated in popular accounts. Parks much of the proceeds in Bank of England redeemables.</div>
+      </div>
+    </div>
+
+    <div class="timeline-item crash">
+      <div class="timeline-node"></div>
+      <div class="timeline-content">
+        <div class="year">14 June 1720 — The Turn</div>
+        <div class="event">Sells the bulk of those Bank securities and puts the money back into South Sea stock — now trading around £700, roughly double the price at which he had sold only weeks earlier.</div>
+      </div>
+    </div>
+
+    <div class="timeline-item crash">
+      <div class="timeline-node"></div>
+      <div class="timeline-content">
+        <div class="year">June–August</div>
+        <div class="event">Continues to increase exposure. By late summer almost the entire portfolio is concentrated in South Sea securities. The stock peaks near £1,000, then begins to crack.</div>
+      </div>
+    </div>
+
+    <div class="timeline-item crash">
+      <div class="timeline-node"></div>
+      <div class="timeline-content">
+        <div class="year">September–November</div>
+        <div class="event">Collapse. Stock falls through £600, £400, £200. Conservative estimates put the net loss above £10,000; the traditional family figure of £20,000 is entirely plausible when the opportunity cost of the early sale is included.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DECISION SLIDER -->
+  <div class="decision">
+    <div class="decision-label">Newton’s Second Decision</div>
+    <div class="decision-track">
+      <span>Sold ~£450</span>
+      <span>Bought back ~£700</span>
+    </div>
+    <input type="range" id="decisionSlider" min="0" max="100" value="0" aria-label="Simulate Newton’s re-entry">
+    <div class="decision-result" id="decisionResult">
+      Position: fully exited. Profit locked.
+    </div>
+  </div>
+
+  <p>
+    The man who had spent decades reducing the motions of planets to elegant equations had just discovered that human desire does not obey differential equations.
+  </p>
+
+  <!-- THE QUOTE -->
+  <h2 class="section-title">The Line That Outlived Him</h2>
+  <p>
+    Decades after Newton’s death a story circulated. Lord Radnor is said to have asked him, while the bubble was still inflating, how long the rise could continue. Newton’s answer, recorded by Joseph Spence, was simply that he “could not calculate the madness of the people.”
+  </p>
+  <p>
+    Later retellings polished the contrast into the version we know:
+  </p>
+  <div class="quote-block crimson">
+    <p>“I can calculate the motions of the heavenly bodies, but not the madness of the people.”</p>
+    <cite>— Attributed to Isaac Newton · earliest form mid-18th century</cite>
+  </div>
+  <p>
+    Whether he spoke the exact words is uncertain. That he felt their meaning is not. In a letter written years afterward he still referred to the losses and admitted the experience had left him “averse from dealing in these matters.”
+  </p>
+
+  <div class="rupture"></div>
+
+  <!-- MODERN MAP -->
+  <div class="modern-map">
+    <h4>The Modern Map</h4>
+    <p>
+      Sell too early. Watch it double without you. Feel the quiet humiliation every time a friend mentions their gains. Re-enter near the high. Watch the drawdown erase the original profit and more. That is Newton’s 1720, rewritten in every generation’s ticker symbols. The only variable that changes is the name of the story that makes the second purchase feel rational.
+    </p>
+  </div>
+
+  <!-- LESSONS -->
+  <h2 class="section-title">What the Episode Still Teaches</h2>
+  <p>
+    Newton was not a naïve retail investor. He was Master of the Mint, a sophisticated holder of government securities, and one of the most formidable intellects alive. He saw the danger early enough to sell. The crowd still pulled him back.
+  </p>
+  <p>
+    That is the durable lesson. Intelligence, status, and prior correct analysis are not enough. The second decision — the one made while watching other people get rich — is the one that destroys the first.
+  </p>
+
+  <div class="moral">
+    <h3>Three Principles</h3>
+    <p><strong>1. Early correctness is not final correctness.</strong> Selling at the right time only counts if you can stay sold while the price keeps rising and the dinner-party conversation turns against you.</p>
+    <p><strong>2. Concentration is the real risk amplifier.</strong> Newton did not merely lose money; he moved from a diversified portfolio into near-total concentration at the worst possible moment.</p>
+    <p><strong>3. The quote is the warning label.</strong> If even the man who wrote the laws of motion cannot model the madness of men, the rest of us should treat every “this time is different” narrative with extreme prejudice.</p>
+  </div>
+
+  <!-- NOTE -->
+  <div class="note">
+    <strong>On the sources.</strong> The detailed reconstruction of Newton’s trades rests primarily on Andrew Odlyzko’s research in <em>Notes and Records of the Royal Society</em> (2018–19), which collates Newton’s surviving broker instructions, South Sea Company dividend records, Bank of England stock ledgers, and the inventory of his estate. The classic £20,000 loss figure originates in family tradition recorded by William Seward in the 1790s; Odlyzko shows that figure is plausible and may even understate the economic pain of the round-trip. Mackay’s narrative remains the best contemporary-feeling account of the wider mania.
+  </div>
+
+  <footer>
+    <div class="bard">The Ledger Bard</div>
+    <div>Financial history, told as it happened, designed for the screen.</div>
+  </footer>
+
+</div>
+
+<script>
+  const slider = document.getElementById('decisionSlider');
+  const result = document.getElementById('decisionResult');
+
+  const messages = [
+    { max: 5,  text: "Position: fully exited. Profit locked." },
+    { max: 25, text: "Watching the price rise without you. The first doubt appears." },
+    { max: 45, text: "Friends are still making money. The quiet pressure builds." },
+    { max: 65, text: "Re-entering. Average price now significantly higher." },
+    { max: 85, text: "Fully re-committed near the highs. Concentration risk extreme." },
+    { max: 100, text: "Collapse. The early profit is gone — and more. <span class='loss'>Even the man who wrote the laws of motion could not price the second decision.</span>" }
+  ];
+
+  function update() {
+    const v = parseInt(slider.value, 10);
+    for (const m of messages) {
+      if (v <= m.max) {
+        result.innerHTML = m.text;
+        break;
+      }
+    }
+  }
+
+  slider.addEventListener('input', update);
+  update();
+</script>
+
+</body>
+</html>
