@@ -335,6 +335,87 @@
       padding: 1.6rem 1.5rem;
       margin: 2.5rem 0;
     }
+
+    /* ----- MECHANISM GRID (how the con worked) ----- */
+    .mech-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      margin: 2rem 0 2.5rem;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .mech-item {
+      background: var(--surface);
+      padding: 1.3rem 1.4rem;
+    }
+    .mech-num {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+    .mech-item h4 {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: 1.15rem;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+    .mech-item p {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 0;
+      line-height: 1.55;
+    }
+    @media (min-width: 640px) {
+      .mech-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    /* ----- DUPED LIST ----- */
+    .duped-list {
+      margin: 1.6rem 0 2.5rem;
+      padding: 0;
+      list-style: none;
+    }
+    .duped-list li {
+      display: grid;
+      grid-template-columns: 22px 1fr;
+      gap: 0.9rem;
+      padding: 0.9rem 0;
+      border-top: 1px solid var(--border);
+      font-size: 0.95rem;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+    .duped-list li:last-child { border-bottom: 1px solid var(--border); }
+    .duped-list li::before {
+      content: "—";
+      color: var(--gold);
+    }
+    .duped-list strong { color: var(--text); font-weight: 500; }
+
+    .stat-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 1.8rem 0 2.4rem;
+      font-family: var(--mono);
+    }
+    .stat-chip {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 0.4rem 0.9rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+    .stat-chip b { color: var(--gold); font-weight: 600; }
     .moral h3 {
       font-family: var(--serif);
       font-size: 1.35rem;
@@ -410,8 +491,61 @@
   <!-- BRIEF CONTEXT -->
   <h2 class="section-title">The Scheme That Captured a Nation</h2>
   <p>
-    The South Sea Company had been chartered in 1711 to take over a slice of Britain’s national debt in exchange for a monopoly on trade with Spanish America. The trade itself was mostly fiction. What mattered was the story. By 1720 the company offered to absorb almost the entire national debt. Parliament debated. Rumours flew. The stock began its climb.
+    The South Sea Company was chartered in 1711 with a monopoly on British trade to Spanish America — mostly the transport of enslaved people under the terms of the Asiento. It sounded lucrative. It never was. The Treaty of Utrecht in 1713 gave the company the right to send exactly one ship a year, taxed on arrival. The trade that supposedly justified the company's existence amounted to almost nothing.
   </p>
+  <p>
+    What the company actually became, quietly, was a debt-management vehicle — and that business turned out to be far more profitable than any ship ever was.
+  </p>
+
+  <div class="stat-strip">
+    <span class="stat-chip">Chartered <b>1711</b></span>
+    <span class="stat-chip">Trade permitted: <b>1 ship / year</b></span>
+    <span class="stat-chip">Debt absorbed: <b>~£31M</b></span>
+    <span class="stat-chip">Peak price: <b>~£1,000</b></span>
+    <span class="stat-chip">December 1720: <b>£124</b></span>
+  </div>
+
+  <h3 class="section-title" style="font-size:1.35rem; margin-top:2rem;">What the company actually did</h3>
+  <p>
+    In January 1720, the company's directors — led by sub-governor John Blunt — proposed absorbing almost the entirety of Britain's national debt, roughly £31 million in long-term government annuities. Annuity holders would swap their government paper for South Sea stock. In exchange, the government would pay the company a reduced rate of interest. The Bank of England made a competing bid. South Sea won it, in part by offering the Treasury a larger up-front payment, and in part through bribery.
+  </p>
+  <p>
+    The profit for the company — and the point of the whole exercise — was the gap between the face value of the debt it absorbed and the price at which it could sell new stock to the public. Every pound the share price rose past its true backing was a pound of pure gain for the insiders converting debt into equity. The incentive was not to run a trading company. It was to inflate the stock as high as possible, for as long as possible, before anyone had to hand over something real.
+  </p>
+
+  <h3 class="section-title" style="font-size:1.35rem; margin-top:2.2rem;">How the machine was built to inflate</h3>
+  <div class="mech-grid">
+    <div class="mech-item">
+      <span class="mech-num">Mechanism 01</span>
+      <h4>Subscription on installment</h4>
+      <p>New share offerings let buyers pay a small fraction down and the rest over time — leverage baked directly into the product, pulling in buyers who could never have paid full price up front.</p>
+    </div>
+    <div class="mech-item">
+      <span class="mech-num">Mechanism 02</span>
+      <h4>The company financed its own demand</h4>
+      <p>South Sea loaned money to investors so they could buy more South Sea stock, taking the stock itself as collateral. The company was, in effect, both seller and lender in the same trade.</p>
+    </div>
+    <div class="mech-item">
+      <span class="mech-num">Mechanism 03</span>
+      <h4>Bribery at scale</h4>
+      <p>Directors handed out "fictitious stock" — shares issued to ministers and MPs with nothing paid down, settled later for cash based purely on how far the price had risen. King George I was named governor. Chancellor of the Exchequer John Aislabie received a substantial allocation and steered the scheme through Parliament.</p>
+    </div>
+    <div class="mech-item">
+      <span class="mech-num">Mechanism 04</span>
+      <h4>The Bubble Act</h4>
+      <p>Passed in June 1720 at the company's own urging, ostensibly to curb fraudulent joint-stock ventures — in practice, to choke off rival schemes competing for the same speculative money. It backfired: killing confidence in stocks generally helped puncture South Sea's own price weeks later.</p>
+    </div>
+  </div>
+
+  <h3 class="section-title" style="font-size:1.35rem; margin-top:2.2rem;">Why everyone was duped</h3>
+  <ul class="duped-list">
+    <li><span><strong>The price was self-referential.</strong> South Sea stock wasn't priced against trade profits or dividends investors could verify — it was priced against expectations of more people buying South Sea stock. There was no external anchor to check it against.</span></li>
+    <li><span><strong>Royal and Parliamentary involvement read as a guarantee.</strong> The King as governor, ministers as shareholders, an Act of Parliament behind the scheme — to a buyer in 1720, that looked less like a stock tip and more like a state-backed certainty.</span></li>
+    <li><span><strong>The debt-conversion mechanics were genuinely hard to evaluate.</strong> Very few people, including many MPs who voted for it, understood how the annuity swap actually priced value. Complexity did the same work confusion always does — it let people substitute trust in authority for their own judgment.</span></li>
+    <li><span><strong>Visible insiders getting rich functioned as proof.</strong> Every acquaintance who cashed out early was treated as evidence the scheme worked, not as evidence someone needed to be left holding the stock when it stopped.</span></li>
+    <li><span><strong>There was no precedent for what this even was.</strong> Britain had almost no living memory of a national stock-speculation mania. The public had no cultural antibody yet — no "we've seen this movie before" — because, in a modern sense, nobody had.</span></li>
+  </ul>
+
   <p>
     Mackay, writing more than a century later, captured the fever:
   </p>
@@ -419,6 +553,10 @@
     <p>“The inordinate thirst of gain that had afflicted all ranks of society was not to be slaked even in the South Sea. Other schemes, of the most extravagant kind, were started… an undertaking of great advantage, but nobody to know what it is.”</p>
     <cite>— Charles Mackay, Extraordinary Popular Delusions</cite>
   </div>
+
+  <p>
+    When it finally cracked in September 1720, the stock fell from roughly £1,000 to £124 by December — an 80% collapse. The ensuing Parliamentary inquiry found the corruption ran deep enough that Aislabie was expelled from Parliament and sent to the Tower, and the company's assets were split between the Bank of England and the East India Company to make survivors whole. Newton was one name among thousands who never saw a Parliamentary inquiry return his money.
+  </p>
 
   <!-- TIMELINE — THE SPINE -->
   <h2 class="section-title">Newton’s Year</h2>
@@ -539,7 +677,7 @@
 
   <!-- NOTE -->
   <div class="note">
-    <strong>On the sources.</strong> The detailed reconstruction of Newton’s trades rests primarily on Andrew Odlyzko’s research in <em>Notes and Records of the Royal Society</em> (2018–19), which collates Newton’s surviving broker instructions, South Sea Company dividend records, Bank of England stock ledgers, and the inventory of his estate. The classic £20,000 loss figure originates in family tradition recorded by William Seward in the 1790s; Odlyzko shows that figure is plausible and may even understate the economic pain of the round-trip. Mackay’s narrative remains the best contemporary-feeling account of the wider mania.
+    <strong>On the sources.</strong> The detailed reconstruction of Newton’s trades rests primarily on Andrew Odlyzko’s research in <em>Notes and Records of the Royal Society</em> (2018–19), which collates Newton’s surviving broker instructions, South Sea Company dividend records, Bank of England stock ledgers, and the inventory of his estate. The classic £20,000 loss figure originates in family tradition recorded by William Seward in the 1790s; Odlyzko shows that figure is plausible and may even understate the economic pain of the round-trip. Mackay’s narrative remains the best contemporary-feeling account of the wider mania. The account of the company's mechanics — the debt-conversion terms, installment subscriptions, director-financed buying, and the Aislabie bribery — follows the Parliamentary inquiry record and standard modern histories of the Bubble (Britannica, the Liberty Street Economics "Crisis Chronicles" series, and contemporary academic treatments of the 1721 inquiry).
   </div>
 
   <footer>
