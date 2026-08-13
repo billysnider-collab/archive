@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The Book of the New Sun – Chapter Companion</title>
+  <title>The Book of the New Sun – Reading Companion</title>
   <style>
     :root {
       --fuligin: #0a0a0c;
@@ -361,6 +361,33 @@
       line-height: 1.6;
     }
 
+    /* Evidence Ledger */
+    .ledger {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+    .ledger th {
+      text-align: left;
+      color: var(--text-dim);
+      font-weight: 600;
+      letter-spacing: 0.4px;
+      border-bottom: 1px solid var(--glass-border);
+      padding: 0.5rem 0.6rem;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+    }
+    .ledger td {
+      padding: 0.7rem 0.6rem;
+      border-bottom: 1px solid var(--glass-border);
+      vertical-align: top;
+      color: var(--text-muted);
+    }
+    .ledger .theory { color: var(--text); font-weight: 500; }
+    .conf-high { color: #34d399; }
+    .conf-med { color: #fbbf24; }
+    .conf-low { color: #f87171; }
+
     /* Connections */
     .connections-list {
       list-style: none;
@@ -475,7 +502,7 @@
   <aside class="sidebar">
     <div class="sidebar-brand">
       <h1>New Sun</h1>
-      <div class="sub">Chapter Companion</div>
+      <div class="sub">Reading Companion</div>
     </div>
     <nav class="timeline" id="timeline"></nav>
   </aside>
@@ -517,6 +544,11 @@
           { title: "Women as Mirrors", text: "Thea appears here for the first time—heart-shaped face, dove's voice. She is Thecla's half-sister. She is a khaibit (copy) of the real Thea? Or is she the real one? This chapter introduces the motif of doubles: Thea/Thecla, Severian/Apu-Punchau." },
           { title: "Religious/Philosophical", text: "The volunteers are guarding 'their own dead.' The necropolis is a sacred space. Vodalus is violating it. Severian is caught between the sacred and the profane. The coin is a sacrament of loyalty." },
           { title: "Sword as Soul", text: "Severian does not yet have Terminus Est. He kills the axeman with the axeman's own ax. He hasn't earned his sword yet. His identity as a torturer is still contingent." }
+        ],
+        ledger: [
+          { theory: "Funeral / exhumed corpse = Thecla or Severian", for: "Later themes of resurrection and doubles; narrative proximity to Thecla's arc", against: "No textual identification in this chapter; pure reader projection at this stage", conf: "low" },
+          { theory: "The coin initiates real political loyalty", for: "Severian states it; he later calls himself a Vodalarius", against: "Chapter 3 shows him already doubting the entire encounter; loyalty may be retrospective construction", conf: "med" },
+          { theory: "Vodalus's energy weapon is the first 'high' technology shown", for: "Described as a pistol that produces a beam/shot unlike ordinary arms", against: "Could still be advanced Commonwealth technology rather than something more exotic", conf: "med" }
         ],
         quotes: [
           "'We believe that we invent symbols. The truth is that they invent us; we are their creatures, shaped by their hard, defining edges.'",
@@ -565,6 +597,11 @@
           { title: "Women as Mirrors", text: "The drowning vision: 'Out of the darkness came the face of a woman, as immense as the green face of the moon.' This is Thecla? The undine? Valeria? She appears as a mirror of all the women he will love." },
           { title: "Religious/Philosophical", text: "The nenuphars are a meditation on death: they are beautiful but deadly. The near-drowning is a baptism or a death-rebirth. He emerges changed." },
           { title: "Sword as Soul", text: "Severian has no sword yet. He is an apprentice, not a journeyman. His identity is still being formed. The mausoleum is his tomb, not his armory." }
+        ],
+        ledger: [
+          { theory: "Funeral bronze = Apu-Punchau / Severian's own corpse", for: "Stated physical resemblance; later identity revelations about Apu-Punchau", against: "Severian does not recognize the figure as himself; could be familial or coincidental resemblance", conf: "med" },
+          { theory: "Near-drowning is an early undine encounter", for: "Giant woman in the water; later undine rescues", against: "No explicit identification; could be pure hallucination under oxygen stress", conf: "med" },
+          { theory: "Blazon encodes the whole plot (exile / rebirth / sacrifice)", for: "Elegant later fit with ship, White Fountain, rose/Claw", against: "Pattern-seeking after the fact; the chapter gives only the images", conf: "low" }
         ],
         quotes: [
           "'From my earliest memory I remember all.'",
@@ -616,6 +653,11 @@
           { title: "Women as Mirrors", text: "The coin bears a woman's face—the Autarch's face. But the Autarch is a man (later revealed). The face is androgynous. This is the first hint that the Autarchy is a composite, a Legion of personalities." },
           { title: "Religious/Philosophical", text: "'We believe that we invent symbols. The truth is that they invent us...' This is the philosophical heart of the chapter. The coin is a symbol that invents Severian's loyalty to Vodalus. He is shaped by the coin, not the other way around." },
           { title: "Sword as Soul", text: "Severian has no sword yet. His identity is still defined by the coin—a symbol of loyalty, of exile, of his future. The coin is his first token of power." }
+        ],
+        ledger: [
+          { theory: "Vodalus encounter was hallucinated", for: "Severian's own explicit doubt; fog setting; perfect-memory claim already under pressure", against: "Multiple other people present (Thea, Hildegrin, volunteers); physical coin remains", conf: "low" },
+          { theory: "Coin face deliberately androgynous / Autarchal", for: "Later nature of the Autarchy; Severian's initial uncertainty about sex of the portrait", against: "Could simply be a conventional regal portrait he misread", conf: "med" },
+          { theory: "Hiding the coin = burying a past self", for: "Mausoleum setting; charm language; later recovery of the coin by a different Severian", against: "May be ordinary secrecy by a boy who has broken rules", conf: "med" }
         ],
         quotes: [
           "'This one bore what I at first thought was a woman's face—a woman crowned, neither young nor old, but silent and perfect in the citrine metal.'",
@@ -669,6 +711,11 @@
           { title: "Religious/Philosophical", text: "The bond between torturer and client is universalized: 'All love that which they destroy.' Severian loves Triskele because he saved him. This is the inverse of the torturer's relationship—he loves the client he destroys." },
           { title: "Sword as Soul", text: "Severian has no sword yet. He carries Triskele instead of a weapon. The dog is a symbol of his soul—wounded, loyal, and eventually lost." }
         ],
+        ledger: [
+          { theory: "Triskele is Severian's 'bright twin'", for: "Proximity to the antipolaric-brother remark; resurrection + loyalty themes", against: "Could be thematic parallel rather than identity; dog may simply be a dog", conf: "med" },
+          { theory: "The episode is the origin of Severian's compassion", for: "Narrative placement; emotional intensity; later acts of mercy", against: "Severian explicitly downplays it; compassion may pre-exist or arise elsewhere", conf: "med" },
+          { theory: "Triskele later returns as aquastor / eidolon", for: "Later appearances of a dog that may be the same", against: "Identity not confirmed in this volume; could be different animals or visions", conf: "low" }
+        ],
         quotes: [
           "'I felt that it could have and should have changed everything, but it was only the episode of a few months, and when it was over and he was gone, it was only another winter passed...'",
           "'He seemed as dead as the rest, but he opened one eye then and rolled it at me, and there was a confidence in it that the worst was over now—I have carried my part, it seemed to say, and borne up, and done all I could do; now it is your turn to do your duty by me.'",
@@ -719,6 +766,11 @@
           { title: "Women as Mirrors", text: "No women in this chapter, but the library is a feminine space—a repository of knowledge, a womb of memory. Ultan's blindness makes him a seer—he sees with his mind, not his eyes." },
           { title: "Religious/Philosophical", text: "The library is a temple of memory. Ultan says: 'In every library, by ancient precept, is a room reserved for children...' This is a sacred space—a place of innocence and initiation. The Book of Gold is a sacrament that transforms the child into a librarian." },
           { title: "Sword as Soul", text: "Severian still has no sword. He carries only the letter to Master Ultan. His identity is still defined by his errands, not his weapon." }
+        ],
+        ledger: [
+          { theory: "The painted warrior prefigures Severian", for: "Emotional impact; gold blank visor; dead-world setting; later solar and imperial imagery", against: "Could be any resonant image; no textual identification", conf: "low" },
+          { theory: "Book of Gold = model for The Book of the New Sun", for: "Recruitment of readers; lifelong binding; appearance to the young", against: "In-universe artifact; the parallel is reader-constructed", conf: "med" },
+          { theory: "Rudesind's temporal confusion foreshadows larger time distortions", for: "His inability to place events; later time-travel / hierarchical time themes", against: "Ordinary senility is a sufficient explanation", conf: "low" }
         ],
         quotes: [
           "'They should be done away with,' I said. 'Vodalus would set them quarrying. They're only a carryover from some past age—what possible help can they give the world?'",
@@ -772,6 +824,18 @@
       window.location.hash = `ch-${chapters[index].id}`;
     }
 
+    function confClass(c) {
+      if (c === 'high') return 'conf-high';
+      if (c === 'med') return 'conf-med';
+      return 'conf-low';
+    }
+
+    function confSymbol(c) {
+      if (c === 'high') return '●';
+      if (c === 'med') return '◐';
+      return '○';
+    }
+
     function renderChapter(index) {
       const ch = chapters[index];
       if (!ch) return;
@@ -818,6 +882,36 @@
                 </div>
               `).join('')}
             </div>
+          </div>
+        `;
+      }
+
+      // Evidence Ledger
+      let ledgerHtml = '';
+      if (ch.ledger?.length) {
+        ledgerHtml = `
+          <div class="section">
+            <div class="section-title">Evidence Ledger</div>
+            <table class="ledger">
+              <thead>
+                <tr>
+                  <th>Theory</th>
+                  <th>Evidence for</th>
+                  <th>Evidence against</th>
+                  <th>Conf.</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${ch.ledger.map(row => `
+                  <tr>
+                    <td class="theory">${row.theory}</td>
+                    <td>${row.for}</td>
+                    <td>${row.against}</td>
+                    <td class="${confClass(row.conf)}">${confSymbol(row.conf)}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
           </div>
         `;
       }
@@ -886,6 +980,7 @@
         </div>
         ${vocabHtml}
         ${anglesHtml}
+        ${ledgerHtml}
         ${quotesHtml}
         ${connectionsHtml}
         ${questionsHtml}
