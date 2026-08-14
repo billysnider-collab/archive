@@ -1,0 +1,1399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wrath — The Education of the Fierce Refusal</title>
+  <meta name="description" content="A layered inquiry into the nature of wrath, drawing from Thich Nhat Hanh, cognitive-behavioral psychology, and the Corpus Hermeticum. The transmutation of anger into durable love of the Good.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Source+Sans+3:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet">
+  <style>
+/* ============================================
+   WRATH — Design System
+   Dark, still, warm, lit from within.
+   Temperature cools from ember-dark to dawn-gold.
+   ============================================ */
+
+:root {
+  /* Core palette */
+  --ash: #141211;
+  --smoked: #1D1A18;
+  --parchment: #F3EDE4;
+  --ember: #C85B2A;
+  --gold: #D4A373;
+  --water: #4E7A8C;
+  --sage: #7C8C72;
+
+  /* Derived */
+  --text: var(--parchment);
+  --text-muted: rgba(243, 237, 228, 0.72);
+  --text-dim: rgba(243, 237, 228, 0.5);
+  --border: rgba(243, 237, 228, 0.08);
+  --border-strong: rgba(243, 237, 228, 0.14);
+  --panel: var(--smoked);
+  --bg: var(--ash);
+
+  /* Typography */
+  --font-display: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --font-body: "Source Sans 3", system-ui, -apple-system, sans-serif;
+
+  /* Spacing & rhythm */
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 1.75rem;
+  --space-lg: 3rem;
+  --space-xl: 5rem;
+  --space-2xl: 8rem;
+
+  --container: 72rem;
+  --narrow: 42rem;
+
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Reset & base */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  font-size: 17px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-body);
+  font-weight: 400;
+  line-height: 1.7;
+  color: var(--text);
+  background: var(--bg);
+  overflow-x: hidden;
+}
+
+/* Ambient background glow that shifts with scroll */
+.ambient {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(200, 91, 42, 0.12), transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 20%, rgba(212, 163, 115, 0.06), transparent 50%),
+    radial-gradient(ellipse 50% 30% at 20% 80%, rgba(78, 122, 140, 0.05), transparent 50%);
+  transition: opacity 0.8s var(--ease);
+}
+
+/* Scroll-driven temperature (via class on body) */
+body.scrolled-mid .ambient {
+  background:
+    radial-gradient(ellipse 70% 45% at 50% 0%, rgba(212, 163, 115, 0.1), transparent 55%),
+    radial-gradient(ellipse 50% 35% at 70% 40%, rgba(78, 122, 140, 0.07), transparent 50%),
+    radial-gradient(ellipse 40% 30% at 30% 90%, rgba(124, 140, 114, 0.06), transparent 50%);
+}
+
+body.scrolled-deep .ambient {
+  background:
+    radial-gradient(ellipse 60% 40% at 50% 10%, rgba(212, 163, 115, 0.08), transparent 50%),
+    radial-gradient(ellipse 50% 40% at 60% 60%, rgba(78, 122, 140, 0.09), transparent 50%),
+    radial-gradient(ellipse 45% 35% at 40% 90%, rgba(124, 140, 114, 0.08), transparent 50%);
+}
+
+/* Typography */
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.display {
+  font-size: clamp(4.5rem, 12vw, 9rem);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 0.95;
+  color: var(--parchment);
+}
+
+.section-title {
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  margin-bottom: var(--space-md);
+  color: var(--parchment);
+}
+
+.lead {
+  font-size: 1.25rem;
+  line-height: 1.65;
+  color: var(--text-muted);
+  margin-bottom: var(--space-md);
+}
+
+.eyebrow {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: var(--space-sm);
+}
+
+p { margin-bottom: 1.1em; }
+p:last-child { margin-bottom: 0; }
+
+a {
+  color: var(--gold);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+a:hover { color: var(--ember); }
+
+em { font-style: italic; color: inherit; }
+
+/* Layout */
+.container {
+  width: min(100% - 2.5rem, var(--container));
+  margin-inline: auto;
+  position: relative;
+  z-index: 1;
+}
+
+.container.narrow {
+  width: min(100% - 2.5rem, var(--narrow));
+}
+
+.section {
+  padding: var(--space-2xl) 0;
+  position: relative;
+}
+
+.section.panel {
+  background: var(--panel);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.section-intro {
+  font-size: 1.15rem;
+  color: var(--text-muted);
+  max-width: 36rem;
+  margin-bottom: var(--space-lg);
+}
+
+/* Header / Nav */
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 1rem 0;
+  transition: background 0.35s var(--ease), border-color 0.35s;
+  border-bottom: 1px solid transparent;
+}
+
+.site-header.scrolled {
+  background: rgba(20, 18, 17, 0.92);
+  backdrop-filter: blur(12px);
+  border-bottom-color: var(--border);
+}
+
+.nav {
+  width: min(100% - 2.5rem, var(--container));
+  margin-inline: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.nav-logo {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--parchment);
+  text-decoration: none;
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  gap: 1.5rem;
+}
+
+.nav-links a {
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  transition: color 0.2s;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  color: var(--gold);
+}
+
+.nav-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.nav-toggle span {
+  display: block;
+  width: 20px;
+  height: 1.5px;
+  background: var(--parchment);
+  transition: transform 0.3s, opacity 0.3s;
+}
+
+/* Hero */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: var(--space-2xl) 1.25rem;
+  position: relative;
+  z-index: 1;
+}
+
+.hero-inner {
+  max-width: 40rem;
+}
+
+.hero-sub {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2.5vw, 1.6rem);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--gold);
+  margin: var(--space-sm) 0 var(--space-lg);
+}
+
+.mantra {
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 2.2vw, 1.4rem);
+  font-style: italic;
+  line-height: 1.85;
+  color: var(--text-muted);
+  border: none;
+  margin: var(--space-lg) 0;
+  padding: 0;
+}
+
+.sources {
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  color: var(--text-dim);
+  margin-top: var(--space-lg);
+}
+
+.scroll-hint {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--text-dim);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.scroll-line {
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(to bottom, var(--gold), transparent);
+  animation: pulse-line 2.5s ease-in-out infinite;
+}
+
+@keyframes pulse-line {
+  0%, 100% { opacity: 0.4; transform: scaleY(0.8); }
+  50% { opacity: 1; transform: scaleY(1); }
+}
+
+/* Cards */
+.card-grid {
+  display: grid;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.card-grid.three {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.card {
+  background: rgba(29, 26, 24, 0.6);
+  border: 1px solid var(--border);
+  padding: var(--space-md);
+  transition: border-color 0.3s, background 0.3s;
+}
+
+.card:hover {
+  border-color: var(--border-strong);
+  background: rgba(29, 26, 24, 0.9);
+}
+
+.card-icon {
+  width: 40px;
+  height: 40px;
+  color: var(--ember);
+  margin-bottom: var(--space-sm);
+}
+
+.card-icon svg { width: 100%; height: 100%; }
+
+.card h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+  color: var(--gold);
+}
+
+.card p {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* Definition block */
+.definition-block {
+  background: rgba(20, 18, 17, 0.5);
+  border-left: 2px solid var(--ember);
+  padding: var(--space-md) var(--space-lg);
+  margin-top: var(--space-lg);
+}
+
+.definition-block h3 {
+  font-size: 1.2rem;
+  color: var(--gold);
+  margin-bottom: var(--space-sm);
+}
+
+.definition-list {
+  list-style: none;
+  margin: var(--space-sm) 0;
+}
+
+.definition-list li {
+  position: relative;
+  padding-left: 1.25rem;
+  margin-bottom: 0.4rem;
+  color: var(--text-muted);
+}
+
+.definition-list li::before {
+  content: "—";
+  position: absolute;
+  left: 0;
+  color: var(--ember);
+}
+
+.closing {
+  margin-top: var(--space-sm);
+  color: var(--parchment);
+  font-style: italic;
+}
+
+/* Accordion */
+.accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.acc-item {
+  border: 1px solid var(--border);
+  background: rgba(20, 18, 17, 0.4);
+}
+
+.acc-item summary {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  padding: 1.15rem 1.5rem;
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--parchment);
+  transition: background 0.2s, color 0.2s;
+}
+
+.acc-item summary::-webkit-details-marker { display: none; }
+
+.acc-item summary::after {
+  content: "+";
+  font-family: var(--font-body);
+  font-size: 1.2rem;
+  color: var(--gold);
+  transition: transform 0.3s;
+}
+
+.acc-item[open] summary::after {
+  content: "−";
+}
+
+.acc-item summary:hover {
+  background: rgba(243, 237, 228, 0.03);
+  color: var(--gold);
+}
+
+.acc-body {
+  padding: 0 1.5rem 1.5rem;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border);
+}
+
+.acc-body p { margin-bottom: 0.9em; }
+
+.acc-body .conclusion {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  color: var(--parchment);
+  font-style: italic;
+}
+
+.acc-body ul {
+  margin: 0.75rem 0 0.75rem 1.25rem;
+  color: var(--text-muted);
+}
+
+.acc-body li { margin-bottom: 0.35rem; }
+
+/* Traditions table */
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+}
+
+.traditions-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.traditions-table th,
+.traditions-table td {
+  padding: 1rem 1.15rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.traditions-table th {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold);
+  background: rgba(20, 18, 17, 0.6);
+}
+
+.traditions-table td:first-child {
+  font-weight: 500;
+  color: var(--parchment);
+  white-space: nowrap;
+}
+
+.traditions-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.traditions-table tbody tr:hover td {
+  background: rgba(243, 237, 228, 0.02);
+}
+
+/* Education cards */
+.education-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-md);
+}
+
+.edu-card {
+  border: 1px solid var(--border);
+  padding: var(--space-md);
+  background: rgba(20, 18, 17, 0.35);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.edu-icon {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 0.25rem;
+}
+
+.edu-card.will .edu-icon { color: var(--ember); }
+.edu-card.heart .edu-icon { color: var(--water); }
+.edu-card.spirit .edu-icon { color: var(--gold); }
+
+.edu-icon svg { width: 100%; height: 100%; }
+
+.edu-card h3 {
+  font-size: 1.35rem;
+  color: var(--parchment);
+}
+
+.edu-source {
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.edu-practice {
+  font-size: 0.9rem;
+  color: var(--sage);
+  font-style: italic;
+}
+
+.edu-result {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  margin-top: auto;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+}
+
+/* Five Marks */
+.marks-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1rem;
+  margin-bottom: var(--space-lg);
+}
+
+.mark {
+  text-align: center;
+  padding: var(--space-md) var(--space-sm);
+  border: 1px solid var(--border);
+  background: rgba(29, 26, 24, 0.4);
+  transition: border-color 0.3s;
+}
+
+.mark:hover {
+  border-color: var(--gold);
+}
+
+.mark-num {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  color: var(--ember);
+  margin-bottom: 0.5rem;
+}
+
+.mark h3 {
+  font-size: 1.15rem;
+  margin-bottom: 0.5rem;
+  color: var(--gold);
+}
+
+.mark p {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-bottom: 0.75rem;
+}
+
+.mark-ground {
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  color: var(--text-dim);
+  display: block;
+}
+
+.marks-closing {
+  max-width: 40rem;
+  margin: 0 auto;
+  text-align: center;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* Voices */
+.voices-grid {
+  display: grid;
+  gap: var(--space-md);
+}
+
+.voice {
+  border-left: 2px solid var(--water);
+  padding: var(--space-md) var(--space-lg);
+  background: rgba(20, 18, 17, 0.3);
+}
+
+.voice h3 {
+  font-size: 1.25rem;
+  color: var(--gold);
+  margin-bottom: 0.75rem;
+}
+
+.voice blockquote {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-style: italic;
+  line-height: 1.6;
+  color: var(--parchment);
+  margin-bottom: 1rem;
+  border: none;
+  padding: 0;
+}
+
+.voice p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+/* Practice */
+.practice-list {
+  list-style: none;
+  counter-reset: practice;
+}
+
+.practice-list li {
+  counter-increment: practice;
+  position: relative;
+  padding: var(--space-md) 0 var(--space-md) 3.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.practice-list li:last-child { border-bottom: none; }
+
+.practice-list li::before {
+  content: counter(practice, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: var(--space-md);
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  color: var(--ember);
+  line-height: 1;
+}
+
+.practice-list strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: var(--gold);
+  margin-bottom: 0.35rem;
+}
+
+.practice-list span {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+/* Synthesis */
+.synthesis-list {
+  list-style: none;
+  margin: var(--space-md) 0;
+}
+
+.synthesis-list li {
+  padding: 0.4rem 0;
+  color: var(--text-muted);
+  font-size: 1.05rem;
+}
+
+.pull {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-style: italic;
+  line-height: 1.7;
+  color: var(--parchment);
+  border-left: 2px solid var(--gold);
+  padding-left: 1.5rem;
+  margin: var(--space-lg) 0;
+}
+
+.pull.large {
+  font-size: 1.15rem;
+}
+
+.trajectory {
+  margin: var(--space-lg) 0;
+  padding: var(--space-md);
+  background: rgba(29, 26, 24, 0.5);
+  border: 1px solid var(--border);
+}
+
+.trajectory p {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-style: italic;
+  color: var(--text-muted);
+  margin-bottom: 0.6rem;
+  padding-left: 1rem;
+  border-left: 1px solid var(--sage);
+}
+
+.trajectory p:last-child { margin-bottom: 0; }
+
+.closing-quote {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-style: italic;
+  text-align: center;
+  color: var(--gold);
+  margin: var(--space-xl) 0 var(--space-md);
+  border: none;
+  padding: 0;
+}
+
+.closing-quote cite {
+  display: block;
+  font-size: 0.85rem;
+  font-style: normal;
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+  margin-top: 0.75rem;
+}
+
+.final-line {
+  text-align: center;
+  color: var(--text-muted);
+  max-width: 36rem;
+  margin-inline: auto;
+}
+
+.final-line.emph {
+  color: var(--parchment);
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-style: italic;
+  margin-top: 1.5rem;
+}
+
+/* Footer */
+.site-footer {
+  padding: var(--space-xl) 0;
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+
+.site-footer p {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  max-width: 40rem;
+  margin-inline: auto;
+}
+
+.footer-note {
+  margin-top: 1rem;
+  font-style: italic;
+}
+
+/* Responsive */
+@media (max-width: 960px) {
+  .card-grid.three,
+  .education-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .marks-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .marks-grid .mark:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: rgba(20, 18, 17, 0.97);
+    flex-direction: column;
+    padding: 1.5rem;
+    gap: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-links.open {
+    display: flex;
+  }
+
+  .nav-toggle {
+    display: flex;
+  }
+}
+
+@media (max-width: 640px) {
+  html { font-size: 16px; }
+
+  .marks-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .traditions-table {
+    font-size: 0.8rem;
+  }
+
+  .traditions-table th,
+  .traditions-table td {
+    padding: 0.75rem;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .scroll-line { animation: none; }
+  * { transition-duration: 0.01ms !important; }
+}
+
+  </style>
+</head>
+<body>
+  <div class="ambient" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <nav class="nav">
+      <a href="#hero" class="nav-logo">WRATH</a>
+      <ul class="nav-links">
+        <li><a href="#threshold">Threshold</a></li>
+        <li><a href="#questions">Inquiry</a></li>
+        <li><a href="#traditions">Traditions</a></li>
+        <li><a href="#education">Education</a></li>
+        <li><a href="#marks">Five Marks</a></li>
+        <li><a href="#voices">Voices</a></li>
+        <li><a href="#practice">Practice</a></li>
+        <li><a href="#synthesis">Synthesis</a></li>
+      </ul>
+      <button class="nav-toggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section id="hero" class="hero">
+      <div class="hero-inner">
+        <p class="eyebrow">A Layered Inquiry</p>
+        <h1 class="display">Wrath</h1>
+        <p class="hero-sub">The education of the fierce refusal</p>
+        <blockquote class="mantra">
+          I refuse the injury.<br>
+          I will not become the injurer.<br>
+          I breathe, I see, I choose, I act.<br>
+          The Good is not my possession—<br>
+          I am the Good’s.
+        </blockquote>
+        <p class="sources">Insights from Thich Nhat Hanh · McKay, Rogers &amp; McKay · the Corpus Hermeticum</p>
+      </div>
+      <div class="scroll-hint">
+        <span>Descend</span>
+        <div class="scroll-line"></div>
+      </div>
+    </section>
+
+    <!-- INTRODUCTION -->
+    <section id="intro" class="section panel">
+      <div class="container narrow">
+        <h2 class="section-title">The Irreducible Core</h2>
+        <p class="lead">When the vocabularies are stripped away—CBT’s cognitions, Buddhism’s mindfulness, Hermeticism’s Gnosis—one insight remains:</p>
+        <blockquote class="pull">
+          Anger is a response to a perceived rupture in connection—and the deepest cure is the restoration of that connection through attentive presence.
+        </blockquote>
+        <p>Three traditions converge on the nature of wrath. Each offers a distinct lens, yet together they reveal a complete path for transmuting destructive anger into wisdom and compassionate action. Wrath is not the opposite of love for the Good—it is love for the Good expressed in ignorance. The soul’s fierce refusal to accept injury, falsehood, and suffering is not the problem. It is the raw material.</p>
+      </div>
+    </section>
+
+    <!-- THRESHOLD -->
+    <section id="threshold" class="section">
+      <div class="container">
+        <h2 class="section-title">The Threshold of Wrath</h2>
+        <p class="section-intro">Anger becomes wrath when it hardens into punitive will.</p>
+        
+        <div class="card-grid three">
+          <article class="card">
+            <div class="card-icon" aria-hidden="true">
+              <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M20 8v12M14 16l6 6 6-6"/><circle cx="20" cy="28" r="3"/></svg>
+            </div>
+            <h3>Therapeutic</h3>
+            <p>Trigger thoughts shift from accurate appraisal to <em>blamers</em> (“You deliberately did this”) and <em>shoulds</em> (“You deserve punishment”).</p>
+          </article>
+          <article class="card">
+            <div class="card-icon" aria-hidden="true">
+              <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M12 20c0-4.4 3.6-8 8-8s8 3.6 8 8-3.6 8-8 8"/><path d="M20 12v8l4 2"/></svg>
+            </div>
+            <h3>Buddhist</h3>
+            <p>One acts or speaks from anger rather than <em>embracing</em> it mindfully—losing the chance to look deeply into the suffering beneath.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon" aria-hidden="true">
+              <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="20" cy="20" r="10"/><circle cx="20" cy="20" r="4"/><path d="M20 6v4M20 30v4M6 20h4M30 20h4"/></svg>
+            </div>
+            <h3>Hermetic</h3>
+            <p>Anger is no longer governed by <em>Mind</em> but becomes a torment—a passion that rules the soul rather than being ruled.</p>
+          </article>
+        </div>
+
+        <div class="definition-block">
+          <h3>Synthetic Definition</h3>
+          <p>Wrath is anger fused with:</p>
+          <ul class="definition-list">
+            <li>Distorted time — the past injury governs the future</li>
+            <li>Narrowed perception — the other is reduced to their offense</li>
+            <li>Self-justifying thought — the feeling of righteousness becomes its own proof</li>
+            <li>Desire for the other’s suffering as an end in itself</li>
+          </ul>
+          <p class="closing">Anger becomes wrath when the satisfaction of vengeance displaces the goal of protection, correction, or justice.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- EIGHT QUESTIONS -->
+    <section id="questions" class="section panel">
+      <div class="container">
+        <h2 class="section-title">Eight Essential Questions</h2>
+        <p class="section-intro">Drawn from the core inquiry into the nature of wrath.</p>
+
+        <div class="accordion">
+          <details class="acc-item" open>
+            <summary>1. Is wrath excessive anger, or anger corrupted by the desire for vengeance?</summary>
+            <div class="acc-body">
+              <p><strong>Wrath is anger corrupted—always.</strong> The raw energy of anger is a signal; wrath is that signal hijacked by the desire to punish.</p>
+              <p>From McKay: the “Letting It Out Fallacy” rests on the belief that people who hurt you should be punished. Blamers and shoulds turn anger into vengeance.</p>
+              <p>From Hanh: the real enemy is ignorance, discrimination, fear, craving, and violence—not the person. His anger at the bombing of Ben Tre was at the <em>policy</em>, not vengeance against the people.</p>
+              <p>From the Hermeticum: “The greatest ill among men is ignorance of God.” Vengeance is the opposite of the Good—it takes rather than gives.</p>
+              <p class="conclusion">Wrath is anger that has forgotten its own nature—a signal of pain—and become a weapon aimed at punishing.</p>
+            </div>
+          </details>
+
+          <details class="acc-item">
+            <summary>2. Can anger be moral knowledge without becoming a license to harm?</summary>
+            <div class="acc-body">
+              <p><strong>Yes—if it is interrogated, not obeyed.</strong> Anger can be a moral compass: a warning that something is wrong. The appropriate question is not “Who’s responsible for my pain?” but “What can I do about it?”</p>
+              <p>Hanh, already a practitioner when angry at injustice, did not speak or act from the surge. He went back to himself, recognized the anger, embraced it, and looked deeply.</p>
+              <p class="conclusion">Anger gives the information that something is wrong. It becomes a license to harm only when you skip from signal to punitive action without responsibility and deep looking.</p>
+            </div>
+          </details>
+
+          <details class="acc-item">
+            <summary>3. What is the relationship between anger and fear, grief, humiliation, or helplessness?</summary>
+            <div class="acc-body">
+              <p><strong>Anger is the shield; these are the wounds.</strong> Anger is often a defense that blocks painful feelings: anxiety, hurt, guilt, shame, loss, emptiness, frustrated desire, helplessness.</p>
+              <p>Looking deeply reveals the pain beneath—the fear, the grief, the shame—that the anger was protecting. To address the anger without addressing the underlying wound is to treat the symptom while the disease festers.</p>
+            </div>
+          </details>
+
+          <details class="acc-item">
+            <summary>4. Is the deepest cure cognitive, somatic, compassionate, or spiritual?</summary>
+            <div class="acc-body">
+              <p><strong>A layered combination—each without the others is incomplete.</strong></p>
+              <ul>
+                <li><strong>Somatic</strong> — deep breathing, progressive muscle relaxation (McKay)</li>
+                <li><strong>Cognitive</strong> — three-column technique: identify trigger thoughts, name the distortion, rewrite (McKay)</li>
+                <li><strong>Compassionate</strong> — embracing anger “like a crying child,” deep listening (Hanh)</li>
+                <li><strong>Virtue / Ethical</strong> — taking responsibility, assertive communication, setting limits without contempt</li>
+                <li><strong>Spiritual / Gnostic</strong> — knowing that God is the Good, that all things are in God, that the only service of God is “not to be evil”</li>
+              </ul>
+              <p class="conclusion">The deepest cure begins with somatic regulation (to create space for choice), proceeds through cognitive correction, is sustained by compassion, guided by virtue, and rooted in spiritual knowledge—the recognition that you and the other are not separate from the Divine.</p>
+            </div>
+          </details>
+
+          <details class="acc-item">
+            <summary>5. Must one forgive in order to be free of wrath?</summary>
+            <div class="acc-body">
+              <p><strong>Yes—but forgiveness is often misunderstood.</strong></p>
+              <p>Forgiveness is <em>not</em> forgetting the harm, condoning the act, forced reconciliation, ignoring boundaries, or a single event. It is a process of releasing the grip of resentment.</p>
+              <p>It is the release of the other from the debt of your wrath—not because they deserve it, but because you deserve freedom. Without it, wrath persists.</p>
+            </div>
+          </details>
+
+          <details class="acc-item">
+            <summary>6. When is withdrawal wise, and when is it evasive suppression?</summary>
+            <div class="acc-body">
+              <p><strong>Withdrawal is wise when it serves re-entry; it is suppression when it serves avoidance.</strong></p>
+              <p>Wise withdrawal is time-limited, physically active, accompanied by a return and check-in, agreed upon in advance, and aimed at cooling so discussion can resume. Evasive suppression is permanent, punitive, or a refusal to return.</p>
+              <p>Hanh’s mindful restraint is suspension of action while staying with the emotion; suppression is pushing the feeling away entirely.</p>
+            </div>
+          </details>
+
+          <details class="acc-item">
+            <summary>7. How can one oppose injustice without converting persons into enemies?</summary>
+            <div class="acc-body">
+              <p><strong>By separating the act from the actor, and the policy from the person.</strong></p>
+              <p>Hanh saw that Americans as well as Vietnamese suffered in the war. The cause was not American soldiers but a kind of policy rooted in misunderstanding and fear.</p>
+              <p>Tools: no global labels—be specific; assume nothing or check it out; use “I” statements. The enemy is never the person—the enemy is the ignorance, fear, and craving that drives them.</p>
+            </div>
+          </details>
+
+          <details class="acc-item">
+            <summary>8. What would “righteous anger” look like under the tests of proportion, truth, non-contempt, and responsibility?</summary>
+            <div class="acc-body">
+              <p><strong>Righteous anger under these tests becomes prophetic action—clear, compassionate, and bound by accountability.</strong></p>
+              <ul>
+                <li><strong>Proportion</strong> — matches the scale of the offense; does not escalate beyond what is necessary to stop the harm.</li>
+                <li><strong>Truth</strong> — based on facts, not inferences or assumed intent.</li>
+                <li><strong>Non-contempt</strong> — expresses disappointment or resistance, never treats a person as subhuman.</li>
+                <li><strong>Responsibility for consequences</strong> — asks “What will this action produce?” Acts to protect, correct, and restore—not to punish.</li>
+              </ul>
+              <p class="conclusion">It feels the full weight of injustice, speaks clearly without exaggeration, remains open to the possibility that the other may change, and takes responsibility for its own consequences.</p>
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- TABLE OF TRADITIONS -->
+    <section id="traditions" class="section">
+      <div class="container">
+        <h2 class="section-title">The Table of Traditions</h2>
+        <div class="table-wrap">
+          <table class="traditions-table">
+            <thead>
+              <tr>
+                <th>Dimension</th>
+                <th>Therapeutic (McKay)</th>
+                <th>Buddhist (Hanh)</th>
+                <th>Hermetic</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>What anger <em>is</em></td>
+                <td>Stress + trigger thoughts</td>
+                <td>Suffering that needs embracing</td>
+                <td>Ignorance of the Good; a torment of the soul</td>
+              </tr>
+              <tr>
+                <td>The rupture</td>
+                <td>The world does not conform to my <em>shoulds</em></td>
+                <td>I am separate from the other; I cling to my self-view</td>
+                <td>I have forgotten that all things are in God</td>
+              </tr>
+              <tr>
+                <td>Source of transformation</td>
+                <td>Cognitive restructuring + skills + stress reduction</td>
+                <td>Mindfulness, deep breathing, compassion, deep listening</td>
+                <td>Gnosis, remembrance, invocation of the Powers</td>
+              </tr>
+              <tr>
+                <td>The goal</td>
+                <td>Anger control, better health, restored relationships</td>
+                <td>Liberation from suffering, reconciliation</td>
+                <td>Union with the Good; freedom from the torments</td>
+              </tr>
+              <tr>
+                <td>The danger</td>
+                <td>Suppression, avoidance, denial of legitimate anger</td>
+                <td>Clinging to the story; repression disguised as acceptance</td>
+                <td>Pride, false knowledge, asceticism without justice</td>
+              </tr>
+              <tr>
+                <td>Final state</td>
+                <td>Equanimity with effective agency</td>
+                <td>Compassionate presence; action without hatred</td>
+                <td>The soul “becomes entirely mind”</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- EDUCATION -->
+    <section id="education" class="section panel">
+      <div class="container">
+        <h2 class="section-title">The Triple Education</h2>
+        <p class="section-intro">The education of the fierce refusal proceeds through three simultaneous disciplines.</p>
+
+        <div class="education-grid">
+          <article class="edu-card will">
+            <div class="edu-icon">
+              <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M24 8l2 12h10l-8 6 3 12-7-5-7 5 3-12-8-6h10z"/><circle cx="24" cy="24" r="18" opacity="0.3"/></svg>
+            </div>
+            <h3>Education of the Will</h3>
+            <p class="edu-source">Therapeutic · McKay</p>
+            <p>The refusal is educated by rehearsal and appraisal. We teach it to distinguish between the warning signal and the destructive response.</p>
+            <p class="edu-practice">Practice: Anger Journal · Three-Column Technique · Response Choice Rehearsal</p>
+            <p class="edu-result">The love of the Good becomes <em>competent</em>. It knows how to protect, negotiate, set limits, and take responsibility for its consequences—without becoming evil.</p>
+          </article>
+
+          <article class="edu-card heart">
+            <div class="edu-icon">
+              <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M24 38c-8-6-16-12-16-20a8 8 0 0116 0 8 8 0 0116 0c0 8-8 14-16 20z"/><path d="M24 18v8M20 22h8" opacity="0.6"/></svg>
+            </div>
+            <h3>Education of the Heart</h3>
+            <p class="edu-source">Buddhist · Hanh</p>
+            <p>The refusal is educated by embrace and deep looking. We teach it to turn its gaze inward to its own suffering and outward to the suffering of the other.</p>
+            <p class="edu-practice">Practice: Mindful breathing &amp; walking · The three sentences of true love · Refusal to speak or act while in the surge</p>
+            <p class="edu-result">The love of the Good becomes <em>compassionate</em>. It can hold the other’s pain without collapsing into sentimentality, and hate the deed without hating the doer.</p>
+          </article>
+
+          <article class="edu-card spirit">
+            <div class="edu-icon">
+              <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="24" cy="24" r="6"/><circle cx="24" cy="24" r="14" stroke-dasharray="2 3"/><circle cx="24" cy="24" r="20" opacity="0.4"/></svg>
+            </div>
+            <h3>Education of the Spirit</h3>
+            <p class="edu-source">Hermetic · Corpus Hermeticum</p>
+            <p>The refusal is educated by Gnosis and invocation. We teach it to remember the Good that grounds all things, and to invoke the Powers that reorder the soul.</p>
+            <p class="edu-practice">Practice: Contemplation of the ordered cosmos · Recognition that “all things are in God” · Hymn of Regeneration (Temperance, Justice, Truth, Communion, Life, Light)</p>
+            <p class="edu-result">The love of the Good becomes <em>unitive</em>. It knows the other is not separate from the Divine; that the fierce refusal, when recollected into the One, becomes the energy of the Good itself.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- FIVE MARKS -->
+    <section id="marks" class="section">
+      <div class="container">
+        <h2 class="section-title">The Durable Love: Five Marks</h2>
+        <p class="section-intro">When will, heart, and spirit are educated, the fierce refusal becomes a love capable of these five capacities.</p>
+
+        <div class="marks-grid">
+          <div class="mark">
+            <span class="mark-num">I</span>
+            <h3>Truth</h3>
+            <p>Speaking clearly, without exaggeration or contempt.</p>
+            <span class="mark-ground">Grounded in cognitive correction</span>
+          </div>
+          <div class="mark">
+            <span class="mark-num">II</span>
+            <h3>Protection</h3>
+            <p>Setting limits, opposing harm without hatred.</p>
+            <span class="mark-ground">Grounded in compassionate action</span>
+          </div>
+          <div class="mark">
+            <span class="mark-num">III</span>
+            <h3>Grief</h3>
+            <p>Weeping without shame, holding loss without vengeance.</p>
+            <span class="mark-ground">Grounded in “holding my face in my hands”</span>
+          </div>
+          <div class="mark">
+            <span class="mark-num">IV</span>
+            <h3>Justice</h3>
+            <p>Naming wrongs, demanding accountability, without dehumanizing.</p>
+            <span class="mark-ground">Grounded in assertive communication + Hermetic justice</span>
+          </div>
+          <div class="mark">
+            <span class="mark-num">V</span>
+            <h3>Reconciliation</h3>
+            <p>Remaining open to the other’s change without abandoning self.</p>
+            <span class="mark-ground">Grounded in Hermetic union + deep listening</span>
+          </div>
+        </div>
+
+        <p class="marks-closing">This love is durable because it is not brittle. It does not shatter under provocation. It does not require the other to be good in order for it to remain loving. It weeps, it resists, it confronts—but it never converts persons into enemies.</p>
+      </div>
+    </section>
+
+    <!-- COMPLEMENTARY VOICES -->
+    <section id="voices" class="section panel">
+      <div class="container">
+        <h2 class="section-title">Complementary Voices</h2>
+        <p class="section-intro">Other traditions that illuminate the same architecture of transformation.</p>
+
+        <div class="voices-grid">
+          <article class="voice">
+            <h3>Seneca · <em>De Ira</em></h3>
+            <blockquote>“Anger is a brief madness… It is the desire to take vengeance for a wrong.”</blockquote>
+            <p>Seneca insists that anger is never useful. Reason must never call upon blind and violent impulses it cannot control. The greatest remedy is delay: the passage of time makes the truth plain. Punishment postponed can still be exacted; punishment exacted cannot be undone. The wise person will never cease to be angry if once they begin, so full is every place of vices—therefore the goal is not moderation of wrath but its extirpation as a ruling passion.</p>
+          </article>
+
+          <article class="voice">
+            <h3>Aristotle · <em>Nicomachean Ethics</em></h3>
+            <blockquote>“Anybody can become angry—that is easy. But to be angry with the right person and to the right degree and at the right time and for the right purpose, and in the right way—that is not within everybody’s power and is not easy.”</blockquote>
+            <p>Aristotle treats good temper as a mean with respect to anger. The gentle-tempered person is not led by passion but becomes angry only in the manner, for the causes, and for the length of time that principle ordains. Excess (irascibility, bitterness) and deficiency (lack of spirit) are both blameworthy. This “right amount” of anger, purified of contempt and disproportion, resonates with the four tests of righteous anger in the primary inquiry.</p>
+          </article>
+
+          <article class="voice">
+            <h3>Stoic &amp; Buddhist Parallel</h3>
+            <p>Both traditions view ordinary anger as an impediment. The Buddha compared anger to holding a hot coal: the one who holds it is burned. Epictetus taught that it is not things that disturb us, but our opinions about things. Change the interpretation and the anger dissolves. Śāntideva places forbearance (kṣānti) as the spiritual practice equal to no evil equal to hatred. The shared counsel: attend to the anger rather than identify with it; recognize, accept, embrace, look deeply.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRACTICE -->
+    <section id="practice" class="section">
+      <div class="container narrow">
+        <h2 class="section-title">Practice Prompts</h2>
+        <ol class="practice-list">
+          <li>
+            <strong>Mindful Breathing</strong>
+            <span>“When you are angry, you are aware that you are angry.” Pause. Take three deep breaths before responding.</span>
+          </li>
+          <li>
+            <strong>Identify Trigger Thoughts</strong>
+            <span>Write the “shoulds” and “blamers.” Name the distortion. Rewrite without judgment.</span>
+          </li>
+          <li>
+            <strong>The Three Sentences of True Love</strong>
+            <span>“I suffer and I want you to know it. I am doing my best. Please help.”</span>
+          </li>
+          <li>
+            <strong>Contemplate the Good</strong>
+            <span>Reflect: “The only service of God is not to be evil.” Let this frame the response.</span>
+          </li>
+          <li>
+            <strong>Daily Journal</strong>
+            <span>Record the episode, the stress preceding it, the trigger thoughts, and the outcome. Learn from patterns.</span>
+          </li>
+          <li>
+            <strong>The Sequence of Transmutation</strong>
+            <span>Interrupt the surge → Return to awareness → Distinguish fact from interpretation → Uncover the suffering beneath → Test the moral claim (truth, proportion, non-contempt, responsibility) → Redirect the energy.</span>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- SYNTHESIS -->
+    <section id="synthesis" class="section panel final">
+      <div class="container narrow">
+        <h2 class="section-title">Final Synthesis</h2>
+        <p class="lead">The soul’s fierceness is not a flaw to be overcome, but a power to be disciplined into love.</p>
+        
+        <ul class="synthesis-list">
+          <li>McKay gives us the <em>skill</em> to discipline it.</li>
+          <li>Hanh gives us the <em>heart</em> to hold it.</li>
+          <li>Hermeticism gives us the <em>vision</em> to reorder it toward the Good.</li>
+        </ul>
+
+        <blockquote class="pull large">
+          Wrath is the fierce refusal educated by ignorance—it knows something is wrong, but does not know what, or why, or how to respond.<br><br>
+          The love of the Good is the fierce refusal educated by Gnosis—it knows what is wrong, knows the suffering beneath it, knows the other’s pain, and knows that the only response that does not multiply the injury is one that is truthful, proportionate, non-contemptuous, and responsible for its consequences.
+        </blockquote>
+
+        <p>This education is never complete. It is a lifelong practice—a daily returning to the breath, the thought, the body, the other, the Good. But the trajectory is clear:</p>
+
+        <div class="trajectory">
+          <p>The refusal that would have been wrath becomes the protection that does not hate.</p>
+          <p>The fire that would have consumed becomes the warmth that holds.</p>
+          <p>The cry that would have cursed becomes the lament that heals.</p>
+          <p>The judgment that would have destroyed becomes the justice that restores.</p>
+        </div>
+
+        <blockquote class="closing-quote">
+          “For the things that are true are not true to themselves, yet they are true to the One.”
+          <cite>— Corpus Hermeticum</cite>
+        </blockquote>
+
+        <p class="final-line">And the One, the Good, is love—not weak, not passive, not indifferent—but a love that refuses injury, speaks truth, weeps grief, enacts justice, and holds open the possibility of reconciliation, without ever resorting to vengeance.</p>
+        <p class="final-line emph">This is the durable love. This is the soul’s true education. This is the transmutation of wrath.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>Compiled from the works of Thich Nhat Hanh (<em>Embracing Anger</em>), McKay, Rogers &amp; McKay (<em>When Anger Hurts</em>), and the <em>Corpus Hermeticum</em> (G.R.S. Mead translation), with complementary voices from Seneca, Aristotle, and the broader Stoic–Buddhist conversation.</p>
+      <p class="footer-note">A syntopical inquiry into the nature of wrath and its transmutation.</p>
+    </div>
+  </footer>
+
+  <script>
+/**
+ * Wrath — site interactions
+ * Scroll temperature shift, sticky nav, mobile menu, active section tracking
+ */
+
+(function () {
+  const header = document.querySelector('.site-header');
+  const navToggle = document.querySelector('.nav-toggle');
+  const navLinks = document.querySelector('.nav-links');
+  const sections = document.querySelectorAll('section[id]');
+  const navAnchors = document.querySelectorAll('.nav-links a');
+
+  // Mobile menu
+  if (navToggle && navLinks) {
+    navToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('open');
+      navToggle.setAttribute(
+        'aria-expanded',
+        navLinks.classList.contains('open')
+      );
+    });
+
+    // Close on link click
+    navLinks.querySelectorAll('a').forEach((a) => {
+      a.addEventListener('click', () => {
+        navLinks.classList.remove('open');
+        navToggle.setAttribute('aria-expanded', 'false');
+      });
+    });
+  }
+
+  // Scroll-driven effects
+  function onScroll() {
+    const y = window.scrollY;
+    const docH = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = docH > 0 ? y / docH : 0;
+
+    // Header
+    if (header) {
+      header.classList.toggle('scrolled', y > 40);
+    }
+
+    // Ambient temperature classes
+    document.body.classList.remove('scrolled-mid', 'scrolled-deep');
+    if (progress > 0.55) {
+      document.body.classList.add('scrolled-deep');
+    } else if (progress > 0.22) {
+      document.body.classList.add('scrolled-mid');
+    }
+
+    // Active nav link
+    let current = '';
+    sections.forEach((sec) => {
+      const top = sec.offsetTop - 120;
+      if (y >= top) {
+        current = sec.getAttribute('id');
+      }
+    });
+
+    navAnchors.forEach((a) => {
+      a.classList.toggle(
+        'active',
+        a.getAttribute('href') === '#' + current
+      );
+    });
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll(); // initial
+
+  // Smooth focus for accessibility when using keyboard
+  document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+    anchor.addEventListener('click', (e) => {
+      const id = anchor.getAttribute('href').slice(1);
+      const target = document.getElementById(id);
+      if (target) {
+        // Let native smooth scroll handle it; ensure focus
+        setTimeout(() => {
+          target.setAttribute('tabindex', '-1');
+          target.focus({ preventScroll: true });
+        }, 400);
+      }
+    });
+  });
+})();
+
+  </script>
+</body>
+</html>
