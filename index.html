@@ -3,366 +3,278 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Archive</title>
+<title>Archive</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --paper:#eae3d2;
-    --paper-2:#e2d9c4;
-    --card:#f4efe2;
-    --ink:#2a2622;
-    --ink-soft:#5b5347;
-    --rule:#c9bd9e;
-    --oxblood:#7c2e2a;
-    --oxblood-dim:#a8564f;
-    --green:#3a4a3a;
-    --gold:#a3792f;
-    --radius:3px;
+  :root {
+    --bg: #f5f1e8;
+    --ink: #1c1916;
+    --muted: #6b655c;
+    --line: #d4cbb8;
+    --accent: #7c2e2a;
   }
-  *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;}
-  body{
-    background:var(--paper);
-    background-image: radial-gradient(rgba(42,38,34,0.035) 1px, transparent 1px);
-    background-size: 3px 3px;
-    color:var(--ink);
-    font-family:'Source Serif 4', Georgia, serif;
-    line-height:1.6;
-  }
-  a{color:inherit; text-decoration:none;}
-  ::selection{background:var(--oxblood); color:var(--card);}
-
-  header{
-    max-width: 900px;
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 16px;
+    line-height: 1.55;
+    max-width: 640px;
     margin: 0 auto;
-    padding: 64px 28px 28px;
-    border-bottom: 2px solid var(--ink);
+    padding: 48px 24px 80px;
   }
-  .kicker{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:11px;
-    letter-spacing:.16em;
-    text-transform:uppercase;
-    color:var(--oxblood);
-    margin:0 0 10px;
+  header { margin-bottom: 36px; }
+  h1 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 500;
+    font-size: 13px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
   }
-  h1{
-    font-family:'Fraunces', serif;
-    font-weight:600;
-    font-size:44px;
-    margin:0 0 12px;
-    letter-spacing:-.01em;
+  .lede {
+    color: var(--muted);
+    font-size: 15px;
   }
-  .lede{
-    color:var(--ink-soft);
-    font-style:italic;
-    font-size:16.5px;
-    max-width:58ch;
-    margin:0 0 8px;
-    line-height:1.5;
+  #search {
+    width: 100%;
+    padding: 10px 0;
+    margin-bottom: 28px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink);
+    outline: none;
   }
-  .count{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:11.5px;
-    color:var(--ink-soft);
-    margin-top:16px;
+  #search::placeholder { color: var(--muted); }
+  #search:focus { border-bottom-color: var(--ink); }
+
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 32px;
+  }
+  .filter-btn {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: .04em;
+    padding: 3px 10px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+  }
+  .filter-btn.active,
+  .filter-btn:hover {
+    border-color: var(--ink);
+    color: var(--ink);
   }
 
-  .controls{
-    max-width:900px;
-    margin: 22px auto 0;
-    padding: 0 28px;
-    display:flex;
-    flex-direction:column;
-    gap:14px;
+  .entry {
+    padding: 18px 0;
+    border-top: 1px solid var(--line);
   }
-  #search{
-    width:100%;
-    padding:11px 14px;
-    font-family:'IBM Plex Mono', monospace;
-    font-size:13px;
-    background:var(--card);
-    border:1px solid var(--rule);
-    border-radius:var(--radius);
-    color:var(--ink);
+  .entry:last-child { border-bottom: 1px solid var(--line); }
+  .kind {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4px;
   }
-  #search:focus{ outline:2px solid var(--oxblood-dim); outline-offset:1px; }
-
-  .filters{
-    display:flex;
-    flex-wrap:wrap;
-    gap:6px;
+  .title {
+    font-size: 17px;
+    font-weight: 500;
+    color: var(--ink);
+    text-decoration: none;
   }
-  .filter-btn{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:11px;
-    padding:4px 11px;
-    border:1px solid var(--rule);
-    border-radius:20px;
-    background:transparent;
-    color:var(--ink-soft);
-    cursor:pointer;
-    transition:all .12s ease;
-    letter-spacing:.02em;
+  .title:hover { color: var(--accent); }
+  .author {
+    font-size: 14px;
+    font-style: italic;
+    color: var(--muted);
+    margin: 3px 0 6px;
   }
-  .filter-btn:hover{
-    border-color:var(--oxblood-dim);
-    color:var(--ink);
+  .summary {
+    font-size: 14px;
+    color: var(--muted);
+    max-width: 54ch;
   }
-  .filter-btn.active{
-    background:var(--oxblood);
-    border-color:var(--oxblood);
-    color:var(--card);
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
   }
-
-  main{
-    max-width:900px;
-    margin: 28px auto 100px;
-    padding: 0 28px;
+  .tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    padding: 2px 8px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--muted);
+    cursor: pointer;
+  }
+  .tag:hover, .tag.active {
+    border-color: var(--ink);
+    color: var(--ink);
   }
 
-  .shelf{
-    border-top: 1px solid var(--rule);
+  #empty {
+    text-align: center;
+    padding: 40px 0;
+    color: var(--muted);
+    font-style: italic;
+    display: none;
   }
-
-  .entry-row{
-    display:grid;
-    grid-template-columns: 44px 1fr;
-    gap: 18px;
-    align-items:start;
-    padding: 22px 6px;
-    border-bottom: 1px solid var(--rule);
-    cursor:pointer;
-    transition: background .12s ease;
-  }
-  .entry-row:hover{ background: rgba(42,38,34,.035); }
-  .entry-row:hover .entry-title{ color:var(--oxblood); }
-
-  .spine{
-    width:44px;
-    height:60px;
-    border-radius: 2px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-family:'IBM Plex Mono', monospace;
-    font-size:11px;
-    color:var(--card);
-    font-weight:600;
-    flex-shrink:0;
-  }
-
-  .kind{
-    display:block;
-    font-family:'IBM Plex Mono', monospace;
-    font-size:10px;
-    text-transform:uppercase;
-    letter-spacing:.1em;
-    color:var(--ink-soft);
-    margin:2px 0 5px;
-  }
-  .entry-title{
-    font-family:'Fraunces', serif;
-    font-weight:600;
-    font-size:19px;
-    margin:0 0 4px;
-    transition: color .12s ease;
-  }
-  .entry-author{
-    font-size:14px;
-    font-style:italic;
-    color:var(--ink-soft);
-    margin:0 0 8px;
-  }
-  .entry-summary{
-    font-size:14px;
-    color:var(--ink-soft);
-    margin:0 0 11px;
-    max-width:64ch;
-  }
-  .tag-row{ display:flex; flex-wrap:wrap; gap:6px; }
-  .tag{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:10px;
-    padding:2px 8px;
-    border:1px solid var(--rule);
-    border-radius:20px;
-    color:var(--ink-soft);
-    cursor:pointer;
-    transition:all .12s ease;
-  }
-  .tag:hover, .tag.active{
-    background:var(--oxblood);
-    border-color:var(--oxblood);
-    color:var(--card);
-  }
-
-  #empty{
-    text-align:center;
-    padding: 60px 20px;
-    color:var(--ink-soft);
-    font-style:italic;
-    display:none;
-  }
-
-  footer{
-    max-width:900px;
-    margin: 0 auto 60px;
-    padding: 20px 28px;
-    font-family:'IBM Plex Mono', monospace;
-    font-size:11px;
-    color:var(--ink-soft);
-    border-top:1px solid var(--rule);
-    text-align:center;
+  footer {
+    margin-top: 48px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    text-align: center;
   }
 </style>
 </head>
 <body>
 
 <header>
-  <p class="kicker">Personal Knowledge Archive</p>
-  <h1>The Archive</h1>
-  <p class="lede">Notes, reading aids, and conceptual maps — rebuilt from books, essays, and original synthesis. A running record of ideas worth keeping.</p>
-  <p class="count" id="count"></p>
+  <h1>Archive</h1>
+  <p class="lede">Notes and reading aids worth keeping.</p>
 </header>
 
-<div class="controls">
-  <input id="search" type="text" placeholder="Search title, creator, or tag…" autocomplete="off">
-  <div class="filters" id="filters">
-    <button class="filter-btn active" data-kind="all">All</button>
-    <button class="filter-btn" data-kind="book">Books</button>
-    <button class="filter-btn" data-kind="essay">Essays</button>
-    <button class="filter-btn" data-kind="guide">Guides</button>
-    <button class="filter-btn" data-kind="short story">Stories</button>
-  </div>
+<input id="search" type="search" placeholder="Search…" autocomplete="off">
+
+<div class="filters" id="filters">
+  <button class="filter-btn active" data-kind="all">All</button>
+  <button class="filter-btn" data-kind="book">Books</button>
+  <button class="filter-btn" data-kind="essay">Essays</button>
+  <button class="filter-btn" data-kind="guide">Guides</button>
+  <button class="filter-btn" data-kind="short story">Stories</button>
 </div>
 
-<main>
-  <div class="shelf" id="shelf"></div>
-  <p id="empty">No entries match that search.</p>
-</main>
+<main id="shelf"></main>
+<p id="empty">No matches.</p>
 
-<footer>the archive · a personal record of synthesized thought</footer>
+<footer>archive</footer>
 
 <script>
-/* ============================================================
-   ENTRIES — one object per page.
-   kind: "book" | "essay" | "guide" | "short story" | "synthesis"
-   ============================================================ */
 const ENTRIES = [
+  {
+    title: "Depth Axis",
+    author: "C. G. Jung — Memories, Dreams, Reflections",
+    href: "jung-analytical.html",
+    kind: "guide",
+    summary: "Twelve chapters read with Adler & Van Doren’s rules. Unity, terms, propositions, objections, and marked passages for the whole book.",
+    tags: ["jung", "analytical-reading", "psychology", "memoir"]
+  },
   {
     title: "How to Read a Book",
     author: "Mortimer J. Adler & Charles Van Doren",
     href: "how-to-read-a-book.html",
     kind: "book",
-    summary: "A practical framework for reading with increasing levels of skill — elementary, inspectional, analytical, and syntopical — built around the habit of asking the right questions of a book.",
-    tags: ["reading", "analytical-reading", "classics", "nonfiction"],
-    accent: "#7c2e2a"
+    summary: "A practical framework for reading with increasing levels of skill — elementary, inspectional, analytical, and syntopical.",
+    tags: ["reading", "analytical-reading", "classics"]
   },
   {
     title: "The Dragonbone Chair",
     author: "Tad Williams",
     href: "the-dragonbone-chair.html",
     kind: "book",
-    summary: "Book 1 of Memory, Sorrow, and Thorn — a scullion boy at a dying king's castle is pulled into a slow-burning epic of buried history, sibling rivalry, and returning ancient magic.",
-    tags: ["fantasy", "epic-fantasy", "memory-sorrow-and-thorn", "tad-williams"],
-    accent: "#3a4a3a"
+    summary: "Book 1 of Memory, Sorrow, and Thorn — a scullion boy pulled into a slow-burning epic of buried history and returning magic.",
+    tags: ["fantasy", "epic-fantasy", "tad-williams"]
   },
   {
     title: "Building a Second Brain",
     author: "Tiago Forte",
     href: "building-a-second-brain.html",
     kind: "book",
-    summary: "A digital system for capturing, organizing, distilling, and expressing what you consume — built on the CODE method and the PARA folder structure, and rooted in the old practice of commonplace books.",
-    tags: ["PKM", "secondbrain", "notetaking", "productivity"],
-    accent: "#a3792f"
+    summary: "A digital system for capturing, organizing, distilling, and expressing what you consume — CODE and PARA.",
+    tags: ["PKM", "secondbrain", "notetaking"]
   },
   {
     title: "Angel Down",
     author: "Daniel Kraus",
     href: "angel-down.html",
     kind: "book",
-    summary: "WWI, the Argonne, October 1918 — burial-duty con man Cyril Bagger survives a shell that killed everyone around him, and starts hearing a shriek no one else can place.",
-    tags: ["historical-fiction", "horror", "wwi", "daniel-kraus"],
-    accent: "#7a2618"
+    summary: "WWI, the Argonne, 1918 — a burial-duty con man survives a shell and starts hearing a shriek no one else can place.",
+    tags: ["historical-fiction", "horror", "wwi"]
   },
   {
     title: "Why All Roads Lead To Crab",
     author: "LivingZoo",
     href: "genotype-pinball.html",
     kind: "essay",
-    summary: "Carcinization as a lens on convergent evolution — why unrelated decapod lineages keep re-evolving the crab body plan, and what that says about how genomes navigate possibility.",
-    tags: ["biology", "evolution", "convergent-evolution"],
-    accent: "#a3792f"
+    summary: "Carcinization as a lens on convergent evolution — why unrelated lineages keep re-evolving the crab body plan.",
+    tags: ["biology", "evolution", "convergent-evolution"]
   },
   {
     title: "Game Theory & Poker",
-    author: "Synthesized — Chen (SIG), Schmid, MIT 15.S50",
+    author: "Synthesized — Chen, Schmid, MIT 15.S50",
     href: "poker-game-theory.html",
     kind: "guide",
-    summary: "A friendly walkthrough: why bluffing needs a frequency not a rule, a hand-solvable A/K/Q equilibrium, how CFR actually learns, taming no-limit's infinite bet sizes, why three-player games break every guarantee, a detour through the Josephus death-circle puzzle, and what any of it means for your home game.",
-    tags: ["game-theory", "poker", "cfr", "nash-equilibrium", "quant-trading"],
-    accent: "#b35a3a"
+    summary: "Why bluffing needs a frequency, a hand-solvable A/K/Q equilibrium, how CFR learns, and what it means for a home game.",
+    tags: ["game-theory", "poker", "nash-equilibrium"]
   },
   {
     title: "The Ones Who Walk Away from Omelas",
     author: "Ursula K. Le Guin",
     href: "omelas.html",
     kind: "short story",
-    summary: "A utopian city's happiness turns out to depend entirely on one child kept in misery in a locked room. Most citizens stay and carry the knowledge; a few leave and walk into the dark, alone, towards a place the story never describes.",
-    tags: ["short-story", "utopia", "ethics", "le-guin"],
-    accent: "#15110d"
+    summary: "A city’s happiness depends on one child kept in misery. Most stay; a few walk away into the dark.",
+    tags: ["short-story", "utopia", "ethics", "le-guin"]
   },
   {
     title: "The Dog Stars",
     author: "Peter Heller",
     href: "dog-stars-constellation.html",
     kind: "book",
-    summary: "Nine years after a superflu and a second, blood-borne collapse, a pilot named Hig flies the perimeter of what's left, holding onto a dog, a wary alliance with a survivalist neighbor, and a radio transmission he can't stop chasing. Rebuilt here as a clickable constellation of the book's characters and themes.",
-    tags: ["literary-fiction", "post-apocalyptic", "peter-heller", "grief"],
-    accent: "#d0a24e"
+    summary: "Nine years after collapse, a pilot holds onto a dog, a wary neighbor, and a radio transmission he can’t stop chasing.",
+    tags: ["literary-fiction", "post-apocalyptic", "grief"]
   },
   {
     title: "Deep Simplicity",
     author: "John Gribbin",
     href: "deep-simplicity-retention.html",
     kind: "book",
-    summary: "From the three-body problem to the logistic map and Feigenbaum's universal constant — how simple, iterated rules with feedback generate chaos, fractals, and eventually life. Rebuilt here as an active-recall engine: predict before revealing, rate your own certainty.",
-    tags: ["science", "chaos-theory", "complexity", "physics", "john-gribbin"],
-    accent: "#35507c"
+    summary: "From the three-body problem to Feigenbaum’s constant — how simple iterated rules generate chaos, fractals, and life.",
+    tags: ["science", "chaos-theory", "complexity"]
   },
   {
     title: "The Shadow of the Torturer",
     author: "Gene Wolfe",
     href: "new-sun-decoder.html",
     kind: "guide",
-    summary: "Book 1 of The Book of the New Sun, decoded chapter by chapter — a vocabulary breakdown of Wolfe's Latinate, fossil-word prose, tracing the etymology and foreshadowing buried inside terms like fuligin, chrisos, and oubliette.",
-    tags: ["science-fantasy", "gene-wolfe", "book-of-the-new-sun", "vocabulary"],
-    accent: "#b8944e"
+    summary: "Book 1 of The Book of the New Sun, decoded — vocabulary and foreshadowing in Wolfe’s Latinate prose.",
+    tags: ["science-fantasy", "gene-wolfe", "vocabulary"]
   },
   {
     title: "The Architecture of Evolution",
     author: "Synthesized — Gould, Conway Morris & Wagner",
     href: "architecture-of-evolution.html",
     kind: "guide",
-    summary: "A three-way dialogue between Wonderful Life, Life's Solution, and Arrival of the Fittest — contingency vs. convergence vs. genotype space, and what it means for evolution to have direction without a destination.",
-    tags: ["biology", "evolution", "contingency", "convergence", "philosophy-of-science"],
-    accent: "#5b9a8b"
+    summary: "Contingency vs. convergence vs. genotype space — what it means for evolution to have direction without a destination.",
+    tags: ["biology", "evolution", "philosophy-of-science"]
   },
   {
     title: "The Man Who Mapped the Stars",
     author: "Synthesized — Mackay, Odlyzko",
     href: "south-sea-newton.html",
     kind: "essay",
-    summary: "Isaac Newton sold South Sea stock near the top, watched his friends get richer, and bought back in near the peak. A close reading of his 1720 trades — reconstructed from broker instructions and estate papers — as the cleanest case study of analytical correctness losing to social pressure.",
-    tags: ["financial-history", "south-sea-bubble", "isaac-newton", "mania", "mackay"],
-    accent: "#c9a227"
+    summary: "Newton’s 1720 South Sea trades — analytical correctness losing to social pressure, reconstructed from the papers.",
+    tags: ["financial-history", "south-sea-bubble", "isaac-newton"]
   }
 ];
 
 const shelf = document.getElementById('shelf');
-const countEl = document.getElementById('count');
 const emptyEl = document.getElementById('empty');
 const searchInput = document.getElementById('search');
 const filterBtns = document.querySelectorAll('.filter-btn');
@@ -370,47 +282,38 @@ const filterBtns = document.querySelectorAll('.filter-btn');
 let activeTag = null;
 let activeKind = 'all';
 
-function initials(title){
-  return title.split(' ').filter(w => /^[A-Z0-9]/.test(w)).slice(0,2).map(w=>w[0]).join('') || title[0];
-}
-
-function render(){
+function render() {
   const q = searchInput.value.trim().toLowerCase();
   const filtered = ENTRIES.filter(b => {
     const kindOk = activeKind === 'all' || b.kind === activeKind;
-    const tagOk = !activeTag || (b.tags||[]).includes(activeTag);
-    const hay = (b.title + ' ' + b.author + ' ' + (b.tags||[]).join(' ')).toLowerCase();
-    const searchOk = !q || hay.includes(q);
-    return kindOk && tagOk && searchOk;
+    const tagOk = !activeTag || (b.tags || []).includes(activeTag);
+    const hay = (b.title + ' ' + b.author + ' ' + (b.tags || []).join(' ')).toLowerCase();
+    return kindOk && tagOk && (!q || hay.includes(q));
   });
 
-  countEl.textContent = `${ENTRIES.length} entr${ENTRIES.length===1?'y':'ies'} in the archive`;
   shelf.innerHTML = '';
   emptyEl.style.display = filtered.length ? 'none' : 'block';
 
   filtered.forEach(b => {
-    const row = document.createElement('div');
-    row.className = 'entry-row';
-    row.innerHTML = `
-      <a href="${b.href}" class="spine" style="background: ${b.accent || '#7c2e2a'}">${initials(b.title)}</a>
-      <div>
-        <a href="${b.href}" style="text-decoration:none;color:inherit;">
-          ${b.kind ? `<span class="kind">${b.kind}</span>` : ''}
-          <p class="entry-title">${b.title}</p>
-          <p class="entry-author">${b.author}</p>
-          ${b.summary ? `<p class="entry-summary">${b.summary}</p>` : ''}
-        </a>
-        ${b.tags && b.tags.length ? `<div class="tag-row">${b.tags.map(t=>`<span class="tag ${t===activeTag?'active':''}" data-tag="${t}">${t}</span>`).join('')}</div>` : ''}
-      </div>
+    const el = document.createElement('article');
+    el.className = 'entry';
+    el.innerHTML = `
+      <div class="kind">${b.kind}</div>
+      <a class="title" href="${b.href}">${b.title}</a>
+      <div class="author">${b.author}</div>
+      ${b.summary ? `<p class="summary">${b.summary}</p>` : ''}
+      ${b.tags?.length ? `<div class="tags">${b.tags.map(t =>
+        `<span class="tag ${t === activeTag ? 'active' : ''}" data-tag="${t}">${t}</span>`
+      ).join('')}</div>` : ''}
     `;
-    shelf.appendChild(row);
+    shelf.appendChild(el);
   });
 
   shelf.querySelectorAll('.tag').forEach(el => {
-    el.addEventListener('click', (e) => {
+    el.addEventListener('click', e => {
       e.preventDefault();
       const t = el.dataset.tag;
-      activeTag = (activeTag === t) ? null : t;
+      activeTag = activeTag === t ? null : t;
       render();
     });
   });
@@ -428,7 +331,5 @@ filterBtns.forEach(btn => {
 searchInput.addEventListener('input', render);
 render();
 </script>
-
 </body>
 </html>
-
