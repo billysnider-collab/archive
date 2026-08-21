@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your Pathology Report, Explained</title>
+<style>
+  :root{
+    --paper:#F6F8F7;
+    --card:#FFFFFF;
+    --ink:#1C2B33;
+    --ink-soft:#55686F;
+    --clear:#256B4E;
+    --clear-bg:#E8F1EC;
+    --rule:#D2DCD7;
+    --sans: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", Arial, sans-serif;
+    --serif: Georgia, "Iowan Old Style", "Times New Roman", serif;
+  }
+
+  *{box-sizing:border-box;}
+
+  html{-webkit-text-size-adjust:100%;}
+
+  body{
+    margin:0;
+    padding:0 20px 72px;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--serif);
+    font-size:20px;
+    line-height:1.65;
+  }
+
+  .page{max-width:660px;margin:0 auto;}
+
+  /* ---------- header ---------- */
+  header{padding:56px 0 34px;}
+
+  .eyebrow{
+    font-family:var(--sans);
+    font-size:14px;
+    font-weight:600;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin:0 0 14px;
+  }
+
+  h1{
+    font-family:var(--serif);
+    font-size:42px;
+    line-height:1.15;
+    font-weight:400;
+    margin:0 0 16px;
+    letter-spacing:-0.01em;
+  }
+
+  .standfirst{
+    margin:0;
+    font-size:20px;
+    color:var(--ink-soft);
+  }
+
+  /* ---------- headline result ---------- */
+  .result{
+    background:var(--clear-bg);
+    border:1px solid #BFD6C9;
+    border-radius:10px;
+    padding:30px 28px 26px;
+    margin:0 0 52px;
+  }
+
+  .result h2{
+    font-family:var(--sans);
+    font-size:15px;
+    font-weight:700;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--clear);
+    margin:0 0 20px;
+  }
+
+  .result ul{list-style:none;margin:0;padding:0;}
+
+  .result li{
+    display:flex;
+    align-items:flex-start;
+    gap:14px;
+    font-size:22px;
+    line-height:1.45;
+    padding:11px 0;
+  }
+
+  .result li + li{border-top:1px solid #CFE1D7;}
+
+  .result svg{flex:0 0 auto;margin-top:5px;}
+
+  /* ---------- sections ---------- */
+  section{
+    border-top:1px solid var(--rule);
+    padding:38px 0 4px;
+  }
+
+  .num{
+    font-family:var(--sans);
+    font-size:13px;
+    font-weight:700;
+    letter-spacing:.14em;
+    color:var(--ink-soft);
+    display:block;
+    margin-bottom:10px;
+  }
+
+  h2.section-title{
+    font-family:var(--serif);
+    font-size:29px;
+    line-height:1.25;
+    font-weight:400;
+    margin:0 0 18px;
+  }
+
+  p{margin:0 0 18px;}
+
+  strong{font-weight:700;}
+
+  dl{margin:24px 0 8px;padding:0;}
+
+  dt{
+    font-family:var(--sans);
+    font-size:16px;
+    font-weight:700;
+    letter-spacing:.02em;
+    text-transform:uppercase;
+    color:var(--ink);
+    margin:22px 0 6px;
+  }
+
+  dd{margin:0;color:var(--ink-soft);}
+
+  /* ---------- lymph node figure ---------- */
+  .nodes{
+    display:flex;
+    align-items:center;
+    gap:26px;
+    background:var(--card);
+    border:1px solid var(--rule);
+    border-radius:10px;
+    padding:24px 26px;
+    margin:0 0 22px;
+  }
+
+  .nodes .figure{
+    font-family:var(--serif);
+    font-size:56px;
+    line-height:1;
+    color:var(--clear);
+    white-space:nowrap;
+  }
+
+  .nodes .caption{
+    font-family:var(--sans);
+    font-size:17px;
+    line-height:1.5;
+    color:var(--ink-soft);
+  }
+
+  /* ---------- summary rows ---------- */
+  .summary{
+    background:var(--card);
+    border:1px solid var(--rule);
+    border-radius:10px;
+    padding:8px 26px;
+    margin:6px 0 8px;
+  }
+
+  .summary .row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:4px 18px;
+    padding:18px 0;
+  }
+
+  .summary .row + .row{border-top:1px solid var(--rule);}
+
+  .summary .label{
+    font-family:var(--sans);
+    font-size:14px;
+    font-weight:700;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    flex:0 0 130px;
+    padding-top:6px;
+  }
+
+  .summary .value{flex:1 1 220px;font-size:20px;}
+
+  /* ---------- question checklist ---------- */
+  .ask{margin:0 0 10px;}
+
+  .ask h3{
+    font-family:var(--sans);
+    font-size:14px;
+    font-weight:700;
+    letter-spacing:.13em;
+    text-transform:uppercase;
+    color:var(--clear);
+    margin:30px 0 12px;
+  }
+
+  .ask ul{list-style:none;margin:0;padding:0;}
+
+  .ask li{
+    border:1px solid var(--rule);
+    border-radius:8px;
+    background:var(--card);
+    margin-bottom:9px;
+  }
+
+  .ask label{
+    display:flex;
+    align-items:flex-start;
+    gap:15px;
+    padding:15px 18px;
+    font-size:19px;
+    line-height:1.5;
+    cursor:pointer;
+  }
+
+  .ask input{
+    flex:0 0 auto;
+    width:23px;
+    height:23px;
+    margin:3px 0 0;
+    accent-color:var(--clear);
+  }
+
+  .ask input:focus-visible{outline:3px solid var(--clear);outline-offset:3px;}
+
+  .ask input:checked + span{color:var(--ink-soft);text-decoration:line-through;}
+
+  .bring{
+    background:var(--clear-bg);
+    border:1px solid #BFD6C9;
+    border-radius:10px;
+    padding:20px 24px;
+    margin:26px 0 8px;
+    font-size:19px;
+  }
+
+  .bring p{margin:0;}
+
+  /* ---------- footer ---------- */
+  footer{
+    border-top:1px solid var(--rule);
+    margin-top:44px;
+    padding-top:26px;
+    font-family:var(--sans);
+    font-size:16px;
+    line-height:1.6;
+    color:var(--ink-soft);
+  }
+
+  footer strong{color:var(--ink);}
+
+  /* ---------- small screens ---------- */
+  @media (max-width:560px){
+    body{font-size:19px;padding:0 18px 56px;}
+    header{padding:40px 0 28px;}
+    h1{font-size:33px;}
+    h2.section-title{font-size:25px;}
+    .result{padding:24px 20px 20px;}
+    .result li{font-size:20px;}
+    .nodes{flex-direction:column;align-items:flex-start;gap:12px;padding:22px 20px;}
+    .nodes .figure{font-size:48px;}
+    .summary{padding:6px 20px;}
+  }
+
+  /* ---------- print ---------- */
+  @media print{
+    body{background:#fff;font-size:12pt;padding:0;}
+    .page{max-width:none;}
+    section{page-break-inside:avoid;}
+    .result{background:#fff;}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <p class="eyebrow">Pathology report &middot; plain English</p>
+    <h1>What your results say</h1>
+    <p class="standfirst">A step-by-step translation of the report from your surgery, without the medical jargon.</p>
+  </header>
+
+  <div class="result">
+    <h2>The bottom line</h2>
+    <ul>
+      <li>
+        <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><circle cx="13" cy="13" r="12" fill="#256B4E"/><path d="M7.5 13.4l3.6 3.6 7.4-7.6" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>There is <strong>no cancer</strong>.</span>
+      </li>
+      <li>
+        <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><circle cx="13" cy="13" r="12" fill="#256B4E"/><path d="M7.5 13.4l3.6 3.6 7.4-7.6" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>The polyp that was removed is <strong>benign</strong> &mdash; non-cancerous.</span>
+      </li>
+      <li>
+        <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><circle cx="13" cy="13" r="12" fill="#256B4E"/><path d="M7.5 13.4l3.6 3.6 7.4-7.6" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>No cancer cells were found in <strong>any</strong> of the lymph nodes.</span>
+      </li>
+    </ul>
+  </div>
+
+  <section>
+    <span class="num">PART ONE</span>
+    <h2 class="section-title">What was removed, and why</h2>
+    <p>You had a <strong>robotic right hemicolectomy</strong>. The surgeon removed the right side of your large intestine &mdash; the cecum and the ascending colon &mdash; along with a small piece of your small intestine, called the ileum.</p>
+    <p>The reason: you had a colon polyp that was either too large or too awkwardly placed to be taken out safely during a routine colonoscopy. Surgery was the best way to remove it completely.</p>
+  </section>
+
+  <section>
+    <span class="num">PART TWO</span>
+    <h2 class="section-title">What the pathologist saw by eye</h2>
+    <p>Before the operation, the surgeon marked the spot with a small ink &ldquo;tattoo&rdquo; on the colon so the polyp&rsquo;s location could be found again.</p>
+    <p>When the pathologist opened the removed tissue, <strong>no mass, ulcer or polyp was left to find</strong>. That usually means the polyp was very small, was removed completely, or had already been partly taken out during the earlier colonoscopy.</p>
+  </section>
+
+  <section>
+    <span class="num">PART THREE</span>
+    <h2 class="section-title">What they saw under the microscope</h2>
+    <p>This is the most important line in the report. It reads:</p>
+    <p><strong>&ldquo;Benign colonic mucosa with focal hyperplastic changes.&rdquo;</strong></p>
+    <dl>
+      <dt>Benign</dt>
+      <dd>Non-cancerous.</dd>
+      <dt>Focal hyperplastic changes</dt>
+      <dd>In one small area, the cells were growing a little faster than usual &mdash; but they are ordinary, harmless cells. This is a very common finding. It is not cancer, and it is not pre-cancer.</dd>
+    </dl>
+  </section>
+
+  <section>
+    <span class="num">PART FOUR</span>
+    <h2 class="section-title">Did anything spread? The lymph nodes</h2>
+    <div class="nodes">
+      <div class="figure">0 of 11</div>
+      <div class="caption">lymph nodes contained tumor cells.<br>The report records this as <strong>0/11</strong>.</div>
+    </div>
+    <p>The pathologist located and examined 11 lymph nodes near the section of colon that was removed. All 11 were clear. That confirms nothing had spread beyond the colon wall &mdash; and given the benign result, there was nothing there to spread in the first place.</p>
+  </section>
+
+  <section>
+    <span class="num">IN SHORT</span>
+    <h2 class="section-title">The summary</h2>
+    <div class="summary">
+      <div class="row">
+        <div class="label">Diagnosis</div>
+        <div class="value">Normal, healthy tissue with one harmless tiny growth.</div>
+      </div>
+      <div class="row">
+        <div class="label">Lymph nodes</div>
+        <div class="value">Completely clear.</div>
+      </div>
+      <div class="row">
+        <div class="label">Outlook</div>
+        <div class="value">Excellent. You do not have colon cancer.</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <span class="num">WHAT HAPPENS NEXT</span>
+    <h2 class="section-title">Your next steps</h2>
+    <p>Because the pathology is clean, <strong>no chemotherapy or other cancer treatment is needed</strong> for this.</p>
+    <p>Follow up with your surgeon, <strong>Dr. Evans</strong>, for your post-surgery recovery check-up. Dr. Evans will tell you when you can go back to normal activities, and when your next routine screening colonoscopy should be &mdash; usually a few years out, simply as general prevention.</p>
+  </section>
+
+  <section>
+    <span class="num">TAKE THIS WITH YOU</span>
+    <h2 class="section-title">Questions to ask Dr. Evans</h2>
+    <p>Tick these off as they get answered. Anything left unticked at the end of the appointment is worth asking before you leave.</p>
+
+    <div class="ask">
+      <h3>About the result</h3>
+      <ul>
+        <li><label><input type="checkbox"><span>What did the original colonoscopy biopsy show, and does the final pathology match it? If not, what changed?</span></label></li>
+        <li><label><input type="checkbox"><span>The report found no polyp left in the tissue. Can you confirm the tattooed site was inside the removed segment, so nothing was left behind?</span></label></li>
+        <li><label><input type="checkbox"><span>Is any part of the specimen still being reviewed, or is this the final report?</span></label></li>
+        <li><label><input type="checkbox"><span>Should a second pathologist look at this?</span></label></li>
+      </ul>
+
+      <h3>About recovery</h3>
+      <ul>
+        <li><label><input type="checkbox"><span>What is normal and what is worrying over the next few weeks &mdash; pain, appetite, the incision?</span></label></li>
+        <li><label><input type="checkbox"><span>Which symptoms mean I should call you, and which mean I should go to the emergency room?</span></label></li>
+        <li><label><input type="checkbox"><span>How will my bowel habits change now that part of my colon is gone? Is that permanent?</span></label></li>
+        <li><label><input type="checkbox"><span>Are there foods I should avoid, and for how long?</span></label></li>
+        <li><label><input type="checkbox"><span>When can I lift things, drive, travel, and go back to normal activity?</span></label></li>
+        <li><label><input type="checkbox"><span>Since part of my ileum was removed, do I need to watch my B12 or iron levels?</span></label></li>
+      </ul>
+
+      <h3>Going forward</h3>
+      <ul>
+        <li><label><input type="checkbox"><span>When is my next colonoscopy, and who schedules it?</span></label></li>
+        <li><label><input type="checkbox"><span>Does this change how often I should be screened?</span></label></li>
+        <li><label><input type="checkbox"><span>Should anyone else in the family start screening earlier?</span></label></li>
+        <li><label><input type="checkbox"><span>Who do I call between now and the next appointment if something comes up?</span></label></li>
+      </ul>
+    </div>
+
+    <div class="bring">
+      <p><strong>Two practical things:</strong> bring someone with you, or ask to record the conversation &mdash; it is hard to remember everything afterwards. And ask for a printed copy of the full pathology report for your own records.</p>
+    </div>
+  </section>
+
+  <footer>
+    <p><strong>Please note:</strong> this page is a plain-English breakdown of a medical report, written by an AI rather than a doctor. Go over the final results with your surgeon or your primary care physician to confirm your specific recovery plan.</p>
+  </footer>
+
+</div>
+</body>
+</html>
