@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Little Brother — Chapter Notes 1–3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#101321;
+  --fog:#E7EBF3;
+  --paper:#FFFFFF;
+  --muted:#5B6479;
+  --line:#D2D8E4;
+  --accent:#D6006E;
+  --accent-soft:rgba(214,0,110,.10);
+  --display:'Space Grotesk',ui-sans-serif,system-ui,sans-serif;
+  --body:'Newsreader',Georgia,'Times New Roman',serif;
+  --mono:'IBM Plex Mono',ui-monospace,'SFMono-Regular',Menlo,monospace;
+  --r:10px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--fog);
+  background-image:radial-gradient(circle at 1px 1px,rgba(16,19,33,.055) 1px,transparent 0);
+  background-size:22px 22px;
+  color:var(--ink);
+  font-family:var(--body);
+  font-size:17px;
+  line-height:1.62;
+}
+.wrap{max-width:860px;margin:0 auto;padding:0 18px 90px}
+
+/* ---------- masthead ---------- */
+.masthead{padding:44px 0 22px}
+.kicker{
+  font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--muted);margin:0 0 12px;
+}
+.masthead h1{
+  font-family:var(--display);font-weight:700;font-size:clamp(38px,10vw,68px);
+  line-height:.94;letter-spacing:-.03em;margin:0;
+}
+.masthead h1 em{font-style:normal;color:var(--accent)}
+.byline{
+  font-family:var(--mono);font-size:12px;color:var(--muted);
+  margin:16px 0 0;display:flex;flex-wrap:wrap;gap:6px 14px;
+}
+.byline span{white-space:nowrap}
+
+/* ---------- chapter tabs ---------- */
+.tabbar{
+  position:sticky;top:0;z-index:20;
+  margin:26px -18px 0;padding:10px 18px;
+  background:rgba(231,235,243,.92);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.tabs{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{
+  flex:1 1 0;min-width:104px;
+  font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.04em;
+  padding:10px 12px;border:1px solid var(--line);border-radius:var(--r);
+  background:var(--paper);color:var(--muted);cursor:pointer;
+  text-align:left;line-height:1.35;transition:border-color .15s,color .15s;
+}
+.tab b{display:block;font-family:var(--display);font-size:14px;color:var(--ink);font-weight:600}
+.tab[aria-selected="true"]{border-color:var(--accent);color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.tab:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+
+/* ---------- chapter hero ---------- */
+.chapter[hidden]{display:none}
+.hero{position:relative;padding:52px 0 30px;overflow:hidden}
+.numeral{
+  position:absolute;top:6px;right:-6px;
+  font-family:var(--display);font-weight:700;font-size:clamp(120px,32vw,210px);
+  line-height:.8;letter-spacing:-.05em;
+  color:transparent;-webkit-text-stroke:1.5px rgba(16,19,33,.13);
+  pointer-events:none;user-select:none;
+}
+.hero .eyebrow{
+  font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--accent);margin:0 0 10px;position:relative;
+}
+.hero h2{
+  font-family:var(--display);font-weight:700;font-size:clamp(28px,7vw,46px);
+  letter-spacing:-.025em;line-height:1.04;margin:0;position:relative;max-width:11ch;
+}
+.summary{
+  position:relative;font-size:clamp(17px,4.4vw,20px);line-height:1.55;
+  margin:20px 0 0;max-width:60ch;border-left:3px solid var(--accent);padding-left:16px;
+}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:22px 0 0;position:relative}
+.chip{
+  font-family:var(--mono);font-size:11px;letter-spacing:.06em;
+  padding:5px 10px;border:1px solid var(--line);border-radius:100px;background:var(--paper);color:var(--muted);
+}
+.chip.hot{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+
+/* ---------- blocks ---------- */
+.block{padding:30px 0 4px;border-top:1px solid var(--line)}
+.block > h3{
+  font-family:var(--display);font-weight:600;font-size:20px;letter-spacing:-.01em;
+  margin:0 0 18px;display:flex;align-items:baseline;gap:10px;
+}
+.block > h3::before{
+  content:attr(data-tag);
+  font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.16em;
+  color:var(--accent);text-transform:uppercase;
+}
+h4{
+  font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);margin:26px 0 10px;
+}
+p{margin:0 0 14px}
+.prose p:last-child{margin-bottom:0}
+
+/* ---------- cards ---------- */
+.cards{display:grid;gap:10px}
+.card{
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--r);
+  padding:14px 16px;
+}
+.card .name{font-family:var(--display);font-weight:600;font-size:16px;letter-spacing:-.01em}
+.card .role{
+  font-family:var(--mono);font-size:11px;letter-spacing:.05em;color:var(--accent);
+  display:block;margin:2px 0 8px;
+}
+.card .desc{font-size:16px;line-height:1.5;margin:0;color:#2A3145}
+
+/* two-column definition rows (themes, echoes) */
+.rows{display:grid;gap:0;background:var(--paper);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.row{padding:14px 16px;border-top:1px solid var(--line)}
+.row:first-child{border-top:0}
+.row dt{
+  font-family:var(--display);font-weight:600;font-size:15px;margin:0 0 4px;
+}
+.row dd{margin:0;font-size:16px;line-height:1.5;color:#2A3145}
+.row dd::before{content:"→ ";color:var(--accent);font-family:var(--mono)}
+
+/* ---------- beats (ordered sequence) ---------- */
+.beats{list-style:none;margin:0;padding:0;counter-reset:beat}
+.beats li{
+  counter-increment:beat;position:relative;padding:9px 0 9px 44px;border-top:1px dashed var(--line);
+  font-size:16px;
+}
+.beats li:first-child{border-top:0}
+.beats li::before{
+  content:counter(beat,decimal-leading-zero);
+  position:absolute;left:0;top:10px;
+  font-family:var(--mono);font-size:12px;font-weight:600;color:var(--accent);
+}
+.beats b{font-family:var(--display);font-weight:600}
+
+/* ---------- quotes ---------- */
+.quote{
+  background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--accent);
+  border-radius:0 var(--r) var(--r) 0;padding:14px 16px;margin:0 0 10px;
+}
+.quote q{
+  display:block;font-size:17px;line-height:1.5;font-style:italic;quotes:'“' '”';
+}
+.quote .why{
+  display:block;margin-top:9px;font-family:var(--mono);font-size:12px;line-height:1.5;color:var(--muted);
+}
+.quote .why::before{content:"why ";color:var(--accent);font-weight:600}
+
+/* ---------- misc lists ---------- */
+.bullets{margin:0;padding:0 0 0 20px}
+.bullets li{margin-bottom:9px;font-size:16px}
+.bullets li b{font-family:var(--display);font-weight:600}
+.links{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0;list-style:none}
+.links li{
+  font-family:var(--mono);font-size:12px;color:var(--muted);
+  background:var(--paper);border:1px dashed var(--line);border-radius:6px;padding:6px 10px;
+}
+.tags{font-family:var(--mono);font-size:12px;color:var(--muted);line-height:2;word-spacing:.3em}
+.tags b{color:var(--accent);font-weight:500}
+
+footer{
+  margin-top:44px;padding-top:20px;border-top:1px solid var(--line);
+  font-family:var(--mono);font-size:11px;color:var(--muted);line-height:1.7;
+}
+
+@media (min-width:680px){
+  .cards{grid-template-columns:1fr 1fr}
+  .wrap{padding:0 28px 90px}
+  .tabbar{margin-left:-28px;margin-right:-28px;padding-left:28px;padding-right:28px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="masthead">
+  <p class="kicker">Reading notes · chapters 1–3</p>
+  <h1>Little<br>Brother<em>.</em></h1>
+  <p class="byline">
+    <span>Cory Doctorow</span><span>2008</span><span>pp. 1–20</span><span>status: read</span>
+  </p>
+</header>
+
+<nav class="tabbar" aria-label="Chapters">
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" id="t1" aria-controls="ch1" aria-selected="true">Ch 1 <b>w1n5t0n</b></button>
+    <button class="tab" role="tab" id="t2" aria-controls="ch2" aria-selected="false">Ch 2 <b>The Escape</b></button>
+    <button class="tab" role="tab" id="t3" aria-controls="ch3" aria-selected="false">Ch 3 <b>The DHS</b></button>
+  </div>
+</nav>
+
+<!-- ══════════════════ CHAPTER 1 ══════════════════ -->
+<section class="chapter" id="ch1" role="tabpanel" aria-labelledby="t1">
+  <div class="hero">
+    <div class="numeral" aria-hidden="true">01</div>
+    <p class="eyebrow">Chapter One</p>
+    <h2>w1n5t0n</h2>
+    <p class="summary">Marcus Yallow, a 17-year-old hacker in post-9/11 San Francisco, navigates the surveillance state of his school, evades the vice-principal who suspects him of being “w1n5t0n,” and sneaks out with Darryl to play an alternate reality game — all while the city hums with the tension of a place under siege.</p>
+    <div class="chips">
+      <span class="chip">pp. 1–10</span>
+      <span class="chip hot">rating 9/10</span>
+      <span class="chip">techno-thriller</span>
+      <span class="chip">first person</span>
+    </div>
+  </div>
+
+  <div class="block">
+    <h3 data-tag="01">Key characters</h3>
+    <div class="cards">
+      <div class="card"><div class="name">Marcus Yallow</div><span class="role">protagonist · hacker · senior</span><p class="desc">Clever, defiant, cynical about authority; deeply tech-literate.</p></div>
+      <div class="card"><div class="name">Darryl Glover</div><span class="role">best friend</span><p class="desc">Loyal, cautious, the voice of reason; wants to stay out of trouble.</p></div>
+      <div class="card"><div class="name">Fred Benson</div><span class="role">vice-principal · antagonist</span><p class="desc">Bureaucratic, suspicious, badly out of touch with technology.</p></div>
+      <div class="card"><div class="name">Ms. Galvez</div><span class="role">social studies teacher</span><p class="desc">Sympathetic to Marcus; doesn't hold his hacking against him.</p></div>
+      <div class="card"><div class="name">Vanessa Pak (Van)</div><span class="role">friend · teammate</span><p class="desc">Smart, resourceful; attends a private girls' school. Darryl has a crush on her.</p></div>
+      <div class="card"><div class="name">Jolu (Jose Luis Torrez)</div><span class="role">friend · teammate</span><p class="desc">Catholic school student; unusually skilled at sneaking out.</p></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <h3 data-tag="02">Locations</h3>
+    <dl class="rows">
+      <div class="row"><dt>Cesar Chavez High School</dt><dd>The surveillance state in microcosm: gait-recognition cameras, SchoolBooks with keyloggers, arphid-tracked library books.</dd></div>
+      <div class="row"><dt>The Mission District</dt><dd>Marcus's neighbourhood — the outside world, where freedom still exists.</dd></div>
+      <div class="row"><dt>San Francisco</dt><dd>A city under siege, both literally and metaphorically.</dd></div>
+    </dl>
+  </div>
+
+  <div class="block prose">
+    <h3 data-tag="03">Plot summary</h3>
+    <p>The chapter opens with Marcus describing himself as one of the most surveilled people in the world. He is called to Vice-Principal Benson's office, where Benson accuses him of being w1n5t0n, the hacker subverting the school's security systems. Marcus denies it, stares Benson down by running the lyrics to “The Rattlin' Bog” in his head, and is dismissed.</p>
+    <p>Back in class, he uses his hacked SchoolBook to IM Darryl into skipping school for Harajuku Fun Madness, an alternate reality game. He evades the school's surveillance with rocks in his shoes to fool gait recognition, TOR to anonymise his traffic, and a hidden Firefox to bypass the spyware.</p>
+    <p>He and Darryl escape, meeting Van and Jolu at the cable cars, and set off for the next clue in the Tenderloin. There they run into a rival team led by a pink-haired girl who threatens to upload their photos to a truancy watch site. Before the confrontation can escalate, a massive explosion rocks the city and a mushroom cloud rises over the Bay.</p>
+  </div>
+
+  <div class="block">
+    <h3 data-tag="04">Themes</h3>
+    <dl class="rows">
+      <div class="row"><dt>Surveillance and control</dt><dd>Gait recognition, SchoolBooks, arphids, keyloggers — the school as a scale model of the state.</dd></div>
+      <div class="row"><dt>Resistance and hacking</dt><dd>Marcus's skills as resistance; subverting the system from inside it.</dd></div>
+      <div class="row"><dt>Privacy vs. security</dt><dd>The school's “security” against students' privacy — and who watches the watchers.</dd></div>
+      <div class="row"><dt>Adolescence and authority</dt><dd>The adversarial relationship between teenagers and institutions; the pull toward autonomy.</dd></div>
+      <div class="row"><dt>Technology as power</dt><dd>The same tools control (surveillance) and liberate (hacking, ARGs).</dd></div>
+    </dl>
+  </div>
+
+  <div class="block prose">
+    <h3 data-tag="05">Multi-method analysis</h3>
+
+    <h4>1 · Adler — classification &amp; unity</h4>
+    <p>Young adult techno-thriller; first-person narration; dystopian near-future combining realism with speculative elements. The chapter introduces Marcus and establishes the tension between institutional control and personal freedom — a tension that detonates with the Bay Bridge.</p>
+
+    <h4>Adler — the parts</h4>
+    <ol class="beats">
+      <li><b>The call to the office</b> — Benson summons Marcus; the adversarial relationship is set</li>
+      <li><b>The interrogation</b> — Benson tries to link Marcus to w1n5t0n; Marcus deflects</li>
+      <li><b>The hacker's arsenal</b> — technical exposition on evading surveillance</li>
+      <li><b>The escape</b> — Marcus and Darryl ditch school</li>
+      <li><b>The team assembles</b> — Van and Jolu join; the ARG begins</li>
+      <li><b>The confrontation</b> — the pink-haired rival team and the truancy threat</li>
+      <li><b>The explosion</b> — the Bay Bridge is bombed; the world changes</li>
+    </ol>
+    <p><b>Problems it solves:</b> establishes the near-future surveillance world, introduces Marcus's skills and worldview, sets up games as resistance, and triggers the inciting incident.</p>
+
+    <h4>2 · Craft — prose &amp; voice</h4>
+    <p>Doctorow's voice is immediate and conversational, first person, immersing the reader in Marcus's head. The prose is dense with technical detail, but it arrives through the voice of someone explaining what he loves — gait recognition, TOR and arphids feel like enthusiasm rather than lecture. The opening line, in which he tells us that back when the story starts he went by w1n5t0n, sets the register at once: witty, contemptuous of authority, rooted in hacker culture.</p>
+
+    <h4>3 · Cognitive / theory of mind</h4>
+    <p><b>Dramatic irony:</b> the reader knows Marcus is w1n5t0n and Benson doesn't — a classic cat-and-mouse setup.<br>
+    <b>Dread:</b> the explosion is prepared by the ambient tension; constant surveillance creates a background hum of unease that makes the blast feel inevitable.<br>
+    <b>Identification:</b> we cheer his hacks, which primes us to side with him against the DHS later.</p>
+
+    <h4>4 · Reader response — the gaps</h4>
+    <ul class="bullets">
+      <li><b>The attack</b> is described but never explained. Who, and why? The reader is as lost as Marcus.</li>
+      <li><b>The future</b> is withheld entirely; the chapter ends on a cliffhanger.</li>
+      <li><b>The stakes</b> are ours to set — is Marcus a hero or just a rebellious kid? That call shapes the whole novel.</li>
+    </ul>
+
+    <h4>5 · Systems / worldbuilding</h4>
+    <ul class="bullets">
+      <li><b>Gait-recognition cameras</b> — biometric surveillance, defeated with rocks in the shoes.</li>
+      <li><b>SchoolBooks</b> — laptops carrying keyloggers and spyware; Marcus has hacked his.</li>
+      <li><b>Arphids (RFID)</b> — in library books, tracked by the school.</li>
+      <li><b>TOR</b> — the onion router, used to anonymise traffic.</li>
+    </ul>
+    <p><b>Rules of the world:</b> technology is ubiquitous and intrusive; the state and its proxies use it to control citizens; hackers survive in the margins. <b>Political climate:</b> post-9/11 America, where the war on terror has built a surveillance state and schools rehearse it in miniature.</p>
+  </div>
+
+  <div class="block">
+    <h3 data-tag="06">Key quotes</h3>
+    <blockquote class="quote"><q>back when this story starts, I was going by w1n5t0n</q><span class="why">establishes the hacker identity and the theme of dual selves</span></blockquote>
+    <blockquote class="quote"><q>one of the most surveilled people in the world</q><span class="why">sets the tone — the surveillance state is already here</span></blockquote>
+    <blockquote class="quote"><q>He's a sucking chest wound of a human being.</q><span class="why">Marcus's contempt for Benson, and for authority generally</span></blockquote>
+    <blockquote class="quote"><q>Your attitude isn't going to help you.</q><span class="why">Benson's line — it echoes in the later DHS interrogations</span></blockquote>
+    <blockquote class="quote"><q>Then the world changed forever.</q><span class="why">the inciting incident; everything after this is different</span></blockquote>
+  </div>
+
+  <div class="block">
+    <h3 data-tag="07">Foreshadowing</h3>
+    <dl class="rows">
+      <div class="row"><dt>Benson's interrogation</dt><dd>Prefigures Marcus's interrogation by the DHS.</dd></div>
+      <div class="row"><dt>The ARG</dt><dd>Games and puzzles become a form of resistance.</dd></div>
+      <div class="row"><dt>The pink-haired girl</dt><dd>Returns later as Masha, the DHS infiltrator.</dd></div>
+      <div class="row"><dt>Surveillance tech</dt><dd>Escalates after the bombing; the DHS uses the same tools at national scale.</dd></div>
+    </dl>
+  </div>
+
+  <div class="block prose">
+    <h3 data-tag="08">Personal reflections</h3>
+    <ul class="bullets">
+      <li><b>Why it works:</b> it establishes Marcus's world, skills and worldview <em>before</em> the inciting incident, so when the DHS tries to break him we already care.</li>
+      <li><b>On re-read:</b> the pink-haired girl is introduced casually but becomes crucial. Doctorow plants seeds early.</li>
+      <li><b>Expectations set:</b> a fast, tech-literate thriller with a political edge — not just about hacking, but about what happens when hacking becomes necessary.</li>
+    </ul>
+    <h4>Related notes</h4>
+    <ul class="links"><li>[[Little Brother - MOC]]</li><li>[[Surveillance in Little Brother]]</li><li>[[Hacking and Resistance]]</li><li>[[The ARG as a Tool of Resistance]]</li><li>[[How to Read a Techno-Thriller]]</li></ul>
+    <p class="tags" style="margin-top:18px"><b>#</b>cory-doctorow <b>#</b>little-brother <b>#</b>chapter-notes <b>#</b>young-adult <b>#</b>science-fiction <b>#</b>surveillance <b>#</b>hacking <b>#</b>digital-rights <b>#</b>techno-thriller</p>
+  </div>
+</section>
+
+<!-- ══════════════════ CHAPTER 2 ══════════════════ -->
+<section class="chapter" id="ch2" role="tabpanel" aria-labelledby="t2" hidden style="--accent:#C2410C;--accent-soft:rgba(194,65,12,.10)">
+  <div class="hero">
+    <div class="numeral" aria-hidden="true">02</div>
+    <p class="eyebrow">Chapter Two</p>
+    <h2>The Escape and the Earthquake</h2>
+    <p class="summary">Marcus and Darryl break out of school by microwaving the RFID tag in a library book, take down their nemesis Charles with a botnet, and rendezvous with Van and Jolu in the Mission — only to be caught in the chaos of a massive attack that shakes San Francisco apart.</p>
+    <div class="chips">
+      <span class="chip">pp. 10–15</span>
+      <span class="chip hot">rating 8.5/10</span>
+      <span class="chip">action turn</span>
+      <span class="chip">capture</span>
+    </div>
+  </div>
+
+  <div class="block">
+    <h3 data-tag="01">Key characters</h3>
+    <div class="cards">
+      <div class="card"><div class="name">Marcus Yallow</div><span class="role">protagonist · hacker</span><p class="desc">Quick-thinking and resourceful; enjoys the thrill of outsmarting authority.</p></div>
+      <div class="card"><div class="name">Darryl Glover</div><span class="role">best friend</span><p class="desc">Nervous, risk-averse; his caution rubs against Marcus's impulsiveness.</p></div>
+      <div class="card"><div class="name">Charles Walker</div><span class="role">school bully · snitch</span><p class="desc">Vindictive and physically imposing; enjoys getting others in trouble.</p></div>
+      <div class="card"><div class="name">Vanessa Pak (Van)</div><span class="role">friend · teammate</span><p class="desc">Sharp and confident — the team's strategist. A crush on Marcus is subtly hinted.</p></div>
+      <div class="card"><div class="name">Jolu (Jose Luis Torrez)</div><span class="role">friend · teammate</span><p class="desc">Loyal; always manages to slip out of his strict Catholic school.</p></div>
+      <div class="card"><div class="name">Pink-haired girl (Masha)</div><span class="role">rival ARG player</span><p class="desc">Aggressive and competitive; threatens to expose them to truant watch.</p></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <h3 data-tag="02">Locations</h3>
+    <dl class="rows">
+      <div class="row"><dt>Chavez High School</dt><dd>The escape demands outsmarting gait-recognition cameras and arphid tracking.</dd></div>
+      <div class="row"><dt>Teacher's lounge</dt><dd>Where Marcus microwaves the library book to kill its arphid — risky but necessary.</dd></div>
+      <div class="row"><dt>The Mission / Valencia Street</dt><dd>The outside world; freedom and the ARG.</dd></div>
+      <div class="row"><dt>The Tenderloin</dt><dd>Site of the ARG clue — and of the explosion.</dd></div>
+      <div class="row"><dt>Powell Street BART</dt><dd>The scene of the panic and the stampede.</dd></div>
+    </dl>
+  </div>
+
+  <div class="block prose">
+    <h3 data-tag="03">Plot summary</h3>
+    <p>Halfway through their escape, Darryl remembers he is carrying a library book whose RFID tag would track them. Marcus decides to kill the tag in a microwave. They sneak into the teacher's lounge, do it, and are nearly caught by Charles Walker. Marcus launches a botnet attack on Charles's phone, flooding it with thousands of texts and calls; the disoriented Charles is caught in the hallway by Ms. Galvez, and the reprimand buys Marcus and Darryl their window.</p>
+    <p>They meet Van and Jolu at the cable cars and head for the Tenderloin, where the next Harajuku Fun Madness clue is hidden. A rival team led by a pink-haired girl threatens to upload their photos to a truancy watch site. Before it escalates, a massive explosion rocks the city and a mushroom cloud rises over the Bay.</p>
+    <p>The tremor and the roar trigger panic. The group races for the BART station and hits a stampede, struggling out of the crowd and watching people get crushed. Darryl is stabbed in the chaos. Emergency vehicles pass without stopping. Finally a military-looking Hummer appears — and the DHS agents inside bag their heads and take them away.</p>
+  </div>
+
+  <div class="block">
+    <h3 data-tag="04">Themes</h3>
+    <dl class="rows">
+      <div class="row"><dt>Surveillance and countermeasures</dt><dd>Microwaving the arphid, the botnet attack — skill as evasion.</dd></div>
+      <div class="row"><dt>Friendship and loyalty</dt><dd>Darryl's fear versus his willingness to follow; Van and Jolu's trust.</dd></div>
+      <div class="row"><dt>The fragility of normalcy</dt><dd>The game, the rival team, the stakes of truancy — all trivialised in a second.</dd></div>
+      <div class="row"><dt>The failure of authority</dt><dd>Ambulances don't stop; the DHS captures rather than helps.</dd></div>
+      <div class="row"><dt>Technology as weapon</dt><dd>Botnets distract an enemy — and the state wields far heavier tools.</dd></div>
+      <div class="row"><dt>The illusion of safety</dt><dd>The city was never safe; the attack shatters the pretence.</dd></div>
+    </dl>
+  </div>
+
+  <div class="block prose">
+    <h3 data-tag="05">Multi-method analysis</h3>
+
+    <h4>1 · Adler — classification &amp; unity</h4>
+    <p>Young adult techno-thriller blending action, technology and political commentary. The chapter bridges Marcus's ordinary life of hacks and ARGs with the catastrophe that defines the rest of the novel, showing how fast the game turns deadly serious.</p>
+
+    <h4>Adler — the parts</h4>
+    <ol class="beats">
+      <li><b>The microwave</b> — the library book's arphid is killed</li>
+      <li><b>The escape from Charles</b> — botnet attack, teacher intervention</li>
+      <li><b>The rendezvous</b> — Van and Jolu; the team assembles</li>
+      <li><b>The ARG clue</b> — the rival team and the confrontation</li>
+      <li><b>The explosion</b> — the Bay Bridge bombing; chaos</li>
+      <li><b>The stampede</b> — panic at BART; Darryl is stabbed</li>
+      <li><b>The capture</b> — the DHS takes them</li>
+    </ol>
+
+    <h4>2 · Craft — prose &amp; voice</h4>
+    <p>The first-person narration stays immediate. Technical detail — botnets, RFID — is folded into the action, so the book teaches without lecturing. The line about killing arphids being a dark art sets up Marcus's moral complexity: he'll destroy property to preserve freedom, but not lightly. Later, watching the crushed and admitting there was no way he could have helped them, his helplessness foreshadows the helplessness of DHS custody. The pacing is relentless — tense escape, sudden blast, frantic flight, brutal capture.</p>
+
+    <h4>3 · Cognitive / theory of mind</h4>
+    <p><b>Dramatic irony:</b> the botnet attack lands because we hold context Charles doesn't.<br>
+    <b>Dread:</b> the explosion is shocking but prepared by the city's tense atmosphere; the reader shares Marcus's disorientation.<br>
+    <b>Identification:</b> we feel his panic, his fear for Darryl and his powerlessness — priming outrage at the state's response.</p>
+
+    <h4>4 · Reader response — the gaps</h4>
+    <ul class="bullets">
+      <li><b>The attack:</b> a massive explosion, no who, no why, no aftermath.</li>
+      <li><b>Darryl's fate:</b> stabbed, still alive at capture — survival unknown.</li>
+      <li><b>The DHS's intentions:</b> unexplained, which is its own kind of threat.</li>
+      <li><b>The horror itself</b> is ours to supply; the text gives facts, we fill in the terror.</li>
+    </ul>
+
+    <h4>5 · Systems / worldbuilding</h4>
+    <ul class="bullets">
+      <li><b>Arphids</b> — trackable, and killable in a microwave.</li>
+      <li><b>Botnets</b> — distributed computing turned into a personal weapon.</li>
+      <li><b>The ARG</b> — Harajuku Fun Madness as playful resistance in real space.</li>
+      <li><b>DHS tactics</b> — hoods and zip-ties; the authoritarian method arrives fully formed.</li>
+    </ul>
+    <p><b>Rules of the world:</b> technology cuts both ways, and the state can act with impunity during a crisis. <b>Political climate:</b> the Bay Bridge is San Francisco's 9/11, and the DHS is drawn as an unaccountable paramilitary force that treats citizens as suspects.</p>
+  </div>
+
+  <div class="block">
+    <h3 data-tag="06">Key quotes</h3>
+    <blockquote class="quote"><q>Killing arphids is a dark art.</q><span class="why">his moral code — destruction in service of freedom, not taken lightly</span></blockquote>
+    <blockquote class="quote"><q>there was no way I could have helped them</q><span class="why">the brutal reality of the stampede, and Marcus's helplessness</span></blockquote>
+    <blockquote class="quote"><q>Then the world changed forever.</q><span class="why">the hinge of the novel</span></blockquote>
+    <blockquote class="quote"><q>like an armored Hummer, only it didn't have any military insignia</q><span class="why">the DHS arrives — not military, but armed and paramilitary</span></blockquote>
+  </div>
+
+  <div class="block">
+    <h3 data-tag="07">Foreshadowing</h3>
+    <dl class="rows">
+      <div class="row"><dt>The botnet attack</dt><dd>Marcus will use similar tactics against the DHS.</dd></div>
+      <div class="row"><dt>The microwave trick</dt><dd>A template for the improvised hacks to come.</dd></div>
+      <div class="row"><dt>Charles as informant</dt><dd>The school snitch prefigures the collaborator.</dd></div>
+      <div class="row"><dt>The pink-haired girl</dt><dd>Reappears as Masha, the DHS infiltrator.</dd></div>
+      <div class="row"><dt>The capture</dt><dd>Sets up the imprisonment and interrogation.</dd></div>
+    </dl>
+  </div>
+
+  <div class="block prose">
+    <h3 data-tag="08">Personal reflections</h3>
+    <ul class="bullets">
+      <li><b>Why it works:</b> the school escape is fun and satisfying, then it's overshadowed within pages — the tone shifts from playful rebellion to survival.</li>
+      <li><b>On re-read:</b> the pink-haired girl's casual introduction is deliberate seeding.</li>
+      <li><b>Expectations set:</b> this isn't about hacking school systems; it's about what the state does with technology when it wants to crush dissent.</li>
+    </ul>
+    <h4>Related notes</h4>
+    <ul class="links"><li>[[Little Brother - Ch 1]]</li><li>[[Little Brother - MOC]]</li><li>[[Surveillance in Little Brother]]</li><li>[[Hacking and Resistance]]</li><li>[[The ARG as a Tool of Resistance]]</li><li>[[DHS and Authoritarianism]]</li></ul>
+    <p class="tags" style="margin-top:18px"><b>#</b>cory-doctorow <b>#</b>little-brother <b>#</b>chapter-notes <b>#</b>young-adult <b>#</b>science-fiction <b>#</b>surveillance <b>#</b>hacking <b>#</b>digital-rights <b>#</b>techno-thriller <b>#</b>resistance <b>#</b>dhs</p>
+  </div>
+</section>
+
+<!-- ══════════════════ CHAPTER 3 ══════════════════ -->
+<section class="chapter" id="ch3" role="tabpanel" aria-labelledby="t3" hidden style="--accent:#2F4B7C;--accent-soft:rgba(47,75,124,.10)">
+  <div class="hero">
+    <div class="numeral" aria-hidden="true">03</div>
+    <p class="eyebrow">Chapter Three</p>
+    <h2>The Department of Homeland Security</h2>
+    <p class="summary">Hooded and shackled, Marcus, Van, Jolu and the wounded Darryl are taken to a secret facility on Treasure Island, where Marcus faces his first interrogation — and refuses to unlock his phone, setting the stage for psychological warfare.</p>
+    <div class="chips">
+      <span class="chip">pp. 15–20</span>
+      <span class="chip hot">rating 9/10</span>
+      <span class="chip">genre shift</span>
+      <span class="chip">interrogation</span>
+    </div>
+  </div>
+
+  <div class="block">
+    <h3 data-tag="01">Key characters</h3>
+    <div class="cards">
+      <div class="card"><div class="name">Marcus Yallow</div><span class="role">protagonist · detainee</span><p class="desc">Terrified but defiant; his refusal to cooperate marks him as a target.</p></div>
+      <div class="card"><div class="name">Severe Haircut Woman</div><span class="role">DHS interrogator</span><p class="desc">Cold, manipulative, professional. She treats Marcus as a threat, not a boy.</p></div>
+      <div class="card"><div class="name">Utility Belt Man</div><span class="role">DHS guard</span><p class="desc">Silent, efficient, physically intimidating.</p></div>
+      <div class="card"><div class="name">Vanessa Pak (Van)</div><span class="role">friend · fellow prisoner</span><p class="desc">Frightened but composed; interrogated separately.</p></div>
+      <div class="card"><div class="name">Jolu</div><span class="role">friend · fellow prisoner</span><p class="desc">Scared but resilient.</p></div>
+      <div class="card"><div class="name">Darryl Glover</div><span class="role">friend · fellow prisoner</span><p class="desc">Wounded and unconscious; his fate is left uncertain.</p></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <h3 data-tag="02">Locations</h3>
+    <dl class="rows">
+      <div class="row"><dt>The DHS truck</dt><dd>Mobile command post and interrogation room; the setting of the first questioning.</dd></div>
+      <div class="row"><dt>The ship</dt><dd>Transport — the moment Marcus realises he's being taken off the mainland.</dd></div>
+      <div class="row"><dt>Treasure Island</dt><dd>A former military base turned black site.</dd></div>
+    </dl>
+  </div>
+
+  <div class="block prose">
+    <h3 data-tag="03">Plot summary</h3>
+    <p>Marcus is hooded and shackled in the back of a truck, still reeling from the stampede. He hears Van and Jolu, tries to reassure them, and is silenced with a blow to the head. After a stretch of darkness and disorientation they are moved to a ship and taken to Treasure Island, where Marcus is put in a cell.</p>
+    <p>The next day he is brought to an interrogation room. Severe Haircut Woman and Utility Belt Man demand he unlock his phone and decrypt his files. Remembering the basic rule — never talk without a lawyer — Marcus refuses, demands an attorney, and asks whether he is under arrest. The interrogators work him psychologically, implying he is a terrorist and that cooperation is the only way out.</p>
+    <p>He holds out, and pays for it. Returned to his cell, he is deprived of food, water and basic sanitation. The chapter closes with Marcus alone, humiliated, and starting to doubt his own resolve.</p>
+  </div>
+
+  <div class="block">
+    <h3 data-tag="04">Themes</h3>
+    <dl class="rows">
+      <div class="row"><dt>The power of the state</dt><dd>Detention, interrogation and isolation without any due process.</dd></div>
+      <div class="row"><dt>Psychological warfare</dt><dd>Isolation, threats and implied violence used as instruments.</dd></div>
+      <div class="row"><dt>Resistance and defiance</dt><dd>Marcus asserts his rights under duress.</dd></div>
+      <div class="row"><dt>The illusion of rights</dt><dd>He asks for a lawyer; the DHS simply ignores the formality.</dd></div>
+      <div class="row"><dt>Dehumanisation</dt><dd>Hoods, shackles and denied needs reduce him to animal fear.</dd></div>
+      <div class="row"><dt>The cost of defiance</dt><dd>Refusal worsens his conditions — the novel asks whether resistance is worth its price.</dd></div>
+    </dl>
+  </div>
+
+  <div class="block prose">
+    <h3 data-tag="05">Multi-method analysis</h3>
+
+    <h4>1 · Adler — classification &amp; unity</h4>
+    <p>The genre shifts here from escapist adventure to political thriller. This is Marcus's first direct encounter with state power; his defiance sets up his radicalisation and installs the DHS as the novel's antagonist.</p>
+
+    <h4>Adler — the parts</h4>
+    <ol class="beats">
+      <li><b>The truck</b> — hooded and shackled; he tries to reach his friends</li>
+      <li><b>The ship</b> — the realisation he's being taken offshore</li>
+      <li><b>The cell</b> — isolation, hunger, the start of breakdown</li>
+      <li><b>The interrogation</b> — he refuses the phone; the pressure comes</li>
+      <li><b>The punishment</b> — food and water withheld; resolve cracks</li>
+    </ol>
+
+    <h4>2 · Craft — prose &amp; voice</h4>
+    <p>The narration turns visceral. Fear, disorientation and humiliation arrive in real time, and the prose strips down to match Marcus's mental state — he has never looked down the barrel of a gun before, and he tells us everything you've heard about it is true. When he decides right then that these people would pay a price, the vow lands as the seed of everything he does later. And when he tastes vomit burning up his throat, the physicality reminds us he is not a superhero but a terrified teenager.</p>
+
+    <h4>3 · Cognitive / theory of mind</h4>
+    <p><b>Dramatic irony:</b> we know he is not a terrorist and the DHS does not — the gap produces outrage rather than suspense.<br>
+    <b>Dread:</b> the interrogation is claustrophobic; consequence feels certain.<br>
+    <b>Identification:</b> his fear, anger and growing powerlessness prime us to want his resistance.</p>
+
+    <h4>4 · Reader response — the gaps</h4>
+    <ul class="bullets">
+      <li><b>Darryl:</b> wounded, and then nothing.</li>
+      <li><b>The facility:</b> Treasure Island is named but the scope of what happens there is withheld.</li>
+      <li><b>Motive:</b> is the DHS following orders or acting from malice? The reader has to decide.</li>
+      <li><b>The suffering</b> is ours to imagine — isolation, interrogation, deprivation.</li>
+    </ul>
+
+    <h4>5 · Systems / worldbuilding</h4>
+    <ul class="bullets">
+      <li><b>Remote shackles</b> — guards unlock chains wirelessly.</li>
+      <li><b>Encrypted phones</b> — the password becomes the battleground.</li>
+      <li><b>DHS method</b> — hoods, shackles, isolation, manipulation.</li>
+    </ul>
+    <p><b>Rules of the world:</b> indefinite detention without due process; “enemy combatant” status overriding constitutional rights; technology repurposed for control. <b>Political climate:</b> post-9/11 America, with the novel arguing directly against the erosion of civil liberties in the name of security.</p>
+  </div>
+
+  <div class="block">
+    <h3 data-tag="06">Key quotes</h3>
+    <blockquote class="quote"><q>I'd never looked down the barrel of a gun before</q><span class="why">the primal terror of the capture, stated plainly</span></blockquote>
+    <blockquote class="quote"><q>I decided right then that they would pay a price</q><span class="why">the vow of resistance — the seed of everything after</span></blockquote>
+    <blockquote class="quote"><q>Honest people don't have anything to hide.</q><span class="why">the classic authoritarian argument the whole novel exists to refute</span></blockquote>
+    <blockquote class="quote"><q>What's your 'tude doing today?</q><span class="why">the mocking register of the interrogator; dehumanisation by tone</span></blockquote>
+    <blockquote class="quote"><q>I would rather die than go back to my cell.</q><span class="why">the breaking point — the moment he surrenders the password</span></blockquote>
+  </div>
+
+  <div class="block">
+    <h3 data-tag="07">Foreshadowing</h3>
+    <dl class="rows">
+      <div class="row"><dt>Marcus's defiance</dt><dd>Leads to his radicalisation and the founding of the Xnet.</dd></div>
+      <div class="row"><dt>The DHS's methods</dt><dd>Will be exposed and challenged later in the novel.</dd></div>
+      <div class="row"><dt>The threat of disappearance</dt><dd>His fear of being sent to Syria prefigures Darryl's fate.</dd></div>
+      <div class="row"><dt>The phone password</dt><dd>He gives it up eventually, and the moment of weakness haunts him.</dd></div>
+    </dl>
+  </div>
+
+  <div class="block prose">
+    <h3 data-tag="08">Personal reflections</h3>
+    <ul class="bullets">
+      <li><b>Why it works:</b> it makes state power visceral. His defiance is admirable, but the chapter refuses to glorify it — it shows the cost.</li>
+      <li><b>On re-read:</b> the interrogator's “nothing to hide” line is the core of the political argument, and Marcus's rejection of it is the novel's thesis.</li>
+      <li><b>Expectations set:</b> this is a book about civil liberties. Captivity is the crucible that forges the resistance.</li>
+    </ul>
+    <h4>Related notes</h4>
+    <ul class="links"><li>[[Little Brother - Ch 1]]</li><li>[[Little Brother - Ch 2]]</li><li>[[Little Brother - MOC]]</li><li>[[Surveillance in Little Brother]]</li><li>[[Hacking and Resistance]]</li><li>[[DHS and Authoritarianism]]</li><li>[[The Ethics of Resistance]]</li></ul>
+    <p class="tags" style="margin-top:18px"><b>#</b>cory-doctorow <b>#</b>little-brother <b>#</b>chapter-notes <b>#</b>young-adult <b>#</b>science-fiction <b>#</b>surveillance <b>#</b>hacking <b>#</b>digital-rights <b>#</b>techno-thriller <b>#</b>resistance <b>#</b>dhs <b>#</b>interrogation</p>
+  </div>
+</section>
+
+<footer>
+  Chapter notes · <em>Little Brother</em>, Cory Doctorow (2008) · methods: Adler, craft, cognitive, reader-response, systems<br>
+  Quoted passages trimmed to short excerpts.
+</footer>
+
+</div>
+
+<script>
+(function(){
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.tab'));
+  function select(tab){
+    tabs.forEach(function(t){
+      var panel = document.getElementById(t.getAttribute('aria-controls'));
+      var on = (t === tab);
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+      panel.hidden = !on;
+    });
+    window.scrollTo({top:0, behavior:'auto'});
+  }
+  tabs.forEach(function(t){
+    t.addEventListener('click', function(){ select(t); });
+    t.addEventListener('keydown', function(e){
+      var i = tabs.indexOf(t);
+      if(e.key === 'ArrowRight'){ tabs[(i+1)%tabs.length].focus(); tabs[(i+1)%tabs.length].click(); }
+      if(e.key === 'ArrowLeft'){ tabs[(i-1+tabs.length)%tabs.length].focus(); tabs[(i-1+tabs.length)%tabs.length].click(); }
+    });
+  });
+})();
+</script>
+</body>
+</html>
