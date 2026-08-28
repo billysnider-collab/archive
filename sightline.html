@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sightline</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+:root{
+  --ink:#0D1826;
+  --ink-2:#16273A;
+  --slate:#16273A;
+  --line:rgba(196,214,236,.16);
+  --fg:#E8EEF6;
+  --fg-dim:#8DA2BC;
+  --paper:#F1EBDD;
+  --paper-2:#E4DCC8;
+  --paper-ink:#181613;
+  --air-red:#C8102E;
+  --air-blue:#2B5EA7;
+  --serif:'Instrument Serif','Iowan Old Style',Palatino,Georgia,serif;
+  --mono:'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,monospace;
+  --sans:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --paper-serif:'Iowan Old Style',Palatino,Georgia,'Times New Roman',serif;
+  --rail-h:104px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  background:var(--ink);
+  color:var(--fg);
+  font-family:var(--sans);
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(120% 70% at 50% -10%, rgba(43,94,167,.22), transparent 60%);
+}
+#app{position:relative;z-index:1;max-width:520px;margin:0 auto;padding-bottom:96px}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0;text-align:left}
+:focus-visible{outline:2px solid var(--air-blue);outline-offset:2px;border-radius:2px}
+
+/* ---------- masthead + country rail (persistent) ---------- */
+#top{position:sticky;top:0;z-index:40;background:rgba(13,24,38,.86);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.masthead{display:flex;align-items:center;justify-content:space-between;padding:12px 16px 8px}
+.wordmark{font-family:var(--mono);font-size:13px;font-weight:600;letter-spacing:.34em;text-transform:uppercase}
+.wordmark i{font-style:normal;color:var(--air-red)}
+.mast-right{display:flex;align-items:center;gap:10px}
+.clock{font-family:var(--mono);font-size:11px;color:var(--fg-dim);letter-spacing:.08em}
+.brief-btn{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+  border:1px solid var(--line);padding:5px 9px;border-radius:2px;color:var(--fg-dim)}
+.brief-btn:hover{color:var(--fg);border-color:var(--fg-dim)}
+.airline{height:3px;background:
+  repeating-linear-gradient(115deg,var(--air-red) 0 9px,transparent 9px 18px),
+  repeating-linear-gradient(115deg,transparent 0 9px,var(--air-blue) 9px 18px);
+  opacity:.75}
+
+.live{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:10px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--air-red)}
+.live .d{width:6px;height:6px;border-radius:50%;background:var(--air-red);animation:blip 1.8s ease-in-out infinite}
+
+.rail{display:flex;gap:6px;overflow-x:auto;padding:9px 16px 10px;scrollbar-width:none}
+.rail::-webkit-scrollbar{display:none}
+.chip{flex:0 0 auto;display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:2px;
+  border:1px solid var(--line);font-family:var(--mono);font-size:11px;letter-spacing:.1em;
+  color:var(--fg-dim);transition:.16s ease;white-space:nowrap}
+.chip:hover{color:var(--fg);border-color:var(--fg-dim)}
+.chip .code{font-weight:600}
+.chip .nm{display:none;text-transform:uppercase;font-size:10px;letter-spacing:.12em}
+.chip[aria-current="true"]{background:var(--paper);color:var(--paper-ink);border-color:var(--paper)}
+.chip[aria-current="true"] .nm{display:inline}
+.chip .bump{width:5px;height:5px;border-radius:50%;background:var(--air-red);opacity:0;transition:.2s}
+.chip[data-unread="true"] .bump{opacity:1;animation:blip 2s ease-in-out infinite}
+.chip[data-unread="true"]{color:var(--fg);border-color:rgba(200,16,46,.5)}
+
+/* ---------- desk ---------- */
+main{padding:0 16px}
+.view{animation:rise .34s cubic-bezier(.2,.7,.3,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+.deskhead{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:22px 0 18px}
+.deskhead h1{font-family:var(--serif);font-weight:400;font-size:44px;line-height:.94;margin:0 0 8px;letter-spacing:-.01em}
+.deskmeta{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--fg-dim)}
+.deskmeta span{color:var(--fg)}
+
+.pulse{flex:0 0 auto;text-align:center;width:78px}
+.pulse svg{display:block;margin:0 auto}
+.pulse .ringtxt{font-family:var(--mono);font-size:12px;font-weight:600;fill:var(--fg)}
+.pulse .lab{font-family:var(--mono);font-size:8.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--fg-dim);
+  margin-top:5px;line-height:1.35}
+.ring-track{stroke:rgba(196,214,236,.14)}
+.ring-val{stroke:var(--air-blue);stroke-linecap:butt;transform:rotate(-90deg);transform-origin:50% 50%;
+  transition:stroke-dashoffset .7s cubic-bezier(.2,.7,.3,1)}
+
+/* ---------- water cooler (signature) ---------- */
+.cooler{display:block;width:100%;padding:9px;border-radius:3px;margin-bottom:30px;
+  background:
+    repeating-linear-gradient(45deg,var(--air-red) 0 11px,transparent 11px 22px),
+    repeating-linear-gradient(45deg,transparent 0 11px,var(--air-blue) 11px 22px),
+    var(--paper-2);
+  box-shadow:0 18px 40px -18px rgba(0,0,0,.75)}
+.cooler-in{background:var(--paper);color:var(--paper-ink);padding:20px 18px 16px;position:relative;overflow:hidden}
+.cooler-in::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(80% 60% at 100% 0%,rgba(0,0,0,.05),transparent 60%)}
+.cooler-kicker{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10px;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--air-red);font-weight:600;margin-bottom:14px}
+.cooler-kicker .dot{width:6px;height:6px;border-radius:50%;background:var(--air-red);animation:blip 2.4s ease-in-out infinite}
+@keyframes blip{0%,100%{opacity:1}50%{opacity:.25}}
+.cooler q{quotes:none;display:block;font-family:var(--serif);font-size:31px;line-height:1.1;letter-spacing:-.015em}
+.cooler .orig{font-family:var(--paper-serif);font-size:14px;line-height:1.45;color:#6C6459;margin-top:14px;font-style:italic}
+.cooler-foot{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-top:18px;
+  padding-top:12px;border-top:1px solid rgba(24,22,19,.18)}
+.cooler-src{font-family:var(--mono);font-size:10px;letter-spacing:.09em;color:#6C6459;line-height:1.6}
+.cooler-src b{color:var(--paper-ink);font-weight:600}
+.stamp{flex:0 0 auto;transform:rotate(-6deg);border:1.5px dashed var(--air-blue);color:var(--air-blue);
+  font-family:var(--mono);font-size:9.5px;font-weight:600;letter-spacing:.12em;padding:5px 7px;text-align:center;line-height:1.4}
+
+/* ---------- story list ---------- */
+.sec-label{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--fg-dim);
+  padding-bottom:10px;border-bottom:1px solid var(--line)}
+.row{display:block;width:100%;padding:16px 0;border-bottom:1px solid var(--line);transition:.15s}
+.row:hover{padding-left:5px}
+.row .kick{font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--air-blue);font-weight:600}
+.row h3{font-family:var(--serif);font-weight:400;font-size:23px;line-height:1.14;margin:7px 0 0;letter-spacing:-.005em}
+.row .who{margin-top:9px;font-family:var(--mono);font-size:10px;color:var(--fg-dim);letter-spacing:.04em}
+.row .who em{font-style:normal;color:#B9C9DC}
+.row.fresh{animation:landed .9s cubic-bezier(.2,.7,.3,1) both}
+@keyframes landed{
+  0%{opacity:0;transform:translateY(-14px);background:rgba(200,16,46,.16)}
+  60%{opacity:1;transform:none;background:rgba(200,16,46,.10)}
+  100%{background:transparent}}
+.row .kick .new{color:var(--air-red)}
+.mentions{font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:#6C6459}
+.mentions b{color:var(--air-red);font-weight:600;font-variant-numeric:tabular-nums}
+
+/* ---------- story view ---------- */
+.back{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-dim);padding:20px 0 4px}
+.back:hover{color:var(--fg)}
+.story-kick{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--air-blue);
+  font-weight:600;margin-top:16px}
+.story h2{font-family:var(--serif);font-weight:400;font-size:36px;line-height:1.04;margin:10px 0 0;letter-spacing:-.015em}
+.story .dek{font-size:16px;line-height:1.5;color:#B9C9DC;margin-top:14px}
+.story .byline{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--fg-dim);margin-top:16px;
+  padding:12px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.story p.body{font-size:16.5px;line-height:1.62;color:#D6E0EC;margin:18px 0}
+.players{margin:28px 0 40px;padding-top:16px;border-top:1px solid var(--line)}
+.players .lab{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--fg-dim)}
+.players .set{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.pchip{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:999px;padding:5px 12px 5px 5px;transition:.15s}
+.pchip:hover{border-color:var(--air-blue);background:rgba(43,94,167,.12)}
+.pchip .av{width:24px;height:24px;border-radius:50%;background:var(--air-blue);color:#fff;font-family:var(--mono);
+  font-size:9.5px;font-weight:600;display:grid;place-items:center;letter-spacing:.02em}
+.pchip .pn{font-size:13.5px}
+.pchip .pr{font-family:var(--mono);font-size:9.5px;color:var(--fg-dim);letter-spacing:.05em}
+.filed{font-family:var(--mono);font-size:10px;color:var(--fg-dim);letter-spacing:.06em;margin-top:8px}
+
+/* ---------- rolodex ---------- */
+.rolobar{position:fixed;left:0;right:0;bottom:0;z-index:50;max-width:520px;margin:0 auto;
+  background:var(--ink-2);border-top:1px solid var(--line);padding:14px 16px calc(14px + env(safe-area-inset-bottom));
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  box-shadow:0 -14px 34px -20px rgba(0,0,0,.9)}
+.rolobar .l{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase}
+.rolobar .c{color:var(--fg-dim)}
+.rolobar .caret{font-family:var(--mono);font-size:12px;color:var(--fg-dim)}
+.rolobar[data-empty="true"] .l{color:var(--fg-dim)}
+
+.scrim{position:fixed;inset:0;z-index:60;background:rgba(6,12,20,.66);backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:.24s}
+.scrim.on{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:70;max-width:520px;margin:0 auto;background:var(--ink-2);
+  border-top:1px solid rgba(196,214,236,.28);border-radius:14px 14px 0 0;
+  transform:translateY(102%);transition:transform .3s cubic-bezier(.2,.7,.3,1);
+  max-height:82vh;display:flex;flex-direction:column}
+.sheet.on{transform:none}
+.grab{width:38px;height:4px;border-radius:2px;background:rgba(196,214,236,.3);margin:10px auto 0}
+.sheet-head{padding:14px 18px 12px;border-bottom:1px solid var(--line);display:flex;align-items:baseline;justify-content:space-between}
+.sheet-head h4{margin:0;font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase}
+.sheet-head .sub{font-family:var(--mono);font-size:10px;color:var(--fg-dim);letter-spacing:.06em}
+.sheet-body{overflow-y:auto;padding:6px 18px calc(26px + env(safe-area-inset-bottom))}
+.empty{padding:34px 0 40px;text-align:center;color:var(--fg-dim);font-size:14px;line-height:1.6}
+.empty b{display:block;color:var(--fg);font-family:var(--serif);font-size:22px;font-weight:400;margin-bottom:8px}
+.person{border-bottom:1px solid var(--line);padding:14px 0}
+.person-top{display:flex;align-items:center;gap:12px;width:100%}
+.person .av{width:34px;height:34px;border-radius:50%;flex:0 0 auto;display:grid;place-items:center;
+  font-family:var(--mono);font-size:11px;font-weight:600;color:#fff}
+.person .nm{font-family:var(--serif);font-size:20px;line-height:1.1}
+.person .rl{font-family:var(--mono);font-size:10px;color:var(--fg-dim);letter-spacing:.06em;margin-top:3px}
+.person .n{margin-left:auto;font-family:var(--mono);font-size:10px;color:var(--fg-dim);letter-spacing:.1em;text-align:right}
+.person-stories{margin:10px 0 0 46px;display:none}
+.person.open .person-stories{display:block}
+.ps{display:block;width:100%;padding:9px 0 9px 12px;border-left:1px solid var(--line);font-size:14px;line-height:1.35}
+.ps:hover{border-left-color:var(--air-blue)}
+.ps .ct{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-dim);display:block;margin-bottom:3px}
+
+/* ---------- briefing sheet ---------- */
+.briefing{position:fixed;inset:0;z-index:80;background:var(--paper);color:var(--paper-ink);overflow-y:auto;
+  animation:slideup .38s cubic-bezier(.2,.7,.3,1) both}
+@keyframes slideup{from{transform:translateY(16px);opacity:0}to{transform:none;opacity:1}}
+.sheetwrap{max-width:520px;margin:0 auto;padding:0 22px calc(40px + env(safe-area-inset-bottom));
+  background:linear-gradient(var(--paper),var(--paper))}
+.bclose{position:sticky;top:0;display:flex;justify-content:space-between;align-items:center;
+  padding:14px 0 10px;background:var(--paper);z-index:2;font-family:var(--mono);font-size:10px;
+  letter-spacing:.14em;text-transform:uppercase;color:#6C6459}
+.bclose button{color:#6C6459}
+.bclose button:hover{color:var(--paper-ink)}
+.bmast{text-align:center;padding:14px 0 0}
+.bmast .pre{font-family:var(--mono);font-size:9.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--air-red)}
+.bmast h2{font-family:var(--paper-serif);font-weight:400;font-size:40px;line-height:1;margin:12px 0 0;letter-spacing:.02em}
+.bmast .date{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6C6459;margin-top:12px}
+.rule2{border-top:2px solid var(--paper-ink);border-bottom:1px solid var(--paper-ink);height:4px;margin:14px 0 0}
+.bsec{padding:22px 0 4px}
+.bsec-h{display:flex;align-items:baseline;justify-content:space-between;gap:10px;
+  border-bottom:1px solid rgba(24,22,19,.3);padding-bottom:6px}
+.bsec-h .t{font-family:var(--mono);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;font-weight:600}
+.bsec-h .c{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;color:#6C6459}
+.bitem{display:flex;gap:14px;width:100%;padding:16px 0;border-bottom:1px dotted rgba(24,22,19,.28);text-align:left}
+.bitem .num{font-family:var(--paper-serif);font-size:24px;line-height:1;color:var(--air-red);flex:0 0 20px}
+.bitem .mk{flex:0 0 20px;font-family:var(--mono);font-size:14px;color:var(--air-blue);line-height:1.2}
+.bitem h3{font-family:var(--paper-serif);font-weight:600;font-size:19px;line-height:1.22;margin:0}
+.bitem p{margin:6px 0 0;font-family:var(--paper-serif);font-size:14.5px;line-height:1.45;color:#4A443C}
+.bitem .src{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;color:#6C6459;margin-top:8px;text-transform:uppercase}
+.bfoot{margin-top:26px;padding-top:14px;border-top:2px solid var(--paper-ink);
+  font-family:var(--mono);font-size:9.5px;line-height:1.8;letter-spacing:.06em;color:#6C6459;text-align:center}
+
+@media (min-width:560px){
+  .deskhead h1{font-size:54px}
+  .cooler q{font-size:36px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms !important;transition-duration:.001ms !important}
+}
+</style>
+</head>
+<body>
+
+<div id="app">
+  <div id="top">
+    <div class="masthead">
+      <div class="wordmark">Sight<i>l</i>ine</div>
+      <div class="mast-right">
+        <div class="live" title="Simulated wire — no live feeds connected"><span class="d"></span>Live</div>
+        <div class="clock" id="clock">07:12</div>
+        <button class="brief-btn" id="openBriefing">7 AM sheet</button>
+      </div>
+    </div>
+    <div class="airline"></div>
+    <nav class="rail" id="rail" aria-label="Country desks"></nav>
+  </div>
+  <main id="main"></main>
+</div>
+
+<button class="rolobar" id="rolobar" aria-expanded="false">
+  <span class="l">Rolodex <span class="c" id="roloCount">· nobody yet</span></span>
+  <span class="caret">▲</span>
+</button>
+
+<div class="scrim" id="scrim"></div>
+<section class="sheet" id="sheet" aria-label="Rolodex" aria-hidden="true">
+  <div class="grab"></div>
+  <div class="sheet-head">
+    <h4>Rolodex</h4>
+    <span class="sub" id="sheetSub">this session only</span>
+  </div>
+  <div class="sheet-body" id="sheetBody"></div>
+</section>
+
+<div id="briefingMount"></div>
+
+<script>
+/* =========================================================
+   SAMPLE DATA — invented outlets, invented people, invented
+   events. Nothing here is a real news report.
+   ========================================================= */
+
+const COUNTRIES = [
+  {code:"JP", name:"Japan",       city:"Tokyo",       pulse:34, stories:21},
+  {code:"BR", name:"Brazil",      city:"São Paulo",   pulse:27, stories:18},
+  {code:"IN", name:"India",       city:"Delhi",       pulse:31, stories:24},
+  {code:"NG", name:"Nigeria",     city:"Lagos",       pulse:22, stories:14},
+  {code:"DE", name:"Germany",     city:"Berlin",      pulse:29, stories:19},
+  {code:"MX", name:"Mexico",      city:"Mexico City", pulse:24, stories:16},
+  {code:"KR", name:"South Korea", city:"Seoul",       pulse:26, stories:17},
+  {code:"ID", name:"Indonesia",   city:"Jakarta",     pulse:19, stories:12}
+];
+
+const COOLER = {
+  JP:{id:"jp-cool", quote:"The vending machine on the corner has started apologising to customers.",
+      orig:"角の自販機が客に謝り始めた。", lang:"Japanese", outlet:"Kantō Shimbun", city:"Tokyo", tag:"JP → EN",
+      dek:"A software update gave 40,000 machines a politeness routine. Nobody asked for it, and now nobody wants it removed.",
+      body:["The update shipped quietly in the spring. When a machine is out of a drink, it now bows on screen and offers a substitute. Sales of the substitute are up 14 percent, which the operator says was not the point.",
+            "Three prefectures have asked whether a machine that apologises is making a promise. The consumer agency says it is thinking about it."],
+      people:[["kaori-shimada","Kaori Shimada","consumer agency counsel"],["takumi-oe","Takumi Ōe","vending operator, Kantō region"]]},
+  BR:{id:"br-cool", quote:"The forest is not scenery. It is a neighbour, and it is moving out.",
+      orig:"A floresta não é paisagem. É vizinha, e está se mudando.", lang:"Portuguese", outlet:"Folha do Norte", city:"Belém", tag:"PT → EN",
+      dek:"A mayor's line at a drought hearing has been on every front page in the north for four days.",
+      body:["The hearing was meant to be procedural: eleven municipalities asking the state to underwrite a shared water reserve. It ran six hours.",
+            "The phrase has since been printed on bus shelters in Belém by people who did not ask the city first."],
+      people:[["marina-quintela","Marina Quintela","hydrologist, Pará"],["ubiratan-melo","Ubiratan Melo","mayor, Curuçá"]]},
+  IN:{id:"in-cool", quote:"Delhi has learned to read the sky the way it reads a bill.",
+      orig:"दिल्ली अब आसमान को बिल की तरह पढ़ती है।", lang:"Hindi", outlet:"Rajpath Dainik", city:"Delhi", tag:"HI → EN",
+      dek:"An op-ed about air-quality dashboards became the week's most forwarded page, mostly by people arguing with it.",
+      body:["The writer's claim is that daily numbers have turned weather into an invoice — something to be checked, resented, and paid.",
+            "School principals have quoted it in letters home. Two dashboard operators have written rebuttals."],
+      people:[["anaya-bhatt","Anaya Bhatt","columnist"],["rohit-sekhri","Rohit Sekhri","air-quality network engineer"]]},
+  NG:{id:"ng-cool", quote:"Lagos no dey sleep. E just dey take turns.",
+      orig:"Lagos no dey sleep. E just dey take turns.", lang:"Nigerian Pidgin", outlet:"Lagos Ledger", city:"Lagos", tag:"PCM → EN",
+      dek:"A line from a radio caller about rolling power schedules has outlived the phone-in that produced it.",
+      body:["The caller was describing a neighbourhood arrangement: four streets, one transformer, an agreed rota nobody wrote down.",
+            "The utility says the rota is not official. Residents say it has held for nine months."],
+      people:[["bimpe-adeyanju","Bimpe Adeyanju","radio host"],["felix-onuoha","Felix Onuoha","distribution engineer"]]},
+  DE:{id:"de-cool", quote:"We set out to build a bike lane and hit a Roman road instead.",
+      orig:"Wir wollten einen Radweg bauen und stießen auf eine Römerstraße.", lang:"German", outlet:"Rheinischer Anzeiger", city:"Cologne", tag:"DE → EN",
+      dek:"A cycling route in Cologne is eleven months late and has become a minor national joke.",
+      body:["Contractors reached compacted stone 1.4 metres down in March. Archaeologists reached the site in April and have not left.",
+            "The city now runs guided walks along the trench on Saturdays. They are booked out until autumn."],
+      people:[["hanna-vogt","Hanna Vogt","city archaeologist"],["martin-kessler","Martin Keßler","transport office, Cologne"]]},
+  MX:{id:"mx-cool", quote:"The city sank four centimetres this year and nobody looked up.",
+      orig:"La ciudad se hundió cuatro centímetros este año y nadie levantó la vista.", lang:"Spanish", outlet:"El Faro Central", city:"Mexico City", tag:"ES → EN",
+      dek:"A subsidence map published as a routine annex is now the most-shared document of the week.",
+      body:["The annex plots sinking rates street by street. Readers found their own addresses on it within hours.",
+            "The water authority says the map changes nothing operationally. Three borough offices disagree in writing."],
+      people:[["lucia-ferrer","Lucía Ferrer","geodesy researcher"],["arturo-nieto","Arturo Nieto","borough water director"]]},
+  KR:{id:"kr-cool", quote:"Our robots must now yield to pedestrians. The pedestrians have not been told.",
+      orig:"우리 로봇은 이제 보행자에게 양보해야 한다. 보행자들은 아직 모른다.", lang:"Korean", outlet:"Hangang Ilbo", city:"Seoul", tag:"KO → EN",
+      dek:"A delivery-robot firm's compliance memo leaked, and the sentence became a meme by lunchtime.",
+      body:["New rules require sidewalk robots to stop for anyone within two metres. In practice, the robots stop constantly.",
+            "One district has painted lanes to see whether people will use them. Early answer: sometimes."],
+      people:[["jisoo-han","Jisoo Han","robotics compliance lead"],["minho-baek","Minho Baek","district transport planner"]]},
+  ID:{id:"id-cool", quote:"The new capital has a traffic jam. It has four thousand residents.",
+      orig:"Ibu kota baru sudah macet. Penduduknya empat ribu.", lang:"Indonesian", outlet:"Warta Nusantara", city:"Jakarta", tag:"ID → EN",
+      dek:"A single photograph of a queue outside the new administrative district set off a week of argument about planning.",
+      body:["The queue was construction traffic on the one finished arterial. Planners say this is temporary by definition.",
+            "Commuters in Jakarta have been unsympathetic, at volume."],
+      people:[["dewi-lasmana","Dewi Lasmana","urban planner"],["bagus-priyono","Bagus Priyono","site logistics manager"]]}
+};
+
+const STORIES = [
+  // ---- JAPAN
+  {id:"jp-1",c:"JP",kick:"Transport",hl:"Overnight sleeper service returns between Tokyo and Osaka, with a catch",
+   dek:"The operator is selling berths, not seats — and refusing to run the train faster than nine hours.",
+   src:"Kantō Shimbun",time:"06:40",
+   body:["The route was retired in 2008 as bullet trains made it pointless. The new service argues the point was never speed.",
+         "Berths went on sale Tuesday for a November start. The first three weekends sold out in under an hour, which the operator says it did not model for."],
+   people:[["nozomi-arakawa","Nozomi Arakawa","rail analyst"],["kenji-morisawa","Kenji Morisawa","operations director"]]},
+  {id:"jp-2",c:"JP",kick:"Labour",hl:"Convenience chains agree to end 24-hour trading in three prefectures",
+   dek:"Franchisees pushed for six years. The agreement covers 2,800 stores and starts in January.",
+   src:"Nihon Keizai Tsūshin",time:"05:55",
+   body:["Owners argued that overnight staffing costs more than overnight trade returns, particularly in towns losing population.",
+         "The chains kept the change voluntary and store-by-store. Analysts expect most eligible owners to take it."],
+   people:[["kenji-morisawa","Kenji Morisawa","operations director"],["yuka-tanabe","Yuka Tanabe","franchise association lawyer"]]},
+  {id:"jp-3",c:"JP",kick:"Agriculture",hl:"Heat cuts rice yields for a third summer, and the reserve is being opened early",
+   dek:"Prices at wholesale have moved enough that the ministry stopped waiting for the autumn figures.",
+   src:"Kantō Shimbun",time:"05:10",
+   body:["Two consecutive hot summers were treated as weather. A third is being treated as a trend line, and the ministry's language changed accordingly this week.",
+         "Growers in the north are trialling heat-tolerant strains that ripen later. The trade-off is a harvest that collides with typhoon season."],
+   people:[["hiroshi-ueda","Hiroshi Ueda","agricultural economist"],["nozomi-arakawa","Nozomi Arakawa","rail analyst"]]},
+  {id:"jp-4",c:"JP",kick:"Courts",hl:"Osaka court sides with independent phone repairers over parts locking",
+   dek:"A narrow ruling, but the first in the country to treat software pairing as a repair restriction.",
+   src:"Osaka Hōritsu Jihō",time:"04:30",
+   body:["The case turned on whether a replaced screen that triggers a warning is a defective repair or a working one.",
+         "The court said working. The manufacturer has 14 days to appeal and is widely expected to."],
+   people:[["yuka-tanabe","Yuka Tanabe","franchise association lawyer"],["kaori-shimada","Kaori Shimada","consumer agency counsel"]]},
+
+  // ---- BRAZIL
+  {id:"br-1",c:"BR",kick:"Climate",hl:"Eleven Amazon municipalities pool drought risk into a shared reserve fund",
+   dek:"Each town pays in by population; any town below a rainfall threshold for 60 days can draw down.",
+   src:"Folha do Norte",time:"06:20",
+   body:["The design borrows from crop insurance but pays for water trucking, well deepening and school closures rather than lost income.",
+         "The state has agreed to match contributions for two years. Nobody has committed beyond that, which is the fund's main open question."],
+   people:[["marina-quintela","Marina Quintela","hydrologist, Pará"],["ubiratan-melo","Ubiratan Melo","mayor, Curuçá"]]},
+  {id:"br-2",c:"BR",kick:"Cities",hl:"São Paulo's bus fleet passes half electric, four years behind schedule",
+   dek:"The delay was depots, not buses — chargers need substation capacity the city did not have.",
+   src:"Diário Paulista",time:"05:45",
+   body:["The city bought vehicles faster than it could energise the yards that store them. Roughly 300 buses sat unused last year.",
+         "Two new substations came online in June. Operators say the rest of the conversion is now a straightforward procurement problem."],
+   people:[["diogo-renteria","Diogo Rentería","transit operations chief"],["bia-sotero","Bia Sotero","energy regulator analyst"]]},
+  {id:"br-3",c:"BR",kick:"Trade",hl:"Santos port congestion eases as coffee shippers move to night loading",
+   dek:"An informal schedule change did what two years of terminal investment had not.",
+   src:"Correio do Litoral",time:"04:55",
+   body:["Exporters agreed among themselves to stagger arrivals. Waiting times fell by a third within six weeks.",
+         "The port authority, which was not consulted, has since written the arrangement into its own guidance."],
+   people:[["bia-sotero","Bia Sotero","energy regulator analyst"],["celia-bomfim","Célia Bomfim","export cooperative director"]]},
+  {id:"br-4",c:"BR",kick:"Culture",hl:"Samba school archives go online after a decade of scanning",
+   dek:"Costume drawings, float blueprints and rehearsal tapes from 1968 onward, free to browse.",
+   src:"Folha do Norte",time:"04:05",
+   body:["Volunteers digitised 210,000 items, much of it stored in homes rather than institutions.",
+         "The schools kept ownership and licensed access. Researchers wanted a looser licence and did not get it."],
+   people:[["celia-bomfim","Célia Bomfim","export cooperative director"],["marina-quintela","Marina Quintela","hydrologist, Pará"]]},
+
+  // ---- INDIA
+  {id:"in-1",c:"IN",kick:"Rail",hl:"Monsoon timetable redrawn after two seasons of the same six failures",
+   dek:"Rather than repair the line, the railway is rerouting around it for four months a year.",
+   src:"Rajpath Dainik",time:"06:35",
+   body:["The affected stretch floods predictably. Engineers costed a permanent fix and found seasonal diversion cheaper for at least a decade.",
+         "Passengers on the diverted route gain 40 minutes of journey time and lose two stations."],
+   people:[["rohit-sekhri","Rohit Sekhri","air-quality network engineer"],["padma-iyer","Padma Iyer","railway board planner"]]},
+  {id:"in-2",c:"IN",kick:"Industry",hl:"A second packaging plant commits to Gujarat as the chip supply chain thickens",
+   dek:"Assembly and test, not fabrication — but it is the part of the chain that hires most.",
+   src:"Vanijya Times",time:"05:30",
+   body:["The plant expects 4,000 direct jobs by 2029, mostly technicians trained at two nearby polytechnics.",
+         "Water allocation remains unresolved. The district has promised recycled supply that does not yet exist."],
+   people:[["padma-iyer","Padma Iyer","railway board planner"],["salim-qureshi","Salim Qureshi","semiconductor supply analyst"]]},
+  {id:"in-3",c:"IN",kick:"Water",hl:"Bengaluru's apartment blocks start metering by tap, not by building",
+   dek:"Early results suggest a fifth of measured use was never reaching anybody.",
+   src:"Deccan Prahar",time:"04:50",
+   body:["Per-tap meters were installed in 60 buildings as a pilot. The gap between inflow and metered use pointed straight at leaks.",
+         "Residents' associations want the rollout expanded. The utility wants somebody else to pay for it."],
+   people:[["anaya-bhatt","Anaya Bhatt","columnist"],["salim-qureshi","Salim Qureshi","semiconductor supply analyst"]]},
+
+  // ---- NIGERIA
+  {id:"ng-1",c:"NG",kick:"Finance",hl:"New rules force fintech apps to show the full cost of a transfer before it sends",
+   dek:"Fees, spread and delivery window, on one screen, in naira.",
+   src:"Lagos Ledger",time:"06:15",
+   body:["The regulator's complaint was not that fees were hidden but that they were disclosed in three different places.",
+         "Apps have 90 days. Two of the largest say they will comply early and use it in advertising."],
+   people:[["felix-onuoha","Felix Onuoha","distribution engineer"],["ngozi-eze","Ngozi Eze","payments regulator"]]},
+  {id:"ng-2",c:"NG",kick:"Energy",hl:"Solar mini-grids reach 400 communities, and the metering is the hard part",
+   dek:"Building the grid took months. Agreeing who pays what has taken years.",
+   src:"Naija Energy Report",time:"05:20",
+   body:["Developers want prepaid meters. Communities want a flat household rate that does not punish a bad month.",
+         "Sites that settled on hybrid tariffs have the lowest default rates, which is now being written into new contracts."],
+   people:[["ngozi-eze","Ngozi Eze","payments regulator"],["bimpe-adeyanju","Bimpe Adeyanju","radio host"]]},
+  {id:"ng-3",c:"NG",kick:"Transport",hl:"Blue Line ridership doubles, and the feeder buses cannot keep up",
+   dek:"The rail works. Getting to the rail does not.",
+   src:"Lagos Ledger",time:"04:40",
+   body:["Stations designed for 8,000 daily passengers are handling closer to 19,000 on weekdays.",
+         "The state has ordered 120 feeder buses. Delivery is scheduled after the next dry season, which nobody is happy about."],
+   people:[["felix-onuoha","Felix Onuoha","distribution engineer"],["ngozi-eze","Ngozi Eze","payments regulator"]]},
+
+  // ---- GERMANY
+  {id:"de-1",c:"DE",kick:"Rail",hl:"Long-distance punctuality improves by cutting the timetable, not fixing the track",
+   dek:"Fewer trains, more of them on time. Passenger groups are not calling it a win.",
+   src:"Rheinischer Anzeiger",time:"06:25",
+   body:["Removing 40 daily services created slack that absorbed delays instead of propagating them.",
+         "The operator says construction volume makes the cut temporary. It has said that before."],
+   people:[["martin-kessler","Martin Keßler","transport office, Cologne"],["ute-brandner","Ute Brandner","passenger association"]]},
+  {id:"de-2",c:"DE",kick:"Industry",hl:"Industrial power tariff agreed for three years, with a condition attached",
+   dek:"Plants taking the subsidised rate must keep sites open through 2031.",
+   src:"Handelsblick",time:"05:35",
+   body:["Chemical and metals producers get a capped rate. In exchange they sign a site-continuity clause with penalties.",
+         "Smaller manufacturers below the consumption threshold get nothing, and have said so loudly."],
+   people:[["ute-brandner","Ute Brandner","passenger association"],["jonas-reichert","Jonas Reichert","industry federation economist"]]},
+  {id:"de-3",c:"DE",kick:"Heritage",hl:"Cologne's Roman trench becomes a Saturday attraction while the bike lane waits",
+   dek:"Eleven months late, fully excavated, and now the most visited hole in the city.",
+   src:"Rheinischer Anzeiger",time:"04:15",
+   body:["The road surface is intact for 60 metres, including a kerb and a drainage channel that still drains.",
+         "The city is deciding whether to build over it, around it, or leave a glass panel and reroute the cyclists again."],
+   people:[["hanna-vogt","Hanna Vogt","city archaeologist"],["martin-kessler","Martin Keßler","transport office, Cologne"]]},
+
+  // ---- MEXICO
+  {id:"mx-1",c:"MX",kick:"Water",hl:"Subsidence map pushes three boroughs to halt new deep wells",
+   dek:"The moratorium is temporary and, officials concede, mostly symbolic without a supply alternative.",
+   src:"El Faro Central",time:"06:05",
+   body:["Extraction and sinking track each other closely enough on the map that the correlation ended the argument.",
+         "A treated-wastewater line has been proposed four times since 2011 and funded none of them."],
+   people:[["lucia-ferrer","Lucía Ferrer","geodesy researcher"],["arturo-nieto","Arturo Nieto","borough water director"]]},
+  {id:"mx-2",c:"MX",kick:"Industry",hl:"Bajío factory build-out slows as electricity queues lengthen",
+   dek:"Land and labour are available. Grid connections are booked into 2029.",
+   src:"Noticias del Bajío",time:"05:25",
+   body:["Six announced plants have connection dates later than their production targets. Two are installing gas turbines as a stopgap.",
+         "The utility is prioritising by job count, which smaller suppliers argue penalises automation."],
+   people:[["arturo-nieto","Arturo Nieto","borough water director"],["renata-caballero","Renata Caballero","industrial parks association"]]},
+  {id:"mx-3",c:"MX",kick:"Seismic",hl:"Neighbourhood sensor network beats the official alert by four seconds",
+   dek:"Volunteers run 900 devices. The agency wants the data and does not want the comparison.",
+   src:"El Faro Central",time:"04:20",
+   body:["Denser coverage nearer the coast means earlier detection. The trade-off is more false triggers.",
+         "Talks about a shared feed have been going on since spring, politely and slowly."],
+   people:[["renata-caballero","Renata Caballero","industrial parks association"],["lucia-ferrer","Lucía Ferrer","geodesy researcher"]]},
+
+  // ---- SOUTH KOREA
+  {id:"kr-1",c:"KR",kick:"Technology",hl:"Sidewalk delivery robots get a legal speed limit and a right of way they mostly lose",
+   dek:"Six kilometres an hour, and stop for anyone within two metres.",
+   src:"Hangang Ilbo",time:"06:30",
+   body:["Operators asked for four metres of clearance and were given two, which they say makes crowded districts unworkable.",
+         "Three districts are trialling painted robot lanes to see whether separation helps."],
+   people:[["jisoo-han","Jisoo Han","robotics compliance lead"],["minho-baek","Minho Baek","district transport planner"]]},
+  {id:"kr-2",c:"KR",kick:"Housing",hl:"Seoul opens leases to single-person households in blocks built for families",
+   dek:"The units were sitting empty. The eligibility rules were written in 1998.",
+   src:"Seoul Kyŏngje",time:"05:15",
+   body:["About 6,000 public units had vacancy rates above 20 percent while single applicants waited years.",
+         "Family groups have objected to the reallocation. The city says the waiting list for family units did not lengthen."],
+   people:[["minho-baek","Minho Baek","district transport planner"],["seoyeon-ryu","Seoyeon Ryu","housing policy researcher"]]},
+  {id:"kr-3",c:"KR",kick:"Media",hl:"Webtoon studios move to fixed advances after a year of contract disputes",
+   dek:"Per-episode payment ends; artists get a floor and a smaller revenue share.",
+   src:"Hangang Ilbo",time:"04:35",
+   body:["The dispute was about schedule pressure: per-episode pay rewarded volume and punished illness.",
+         "Established artists lose money under the new terms. Most of them signed anyway."],
+   people:[["seoyeon-ryu","Seoyeon Ryu","housing policy researcher"],["jisoo-han","Jisoo Han","robotics compliance lead"]]},
+
+  // ---- INDONESIA
+  {id:"id-1",c:"ID",kick:"Resources",hl:"Nickel smelters told to publish emissions data or lose export quota",
+   dek:"The rule applies from January and covers 31 facilities.",
+   src:"Warta Nusantara",time:"06:00",
+   body:["Buyers in Europe and Korea have been asking for verified figures that the ministry could not supply.",
+         "Smelters want a two-year phase-in. The ministry has offered one."],
+   people:[["dewi-lasmana","Dewi Lasmana","urban planner"],["hendra-siregar","Hendra Siregar","minerals ministry official"]]},
+  {id:"id-2",c:"ID",kick:"Energy",hl:"Geothermal expansion slows as drilling costs outrun the tariff",
+   dek:"The heat is there. The price per kilowatt-hour has not moved since 2019.",
+   src:"Jakarta Ekonomi",time:"05:05",
+   body:["Developers have deferred four projects, citing exploration risk that nobody will underwrite.",
+         "A revised tariff has been drafted twice and published neither time."],
+   people:[["hendra-siregar","Hendra Siregar","minerals ministry official"],["bagus-priyono","Bagus Priyono","site logistics manager"]]},
+  {id:"id-3",c:"ID",kick:"Transport",hl:"Ferry operators face mandatory load sensors after a summer of overloading fines",
+   dek:"Sensors report to the harbourmaster directly, not to the operator.",
+   src:"Warta Nusantara",time:"04:10",
+   body:["Manual manifests and actual loads diverged on nearly a third of inspected crossings.",
+         "Operators say the sensors are affordable and the retrofit window is not."],
+   people:[["bagus-priyono","Bagus Priyono","site logistics manager"],["dewi-lasmana","Dewi Lasmana","urban planner"]]}
+];
+
+/* Reserve wire — these have not "arrived" yet. They drip onto the desks over time. */
+const RESERVE = [
+  {id:"jp-5",c:"JP",kick:"Energy",hl:"Two reactors clear restart review, and the prefecture still has to agree",
+   dek:"Technical approval is done. Local consent is the part that has taken four years.",src:"Nihon Keizai Tsūshin",
+   body:["The regulator signed off on seismic reinforcement in June. Consent sits with a governor facing an election.",
+         "Utilities have started buying LNG for a winter in which the reactors stay off."],
+   people:[["hiroshi-ueda","Hiroshi Ueda","agricultural economist"],["kaori-shimada","Kaori Shimada","consumer agency counsel"]]},
+  {id:"jp-6",c:"JP",kick:"Cities",hl:"Kyoto caps tour buses in three districts after residents petition twice",
+   dek:"Permits halve from spring. Coach operators say the cap will simply move the crowds.",src:"Kantō Shimbun",
+   body:["Residents documented 40 coaches an hour on a street with no bus stop.",
+         "The city is pairing the cap with a shuttle from two outer car parks."],
+   people:[["nozomi-arakawa","Nozomi Arakawa","rail analyst"],["takumi-oe","Takumi Ōe","vending operator, Kantō region"]]},
+
+  {id:"br-5",c:"BR",kick:"Climate",hl:"Rainfall trigger in the new drought fund is challenged within a week",
+   dek:"Two towns say a 60-day threshold misses the droughts that actually hurt them.",src:"Folha do Norte",
+   body:["Their argument is that shorter dry spells during planting do more damage than long ones after harvest.",
+         "The fund's board has agreed to review the trigger before the next rainy season."],
+   people:[["marina-quintela","Marina Quintela","hydrologist, Pará"],["ubiratan-melo","Ubiratan Melo","mayor, Curuçá"]]},
+  {id:"br-6",c:"BR",kick:"Energy",hl:"Wind curtailment in the northeast hits a record, and nobody is being paid for it",
+   dek:"Turbines were switched off for 14 percent of generating hours last month.",src:"Diário Paulista",
+   body:["Transmission out of the region has not kept pace with what was built into it.",
+         "Developers want compensation for curtailed output. The regulator has not said yes."],
+   people:[["bia-sotero","Bia Sotero","energy regulator analyst"],["diogo-renteria","Diogo Rentería","transit operations chief"]]},
+
+  {id:"in-5",c:"IN",kick:"Health",hl:"Heat action plans get their first legal teeth in two states",
+   dek:"Outdoor work stops above a wet-bulb threshold. Enforcement is the open question.",src:"Rajpath Dainik",
+   body:["Construction and delivery are covered. Agriculture is not, which unions have called the obvious gap.",
+         "Employers get a two-hour shift window either side of the ban."],
+   people:[["anaya-bhatt","Anaya Bhatt","columnist"],["padma-iyer","Padma Iyer","railway board planner"]]},
+  {id:"in-6",c:"IN",kick:"Technology",hl:"Domestic language models get public compute at a discount, with strings",
+   dek:"Access is cheap if the weights are released. Most applicants want it the other way around.",src:"Vanijya Times",
+   body:["The scheme reserves capacity for teams working on Indian languages with little training data.",
+         "Three of the eleven approved teams have committed to open release so far."],
+   people:[["salim-qureshi","Salim Qureshi","semiconductor supply analyst"],["rohit-sekhri","Rohit Sekhri","air-quality network engineer"]]},
+
+  {id:"ng-5",c:"NG",kick:"Cities",hl:"Lagos begins charging for kerbside parking in two business districts",
+   dek:"Attendants become app operators. Nobody has explained what happens to the attendants who do not.",src:"Lagos Ledger",
+   body:["The state expects the scheme to fund street resurfacing within three years.",
+         "Informal parking arrangements it replaces have run for decades and employ thousands."],
+   people:[["bimpe-adeyanju","Bimpe Adeyanju","radio host"],["ngozi-eze","Ngozi Eze","payments regulator"]]},
+  {id:"ng-6",c:"NG",kick:"Film",hl:"Streaming platforms agree minimum residuals for Nigerian productions",
+   dek:"The guild asked for a percentage. It got a flat figure per episode instead.",src:"Naija Screen",
+   body:["Producers argued a revenue share was unworkable without audited viewing data.",
+         "The flat rate is indexed to inflation, which was the concession that closed the deal."],
+   people:[["felix-onuoha","Felix Onuoha","distribution engineer"],["bimpe-adeyanju","Bimpe Adeyanju","radio host"]]},
+
+  {id:"de-5",c:"DE",kick:"Housing",hl:"Berlin converts three office towers to flats, and the plumbing is the bottleneck",
+   dek:"Floorplates designed for two toilets per floor now need forty.",src:"Rheinischer Anzeiger",
+   body:["Conversion costs came in at 70 percent of new build, higher than the model assumed.",
+         "The city is subsidising the gap for buildings empty more than two years."],
+   people:[["ute-brandner","Ute Brandner","passenger association"],["hanna-vogt","Hanna Vogt","city archaeologist"]]},
+  {id:"de-6",c:"DE",kick:"Industry",hl:"Machine-tool orders fall for a sixth quarter, and firms stop calling it a cycle",
+   dek:"Export demand is down; domestic demand is down further.",src:"Handelsblick",
+   body:["The federation now describes the decline as structural in its own quarterly note, a first.",
+         "Short-time working covers about 18,000 staff across the sector."],
+   people:[["jonas-reichert","Jonas Reichert","industry federation economist"],["ute-brandner","Ute Brandner","passenger association"]]},
+
+  {id:"mx-5",c:"MX",kick:"Energy",hl:"Rooftop solar rules loosened for small businesses after a five-year cap",
+   dek:"The limit rises from 500 kilowatts to 1.5 megawatts per site.",src:"Noticias del Bajío",
+   body:["Installers report a backlog of applications that were designed and then shelved under the old cap.",
+         "Grid operators want notification requirements that the new rules do not contain."],
+   people:[["renata-caballero","Renata Caballero","industrial parks association"],["arturo-nieto","Arturo Nieto","borough water director"]]},
+  {id:"mx-6",c:"MX",kick:"Conservation",hl:"Monarch overwintering area shrinks again, and the cause is not in Mexico",
+   dek:"Reserve managers point north, to milkweed loss along the migration route.",src:"El Faro Central",
+   body:["Illegal logging inside the reserve is at its lowest measured level and the colonies still contracted.",
+         "Cross-border monitoring funding runs out in March."],
+   people:[["lucia-ferrer","Lucía Ferrer","geodesy researcher"],["renata-caballero","Renata Caballero","industrial parks association"]]},
+
+  {id:"kr-5",c:"KR",kick:"Trade",hl:"Memory chip prices firm up, and the fabs are still not adding capacity",
+   dek:"Two years of losses have made everyone cautious at exactly the same moment.",src:"Seoul Kyŏngje",
+   body:["Utilisation is high; capital spending plans have not moved.",
+         "Buyers are signing longer contracts than they did in either of the last two upcycles."],
+   people:[["jisoo-han","Jisoo Han","robotics compliance lead"],["seoyeon-ryu","Seoyeon Ryu","housing policy researcher"]]},
+  {id:"kr-6",c:"KR",kick:"Education",hl:"Curfew on cram schools extended to a fourth province",
+   dek:"Doors shut at 10 p.m. Enforcement relies on neighbours reporting lights on.",src:"Hangang Ilbo",
+   body:["The province says compliance in the first three areas sits above 90 percent by inspection.",
+         "Online tutoring, which the curfew does not cover, has grown in all three."],
+   people:[["seoyeon-ryu","Seoyeon Ryu","housing policy researcher"],["minho-baek","Minho Baek","district transport planner"]]},
+
+  {id:"id-5",c:"ID",kick:"Cities",hl:"Jakarta's sinking north coast gets a sea wall decision, eight years late",
+   dek:"The outer barrier is dropped. The inner embankment is funded through 2032.",src:"Jakarta Ekonomi",
+   body:["Cost was the stated reason. Groundwater extraction, the actual driver of subsidence, is addressed separately or not at all.",
+         "Piped water coverage in the affected districts remains under half."],
+   people:[["dewi-lasmana","Dewi Lasmana","urban planner"],["hendra-siregar","Hendra Siregar","minerals ministry official"]]},
+  {id:"id-6",c:"ID",kick:"Labour",hl:"Ride-hailing drivers win a minimum per-kilometre floor after a four-day stoppage",
+   dek:"Platforms wanted regional variation and got it, at a higher floor than they offered.",src:"Warta Nusantara",
+   body:["The floor differs across six zones, with Jakarta highest.",
+         "Commission caps, the drivers' second demand, were left for a later round."],
+   people:[["bagus-priyono","Bagus Priyono","site logistics manager"],["dewi-lasmana","Dewi Lasmana","urban planner"]]}
+];
+RESERVE.forEach(s=>{ s.time="—"; });
+
+/* Fold cooler stories into the main index so the Rolodex can reach them */
+Object.keys(COOLER).forEach(cc=>{
+  const w = COOLER[cc];
+  STORIES.push({id:w.id,c:cc,kick:"Water Cooler",hl:w.quote,dek:w.dek,src:w.outlet,time:"07:00",body:w.body,people:w.people,cooler:true});
+});
+
+const BRIEFING = {
+  japan:["jp-1","jp-2","jp-3"],
+  brazil:"br-1",
+  oddity:"de-3"
+};
+
+const AV_COLORS = ["#2B5EA7","#C8102E","#1F6F5C","#7A4FA3","#B06A18","#2F6E8F"];
+
+/* ================= state ================= */
+/* Live desk state — the wire writes here, the desk reads from here */
+const DESK = {};
+COUNTRIES.forEach(c=>{
+  DESK[c.code] = {
+    list: STORIES.filter(s=>s.c===c.code && !s.cooler).map(s=>s.id),
+    queue: RESERVE.filter(s=>s.c===c.code).map(s=>s.id),
+    pulse: c.pulse,
+    count: c.stories,
+    mentions: 800 + c.pulse*137,
+    unread: 0
+  };
+});
+
+const state = {
+  country:"JP",
+  view:"desk",          // desk | story
+  storyId:null,
+  rolodex:new Map(),    // personId -> {id,name,role,storyIds:Set}
+  openPerson:null
+};
+
+const byId = id => STORIES.find(s=>s.id===id) || RESERVE.find(s=>s.id===id);
+const ago = ts => {
+  const m = Math.floor((Date.now()-ts)/60000);
+  return m<1 ? "just in" : m+" min ago";
+};
+const country = code => COUNTRIES.find(c=>c.code===code);
+const initials = n => n.split(/\s+/).slice(0,2).map(w=>w[0]).join("").toUpperCase();
+const avColor = id => AV_COLORS[[...id].reduce((a,ch)=>a+ch.charCodeAt(0),0)%AV_COLORS.length];
+const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function logPeople(story){
+  story.people.forEach(([id,name,role])=>{
+    if(!state.rolodex.has(id)) state.rolodex.set(id,{id,name,role,storyIds:new Set()});
+    state.rolodex.get(id).storyIds.add(story.id);
+  });
+  renderRoloBar();
+}
+
+/* ================= country rail ================= */
+function renderRail(){
+  document.getElementById("rail").innerHTML = COUNTRIES.map(c=>`
+    <button class="chip" data-country="${c.code}" aria-current="${c.code===state.country}"
+      data-unread="${DESK[c.code].unread>0 && c.code!==state.country}">
+      <span class="code">${c.code}</span><span class="nm">${esc(c.name)}</span><span class="bump"></span>
+    </button>`).join("");
+}
+
+/* ================= desk ================= */
+function pulseRing(pct){
+  const r=17, C=2*Math.PI*r, off=C*(1-pct/100);
+  return `<div class="pulse">
+    <svg width="46" height="46" viewBox="0 0 46 46" role="img" aria-label="${pct} percent of this desk's stories are internationally picked up">
+      <circle class="ring-track" cx="23" cy="23" r="${r}" fill="none" stroke-width="4"/>
+      <circle class="ring-val" cx="23" cy="23" r="${r}" fill="none" stroke-width="4"
+        stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${off.toFixed(1)}"/>
+      <text class="ringtxt" x="23" y="27" text-anchor="middle">${pct}</text>
+    </svg>
+    <div class="lab">Pulse<br>intl share</div>
+  </div>`;
+}
+
+function renderDesk(){
+  const c = country(state.country);
+  const d = DESK[state.country];
+  const w = COOLER[state.country];
+  d.unread = 0;
+  const list = d.list.map(byId);
+  document.getElementById("main").innerHTML = `
+  <div class="view">
+    <header class="deskhead">
+      <div>
+        <h1>${esc(c.name)}</h1>
+        <div class="deskmeta"><span>${esc(c.city)} desk</span> · <span id="deskCount">${d.count}</span> stories today</div>
+      </div>
+      ${pulseRing(d.pulse)}
+    </header>
+
+    <button class="cooler" data-story="${w.id}">
+      <div class="cooler-in">
+        <div class="cooler-kicker"><span class="dot"></span>Water cooler · what they're actually talking about</div>
+        <q>${esc(w.quote)}</q>
+        <div class="orig">${esc(w.orig)}</div>
+        <div class="cooler-foot">
+          <div class="cooler-src">Front page · <b>${esc(w.outlet)}</b><br>${esc(w.city)} · translated from ${esc(w.lang)}
+            <div class="mentions"><b id="coolerCount">${d.mentions.toLocaleString()}</b> mentions in the last hour</div>
+          </div>
+          <div class="stamp">${esc(w.tag)}<br>MACHINE + EDITOR</div>
+        </div>
+      </div>
+    </button>
+
+    <div class="sec-label">Also on the ${esc(c.city)} desk</div>
+    ${list.map(s=>{
+      const isNew = s.arrivedAt && Date.now()-s.arrivedAt < 12000;
+      const stamp = s.arrivedAt ? ago(s.arrivedAt) : s.time;
+      return `<button class="row ${isNew?"fresh":""}" data-story="${s.id}">
+        <div class="kick">${esc(s.kick)}${isNew?' <span class="new">· just in</span>':""}</div>
+        <h3>${esc(s.hl)}</h3>
+        <div class="who">${stamp} · ${esc(s.src)} · <em>${s.people.map(p=>esc(p[1])).join(", ")}</em></div>
+      </button>`;}).join("")}
+    <div style="height:28px"></div>
+  </div>`;
+}
+
+/* ================= story ================= */
+function renderStory(){
+  const s = byId(state.storyId);
+  const c = country(s.c);
+  document.getElementById("main").innerHTML = `
+  <div class="view story">
+    <button class="back" id="backBtn">← ${esc(c.name)} desk</button>
+    <div class="story-kick">${esc(s.kick)} · ${esc(c.city)}</div>
+    <h2>${esc(s.hl)}</h2>
+    <p class="dek">${esc(s.dek)}</p>
+    <div class="byline">${esc(s.src)} · filed ${s.time} local${s.cooler?" · translated from "+esc(COOLER[s.c].lang):""}</div>
+    ${s.body.map(p=>`<p class="body">${esc(p)}</p>`).join("")}
+    <div class="players">
+      <div class="lab">People &amp; players</div>
+      <div class="set">
+        ${s.people.map(([id,name,role])=>`
+          <button class="pchip" data-person="${id}">
+            <span class="av" style="background:${avColor(id)}">${initials(name)}</span>
+            <span><span class="pn">${esc(name)}</span> <span class="pr">${esc(role)}</span></span>
+          </button>`).join("")}
+      </div>
+      <div class="filed">Added to your Rolodex. Tap the bar below to see them again later.</div>
+    </div>
+  </div>`;
+  logPeople(s);
+}
+
+/* ================= rolodex ================= */
+function renderRoloBar(){
+  const n = state.rolodex.size;
+  const bar = document.getElementById("rolobar");
+  bar.dataset.empty = n===0;
+  document.getElementById("roloCount").textContent = n===0 ? "· nobody yet" : "· " + n + (n===1?" person":" people");
+}
+
+function renderSheet(){
+  const body = document.getElementById("sheetBody");
+  const people = [...state.rolodex.values()].sort((a,b)=>b.storyIds.size-a.storyIds.size || a.name.localeCompare(b.name));
+  document.getElementById("sheetSub").textContent = people.length ? "this session only" : "";
+  if(!people.length){
+    body.innerHTML = `<div class="empty"><b>Nobody yet</b>Open a story. Everyone named in it lands here, and stays for the session.</div>`;
+    return;
+  }
+  body.innerHTML = people.map(p=>{
+    const open = state.openPerson===p.id;
+    const stories = [...p.storyIds].map(byId);
+    return `<div class="person ${open?"open":""}">
+      <button class="person-top" data-person-toggle="${p.id}" aria-expanded="${open}">
+        <span class="av" style="background:${avColor(p.id)}">${initials(p.name)}</span>
+        <span>
+          <span class="nm">${esc(p.name)}</span>
+          <span class="rl">${esc(p.role)}</span>
+        </span>
+        <span class="n">${stories.length} ${stories.length===1?"story":"stories"}<br>${open?"▲":"▼"}</span>
+      </button>
+      <div class="person-stories">
+        ${stories.map(s=>`<button class="ps" data-story="${s.id}">
+            <span class="ct">${country(s.c).name} · ${esc(s.kick)}</span>${esc(s.hl)}
+          </button>`).join("")}
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function openSheet(personId){
+  if(personId) state.openPerson = personId;
+  renderSheet();
+  document.getElementById("sheet").classList.add("on");
+  document.getElementById("sheet").setAttribute("aria-hidden","false");
+  document.getElementById("scrim").classList.add("on");
+  document.getElementById("rolobar").setAttribute("aria-expanded","true");
+}
+function closeSheet(){
+  document.getElementById("sheet").classList.remove("on");
+  document.getElementById("sheet").setAttribute("aria-hidden","true");
+  document.getElementById("scrim").classList.remove("on");
+  document.getElementById("rolobar").setAttribute("aria-expanded","false");
+}
+
+/* ================= briefing sheet ================= */
+function briefItem(id, marker, isNum){
+  const s = byId(id);
+  return `<button class="bitem" data-brief-story="${id}">
+    <span class="${isNum?"num":"mk"}">${marker}</span>
+    <span>
+      <h3>${esc(s.hl)}</h3>
+      <p>${esc(s.dek)}</p>
+      <div class="src">${esc(s.src)} · ${s.time} local</div>
+    </span>
+  </button>`;
+}
+
+function openBriefing(){
+  const d = new Date();
+  const date = d.toLocaleDateString(undefined,{weekday:"long",day:"numeric",month:"long"});
+  document.getElementById("briefingMount").innerHTML = `
+  <div class="briefing" id="briefing">
+    <div class="sheetwrap">
+      <div class="bclose">
+        <span>Preview · not sent</span>
+        <button id="closeBriefing">Close ✕</button>
+      </div>
+      <div class="bmast">
+        <div class="pre">Sightline delivers at 7:00</div>
+        <h2>The Morning Sheet</h2>
+        <div class="date">${esc(date)} · five items · four minutes</div>
+      </div>
+      <div class="rule2"></div>
+
+      <section class="bsec">
+        <div class="bsec-h"><span class="t">Japan · top three</span><span class="c">Tokyo desk</span></div>
+        ${BRIEFING.japan.map((id,i)=>briefItem(id,String(i+1),true)).join("")}
+      </section>
+
+      <section class="bsec">
+        <div class="bsec-h"><span class="t">Brazil · climate</span><span class="c">Belém desk</span></div>
+        ${briefItem(BRIEFING.brazil,"◆",false)}
+      </section>
+
+      <section class="bsec">
+        <div class="bsec-h"><span class="t">One oddity</span><span class="c">Cologne desk</span></div>
+        ${briefItem(BRIEFING.oddity,"✻",false)}
+      </section>
+
+      <div class="bfoot">
+        This is a preview of the 7 a.m. sheet.<br>
+        Tap any item to open it on its country desk.<br>
+        Sample data · no live wires connected
+      </div>
+    </div>
+  </div>`;
+  document.body.style.overflow="hidden";
+}
+function closeBriefing(){
+  document.getElementById("briefingMount").innerHTML="";
+  document.body.style.overflow="";
+}
+
+/* ================= routing ================= */
+function go(view,opts={}){
+  state.view=view;
+  if(opts.country) state.country=opts.country;
+  if(opts.storyId) state.storyId=opts.storyId;
+  renderRail();
+  view==="story" ? renderStory() : renderDesk();
+  window.scrollTo({top:0,behavior:"instant"});
+}
+
+document.addEventListener("click",e=>{
+  const chip=e.target.closest("[data-country]");
+  if(chip){ closeSheet(); go("desk",{country:chip.dataset.country}); return; }
+
+  const brief=e.target.closest("[data-brief-story]");
+  if(brief){ const s=byId(brief.dataset.briefStory); closeBriefing(); go("story",{country:s.c,storyId:s.id}); return; }
+
+  const st=e.target.closest("[data-story]");
+  if(st){ const s=byId(st.dataset.story); closeSheet(); go("story",{country:s.c,storyId:s.id}); return; }
+
+  const pchip=e.target.closest("[data-person]");
+  if(pchip){ openSheet(pchip.dataset.person); return; }
+
+  const ptog=e.target.closest("[data-person-toggle]");
+  if(ptog){ const id=ptog.dataset.personToggle;
+    state.openPerson = state.openPerson===id ? null : id; renderSheet(); return; }
+
+  if(e.target.closest("#backBtn")){ go("desk"); return; }
+  if(e.target.closest("#rolobar")){ openSheet(); return; }
+  if(e.target.closest("#scrim")){ closeSheet(); return; }
+  if(e.target.closest("#openBriefing")){ closeSheet(); openBriefing(); return; }
+  if(e.target.closest("#closeBriefing")){ closeBriefing(); return; }
+});
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape"){ closeSheet(); if(document.getElementById("briefing")) closeBriefing(); }
+});
+
+/* =========================================================
+   THE WIRE — simulated. Nothing here touches a network.
+   Stories move from each desk's queue onto the desk over
+   time; pulse, counts and mentions drift while you read.
+   ========================================================= */
+
+const MAX_ROWS = 7;
+
+function fileStory(code){
+  const d = DESK[code];
+  if(!d.queue.length) return false;
+  const s = byId(d.queue.shift());
+  s.arrivedAt = Date.now();
+  s.time = new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit",hour12:false});
+  if(!STORIES.includes(s)) STORIES.push(s);
+  d.list.unshift(s.id);
+  if(d.list.length > MAX_ROWS) d.queue.push(d.list.pop());   // recycle to the back of the wire
+  d.count++;
+  if(code !== state.country || state.view !== "desk") d.unread++;
+  return true;
+}
+
+function wireTick(){
+  // one desk files a story
+  const open = COUNTRIES.filter(c=>DESK[c.code].queue.length);
+  if(open.length){
+    const pick = Math.random() < .45
+      ? state.country                                    // bias toward the desk you're reading
+      : open[Math.floor(Math.random()*open.length)].code;
+    if(DESK[pick].queue.length) fileStory(pick);
+  }
+  // pulse drifts
+  COUNTRIES.forEach(c=>{
+    const d = DESK[c.code];
+    d.pulse = Math.max(8, Math.min(62, d.pulse + (Math.random()<.5?-1:1)*(Math.random()<.7?1:2)));
+  });
+  renderRail();
+  if(state.view === "desk") renderDesk();
+}
+
+function slowTick(){
+  // water cooler mentions climb, counts refresh, timestamps age
+  const d = DESK[state.country];
+  d.mentions += Math.floor(Math.random()*90) + 15;
+  const cc = document.getElementById("coolerCount");
+  if(cc) cc.textContent = d.mentions.toLocaleString();
+  const dc = document.getElementById("deskCount");
+  if(dc) dc.textContent = d.count;
+  if(state.view === "desk") renderDesk();
+}
+
+/* clock */
+function tick(){
+  document.getElementById("clock").textContent =
+    new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit",hour12:false});
+}
+tick();
+setInterval(tick,20000);
+setInterval(wireTick,26000);
+setInterval(slowTick,6000);
+setTimeout(()=>{ if(DESK[state.country].queue.length) { fileStory(state.country); renderRail(); if(state.view==="desk") renderDesk(); } }, 9000);
+
+renderRoloBar();
+go("desk");
+</script>
+</body>
+</html>
